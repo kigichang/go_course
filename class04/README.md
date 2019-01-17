@@ -20,165 +20,162 @@
 
 ## Arrays
 
-1. Array Declaration
+### Array Declaration
 
-    ```go {.line-numbers}
-    var a [3]int            // [0,0,0]
-    var q [3]int = [3]int{1, 2, 3}
+```go {.line-numbers}
+var a [3]int // [0,0,0]
+var b = [3]int{1, 2, 3}
+var r = [3]int{1, 2} // [1, 2, 0]
+q := [...]int{1, 2, 3} // [1, 2, 3]
+x := [...]int{5: -1} // [0, 0, 0, 0, 0, -1]
+```
 
-    var r [3]int = [3]int{1, 2}
-    fmt.Println(r[2])       // "0"
+### Array Travel
 
-    q := [...]int{1, 2, 3}
-    fmt.Printf("%T\n", q)   // "[3]int"
+```go {.line-numbers}
+// Print the indices and elements.
+for i, v := range x {
+    fmt.Printf("%d %d\n", i, v)
+}
 
-    x := [...]int{99: -1}   // value of 0 ~ 98th is "0", and 99th is "-1", length of array is 100
-    ```
+// Print the elements only.
+for _, v := range x {
+    fmt.Printf("%d\n", v)
+}
+```
 
-1. Array Travel
+### Array Compare
 
-    ```go {.line-numbers}
-    // Print the indices and elements.
-    for i, v := range a {
-        fmt.Printf("%d %d\n", i, v)
-    }
+>If an array’s element type is **comparable** then the array type is comparable too, so we may directly compare two arrays of that type using the == operator, which reports whether all corresponding elements are equal. The != operator is its negation.
 
-    // Print the elements only.
-    for _, v := range a {
-        fmt.Printf("%d\n", v)
-    }
-    ```
+```go {.line-numbers}
+a := [2]int{1, 2}
+b := [...]int{1, 2}
+c := [2]int{1, 3}
+fmt.Println(a == b, a == c, b == c) // "true false false"
 
-1. Array Compare
-
-    >If an array’s element type is **comparable** then the array type is comparable too, so we may directly compare two arrays of that type using the == operator, which reports whether all corresponding elements are equal. The != operator is its negation.
-
-    ```go {.line-numbers}
-    a := [2]int{1, 2}
-    b := [...]int{1, 2}
-    c := [2]int{1, 3}
-    fmt.Println(a == b, a == c, b == c) // "true false false"
-
-    d := [3]int{1, 2}
-    fmt.Println(a == d) // compile error: cannot compare [2]int == [3]int
-    ```
+d := [3]int{1, 2}
+fmt.Println(a == d) // compile error: cannot compare [2]int == [3]int
+```
 
 ## Struct
 
 跟 C 的 struct 用法一樣。struct 可以組合多個不同型別的資料，每一個資料欄位，稱作 field.
 
-1. Struct Declaration
+### Struct Declaration
 
-    ```go {.line-numbers}
-    type Employee struct {
-        ID        int
-        Name      string
-        Address   string
-        DoB       time.Time
-        Position  string
-        Salary    int
-        ManagerID int
-    }
+```go {.line-numbers}
+type Employee struct {
+    ID        int
+    Name      string
+    Address   string
+    DoB       time.Time
+    Position  string
+    Salary    int
+    ManagerID int
+}
 
-    var dilbert Employee
+var empty Employee // empty Employy struct
 
-    dilbert.Salary -= 5000 // demoted, for writing too few lines of code
+dilbert := Employee{
+    ID:       1,
+    Name:     "Dilbert",
+    Position: "Engineer",
+    Salary:   5000,
+}
+dilbert.Salary -= 5000 // demoted, for writing too few lines of code
+position := &dilbert.Position
+*position = "Senior " + *position // promoted, for outsourcing to Elbonia
+```
 
-    position := &dilbert.Position
-    *position = "Senior " + *position // promoted, for outsourcing to Elbonia
+與 C 不同的是，一個空白的 struct，會依照每一個 field 的資料型別，自動帶入該型別的 **zero value**。如：int 則為 0, string 則為 ""
 
-    wally := Employee {
-        ID: 1,
-        Name: "Wally",
-    }
-    ```
+### Struct Pointer
 
-    與 C 不同的是，一個空白的 struct，會依照每一個 field 的資料型別，自動帶入該型別的 **zero value**。如：int 則為 0, string 則為 ""
+與 C 一樣，struct 通常會撘配 pointer 來處理。與 C 不同是操作語法。
 
-1. Struct Pointer
+- 在 C 中，如果是實例 (instance)，則用 **.** 來操作, eg: **x.A**，如果是指標 (pointer)，則用 **->**, eg: **x->A**。
+- 在 Go 則都用 **.** 來操作，也因此要小心是在用 instance 還是 pointer。
 
-    與 C 一樣，struct 通常會撘配 pointer 來處理。與 C 不同是操作語法。在 C 中，如果是實例 (instance)，則用 `.` 來操作, eg: `x.A`，如果是指標 (pointer)，則用 `->`, eg: `x->A`。在 Go 則都用 `.` 來操作，也因此要小心是在用 instance 還是 pointer。
+```go {.line-numbers}
+alice := &Employee{
+    ID:   2,
+    Name: "Alice",
+}
+fmt.Println("alice:", alice) // alice: &{2 Alice  0001-01-01 00:00:00 +0000 UTC  0 0}
 
-    ```go {.line-numbers}
-    alice := &Employee {
-        ID: 2,
-        Name: "Alice",
-    }
+fmt.Println(alice.ID, alice.Name)
+```
 
-    func EmployeeByID(id int) *Employee { /* ... */ }
+### Struct Compare
 
-    fmt.Println(alice.ID)
-    ```
+>If all the fields of a struct are **comparable**, the struct itself is comparable, so two expressions of that type may be compared using == or !=. The == operation compares the corresponding fields of the two structs in order, so the two printed expressions below are equivalent:
 
-1. Struct Compare
+```go {.line-numbers}
+type Point struct{ X, Y int }
+p := Point{1, 2}
+q := Point{2, 1}
+fmt.Println(p.X == q.X && p.Y == q.Y) // "false"
+fmt.Println(p == q)                   // "false"
+```
 
-    >If all the fields of a struct are **comparable**, the struct itself is comparable, so two expressions of that type may be compared using == or !=. The == operation compares the corresponding fields of the two structs in order, so the two printed expressions below are equivalent:
+### Struct Embedding and Anonymous Fields (移到 oop)
 
-    ```go {.line-numbers}
-    type Point struct{ X, Y int }
-    p := Point{1, 2}
-    q := Point{2, 1}
-    fmt.Println(p.X == q.X && p.Y == q.Y) // "false"
-    fmt.Println(p == q)                   // "false"
-    ```
+struct 裏還可以再包含 struct。在程式寫作上，會有點麻煩。如下：
 
-1. Struct Embedding and Anonymous Fields
+```go {.line-numbers}
+type Point struct {
+    X, Y int
+}
 
-    struct 裏還可以再包含 struct。在程式寫作上，會有點麻煩。如下：
+type Circle struct {
+    Center Point
+    Radius int
+}
 
-    ```go {.line-numbers}
-    type Point struct {
-        X, Y int
-    }
+type Wheel struct {
+    Circle Circle
+    Spokes int
+}
 
-    type Circle struct {
-        Center Point
-        Radius int
-    }
+var w Wheel
+w.Circle.Center.X = 8
+w.Circle.Center.Y = 8
+w.Circle.Radius = 5
+w.Spokes = 20
+```
 
-    type Wheel struct {
-        Circle Circle
-        Spokes int
-    }
+可以修改成下面的寫法：
 
-    var w Wheel
-    w.Circle.Center.X = 8
-    w.Circle.Center.Y = 8
-    w.Circle.Radius = 5
-    w.Spokes = 20
-    ```
+```go {.line-numbers}
+type Circle struct {
+    Point
+    Radius int
+}
 
-    可以修改成下面的寫法：
+type Wheel struct {
+    Circle
+    Spokes int
+}
 
-    ```go {.line-numbers}
-    type Circle struct {
-        Point
-        Radius int
-    }
+var w Wheel
+w.X = 8         // equivalent to w.Circle.Point.X = 8
+w.Y = 8         // equivalent to w.Circle.Point.Y = 8
+w.Radius = 5    // equivalent to w.Circle.Radius = 5
+w.Spokes = 20
 
-    type Wheel struct {
-        Circle
-        Spokes int
-    }
+w = Wheel{Circle{Point{8, 8}, 5}, 20}
 
-    var w Wheel
-    w.X = 8         // equivalent to w.Circle.Point.X = 8
-    w.Y = 8         // equivalent to w.Circle.Point.Y = 8
-    w.Radius = 5    // equivalent to w.Circle.Radius = 5
-    w.Spokes = 20
+w = Wheel{
+    Circle: Circle{
+        Point:  Point{X: 8, Y: 8},
+        Radius: 5,
+    },
+    Spokes: 20, // NOTE: trailing comma necessary here (and at Radius)
+}
+```
 
-    w = Wheel{Circle{Point{8, 8}, 5}, 20}
-
-    w = Wheel{
-        Circle: Circle{
-            Point:  Point{X: 8, Y: 8},
-            Radius: 5,
-        },
-        Spokes: 20, // NOTE: trailing comma necessary here (and at Radius)
-    }
-    ```
-
-    struct 可以透過 **Anonymous Field** 來達到 OO 繼承的效果。
+struct 可以透過 **Anonymous Field** 來達到 OO 繼承的效果。
 
 ## JSON
 
@@ -195,9 +192,24 @@ type Movie struct {
 }
 
 var movies = []Movie{
-    {Title: "Casablanca", Year: 1942, Color: false, Actors: []string{"Humphrey Bogart", "Ingrid Bergman"}},
-    {Title: "Cool Hand Luke", Year: 1967, Color: true, Actors: []string{"Paul Newman"}},
-    {Title: "Bullitt", Year: 1968, Color: true, Actors: []string{"Steve McQueen", "Jacqueline Bisset"}},
+    {
+        Title:  "Casablanca",
+        Year:   1942,
+        Color:  false,
+        Actors: []string{"Humphrey Bogart", "Ingrid Bergman"},
+    },
+    {
+        Title:  "Cool Hand Luke",
+        Year:   1967,
+        Color:  true,
+        Actors: []string{"Paul Newman"},
+    },
+    {
+        Title:  "Bullitt",
+        Year:   1968,
+        Color:  true,
+        Actors: []string{"Steve McQueen", "Jacqueline Bisset"},
+    },
 }
 
 data, err := json.Marshal(movies)
@@ -205,16 +217,7 @@ if err != nil {
     log.Fatalf("JSON marshaling failed: %s", err)
 }
 
-/*
-[{"Title":"Casablanca","released":1942,"Actors":["Humphrey
-  Bogart","Ingr
-  id Bergman"]},{"Title":"Cool Hand
-  Luke","released":1967,"color":true,"Ac
-  tors":["Paul Newman"]},
-  {"Title":"Bullitt","released":1968,"color":true,"
-  Actors":["Steve McQueen","Jacqueline Bisset"]}]
-*/
-fmt.Printf("%s\n", data)
+fmt.Println("movies: ", string(data))
 
 var titles []struct{ Title string }
 if err := json.Unmarshal(data, &titles); err != nil {
@@ -223,7 +226,12 @@ if err := json.Unmarshal(data, &titles); err != nil {
 fmt.Println(titles) // "[{Casablanca} {Cool Hand Luke} {Bullitt}]"
 
 var movie1 Movie
-err = json.Unmarshal([]byte(`{"Title":"Casablanca","released":1942,"Actors":["Humphrey Bogart","Ingrid Bergman"]}`), &movie1)
+err = json.Unmarshal([]byte(
+    `{
+        "Title": "Casablanca",
+        "released":1942,
+        "Actors":["Humphrey Bogart","Ingrid Bergman"]}
+    `), &movie1)
 
 if err != nil {
     log.Fatalf("JSON unmarshaling failed: %s", err)

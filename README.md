@@ -11,16 +11,21 @@
 1. [Go Web Programming](https://www.manning.com/books/go-web-programming)
 1. [Go System Programming](https://www.packtpub.com/networking-and-servers/go-systems-programming)
 
-# Summary
+## Summary
 
 - [說明](README.md)
 - [01 開發環境與語言簡介](class01/)
 - [02 程式結構與語法](class02/)
 - [03 Data Types - Basic Types](class03/)
 - [04 Data Types - Aggregate Types](class04/)
-- [05 Data Types - Reference Types](class05_.md)
-- [06 Functions and Methods](class06_.md)
+- [05 Data Types - Reference Types](class05/)
+- [06 Functions](class06/)
+- [07 Methods](class07/)
 - [07 Interface](class07_.md)
+- [15 OOP in Go](class15_.md)
+- [xx Funtional Language in Go]
+- [07 Defer and Error Handling]
+- [Cyberon Package]
 - [08 Concurrency - Goroutine and Channel](class08_.md)
 - [09 Testing](class09_.md)
 - [10 Build and Dependency Management](class10_.md)
@@ -28,5 +33,4 @@
 - [12 MySQL and Web (Gorilla web toolkit)](class12_.md)
 - [13 RESTful, Protobuf and gRPC](class13_.md)
 - [14 Reflection and Struct Tag](class14_.md)
-- [15 Fake Inheritance in Golang](class15_.md)
 - [16 Cowork with C/C++ (swig)](class16_.md)
