@@ -73,11 +73,11 @@ func main() {
 }
 ```
 
-## Methods in Struct and Struct Pointer
+## Methods in Value and Pointer
 
 由上面的例子來看，不論 methods 是被宣告在 struct 或者是 struct pointer，只要是該 struct 或者是 struct pointer，都可以呼叫。而這兩者差別是，用 struct pointer 定義 method 要特別注意會修改到原本的值。
 
-### struct version
+### Value
 
 ```go {.line-numbers}
 package main
@@ -99,12 +99,14 @@ func main() {
     fmt.Println(p) // {1 2}
 
     q := &Point{1, 2}
-    q.ScaleBy(10)
+    q.ScaleBy(10)  // implicit (*q)
     fmt.Println(q) // &{1 2}
+
+    (&Point{3, 4}).ScaleBy(100) // an pointer can be the receiver for value method.
 }
 ```
 
-### struct pointer version
+### Pointer
 
 ```go {.line-numbers}
 package main
@@ -122,12 +124,15 @@ func (p *Point) ScaleBy(factor float64) {
 
 func main() {
     p := Point{1, 2}
-    p.ScaleBy(10)
-    fmt.Println(p) // {1 2}
+    p.ScaleBy(10)  // implicit (&p)
+    fmt.Println(p) // {10 20}
 
     q := &Point{1, 2}
     q.ScaleBy(10)
-    fmt.Println(q) // &{1 2}
+    fmt.Println(q) // &{10 20}
+
+    // value can not be the receiver of pointer method.
+    Point{3, 4}.ScaleBy(20) // compile error: cannot call pointer method on Point literal.
 }
 ```
 
@@ -137,6 +142,17 @@ func main() {
 
 1. 避免 pass by value 的記憶體浪費
 1. 避免 golang 在 struct pointer 語法上的 puzzle (因為 struct 與 struct pointer 在 call method 的語法都一樣，不像 C 有分 `.` 與 `->`).
+
+## Summary
+
+>The rule about pointers vs. values for receivers is that value methods can be invoked on pointers and values, but pointer methods can only be invoked on pointers.
+
+[From Effective Go](https://golang.org/doc/effective_go.html#pointers_vs_values)
+
+|                | Pointer | Value |
+|:--------------:|:-------:|:-----:|
+| Pointer Method | O       | X     |
+| Value Method   | O       | O     |
 
 ## Method Signature
 

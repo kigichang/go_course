@@ -17,6 +17,8 @@ func main() {
 	fmt.Println(p) // {1 2}
 
 	q := &Point{1, 2}
-	q.ScaleBy(10)
+	q.ScaleBy(10)  // implicit (*q), (compiler)
 	fmt.Println(q) // &{1 2}
+
+	(&Point{3, 4}).ScaleBy(100) // an pointer can be the receiver for value method.
 }

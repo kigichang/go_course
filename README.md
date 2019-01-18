@@ -21,9 +21,8 @@
 - [05 Data Types - Reference Types](class05/)
 - [06 Functions](class06/)
 - [07 Methods](class07/)
-- [07 Interface](class07_.md)
+- [08 Interface](class08/)
 - [15 OOP in Go](class15_.md)
-- [xx Funtional Language in Go]
 - [07 Defer and Error Handling]
 - [Cyberon Package]
 - [08 Concurrency - Goroutine and Channel](class08_.md)

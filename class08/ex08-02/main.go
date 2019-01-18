@@ -2,40 +2,35 @@ package main
 
 import "fmt"
 
-func a1() {
-	fmt.Println("\na1 loop start")
-	for i := 0; i < 3; i++ {
-		defer fmt.Print(i, " ")
-	}
-	fmt.Println("a1 loop end")
+// Scale ...
+type Scale interface {
+	ScaleBy(float64)
 }
 
-func a2() {
-	fmt.Println("\na2 loop start")
-	for i := 0; i < 3; i++ {
-		defer func() {
-			fmt.Print(i, " ") // warn: [go-vet] loop variable i captured by func literal
-		}()
-	}
-	fmt.Println("a2 loop end")
+// Point ...
+type Point struct {
+	X float64
+	Y float64
 }
 
-func a3() {
-	fmt.Println("\na3 loop start")
-	for i := 0; i < 3; i++ {
-		defer func(n int) {
-			fmt.Print(n, " ")
-		}(i)
-	}
-	fmt.Println("a3 loop end")
+// ScaleBy ...
+func (p *Point) ScaleBy(a float64) {
+	p.X *= a
+	p.Y *= a
+}
+
+// CallScale ...
+func CallScale(s Scale, a float64) {
+	s.ScaleBy(a)
 }
 
 func main() {
-	for i := 0; i < 3; i++ {
-		defer fmt.Printf("\n%d main end", i)
-	}
+	p := Point{100.0, 200.0}
 
-	a1() // 2 1 0
-	a2() // 3 3 3
-	a3() // 2 1 0
+	fmt.Println(p) // {100 200}
+	p.ScaleBy(10)
+	fmt.Println(p) // {1000 2000}
+	CallScale(&p, 10)
+	fmt.Println(p) // {10000 20000}
+	//CallScale(p, 10) // cannot use p (type Point) as type Scale in argument to CallScale: Point does not implement Scale (ScaleBy method has pointer receiver)
 }
