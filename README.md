@@ -25,7 +25,7 @@
 - [09 OOP in Go](class09/)
 - [10 Defer and Error Handling](class10/)
 - [Cyberon Package]
-- [08 Concurrency - Goroutine and Channel](class08_.md)
+- [11 Concurrency - Goroutine and Channel]
 - [09 Testing](class09_.md)
 - [10 Build and Dependency Management](class10_.md)
 - [11 flag and spf13 Cobra/Viper](class11_.md)
