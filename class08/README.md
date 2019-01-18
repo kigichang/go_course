@@ -21,90 +21,103 @@ type Chaincode interface {
 }
 ```
 
-## Differentence from Struct and Struct Pointer
+在 interface 內，也可以再宣告另一個 interface。
 
-Interface 與 Java 類似，用 struct 的 method 來實作 interface 指定的 method。這邊需注意的是，在實作 interface 的 method 時，是用 struct 還是 pointer.
+```go {.line-numbers}
+type ReadCloser interface {
+    Reader
+    Closer
+}
+```
 
-1. 用 **struct** 實作 interface method
+Go 的 `io.ReadCloser` 是由 `io.Reader` 與 `io.Closer` 組成。
 
-    ```go {.line-numbers}
-    package main
+## Differentence from Struct Value and Pointer
 
-    import "fmt"
+Interface 與 Java 類似，用 struct 的 method 來實作 interface 指定的 method。這邊需注意的是，在實作 interface 的 method 時，是用 value 還是 pointer.
 
-    // Scale ...
-    type Scale interface {
-        ScaleBy(float64)
-    }
+### Value Version
 
-    // Point ...
-    type Point struct {
-        X float64
-        Y float64
-    }
+```go {.line-numbers}
+package main
 
-    // ScaleBy ...
-    func (p Point) ScaleBy(a float64) {
-        p.X *= a
-        p.Y *= a
-    }
+import "fmt"
 
-    // CallScale ...
-    func CallScale(s Scale, a float64) {
-        s.ScaleBy(a)
-    }
+// Scale ...
+type Scale interface {
+    ScaleBy(float64)
+}
 
-    func main() {
-        p := Point{100.0, 200.0}
+// Point ...
+type Point struct {
+    X float64
+    Y float64
+}
 
-        fmt.Println(p) // {100 200}
-        p.ScaleBy(10)
-        fmt.Println(p) // {100 200}
-        CallScale(p, 10)
-        fmt.Println(p) // {100 200}
-    }
-    ```
+// ScaleBy ...
+func (p Point) ScaleBy(a float64) {
+    p.X *= a
+    p.Y *= a
+}
 
-1. 用 **pointer** 實作 interface method
+// CallScale ...
+func CallScale(s Scale, a float64) {
+    s.ScaleBy(a)
+}
 
-    ```go {.line-numbers}
-    package main
+func main() {
+    p := Point{100.0, 200.0}
 
-    import "fmt"
+    fmt.Println(p) // {100 200}
+    p.ScaleBy(10)
+    fmt.Println(p) // {100 200}
+    CallScale(p, 10)
+    fmt.Println(p) // {100 200}
+    CallScale(&p, 10)
+    fmt.Println(p) // {100 200}
+}
+```
 
-    // Scale ...
-    type Scale interface {
-        ScaleBy(float64)
-    }
+### Pointer Version
 
-    // Point ...
-    type Point struct {
-        X float64
-        Y float64
-    }
+```go {.line-numbers}
+package main
 
-    // ScaleBy ...
-    func (p *Point) ScaleBy(a float64) {
-        p.X *= a
-        p.Y *= a
-    }
+import "fmt"
 
-    // CallScale ...
-    func CallScale(s Scale, a float64) {
-        s.ScaleBy(a)
-    }
+// Scale ...
+type Scale interface {
+    ScaleBy(float64)
+}
 
-    func main() {
-        p := Point{100.0, 200.0}
+// Point ...
+type Point struct {
+    X float64
+    Y float64
+}
 
-        fmt.Println(p) // {100 200}
-        p.ScaleBy(10)
-        fmt.Println(p) // {1000 2000}
-        CallScale(&p, 10)
-        fmt.Println(p) // {10000 20000}
-        CallScale(p, 10) // cannot use p (type Point) as type Scale in argument to CallScale: Point does not implement Scale (ScaleBy method has pointer receiver)
-    }
-    ```
+// ScaleBy ...
+func (p *Point) ScaleBy(a float64) {
+    p.X *= a
+    p.Y *= a
+}
+
+// CallScale ...
+func CallScale(s Scale, a float64) {
+    s.ScaleBy(a)
+}
+
+func main() {
+    p := Point{100.0, 200.0}
+
+    fmt.Println(p) // {100 200}
+    p.ScaleBy(10)
+    fmt.Println(p) // {1000 2000}
+    CallScale(&p, 10)
+    fmt.Println(p) // {10000 20000}
+    CallScale(p, 10) // cannot use p (type Point) as type Scale in argument to CallScale: Point does not implement Scale (ScaleBy method has pointer receiver)
+}
+```
 
 ## Stringer interface
 

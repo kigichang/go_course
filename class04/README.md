@@ -119,64 +119,6 @@ fmt.Println(p.X == q.X && p.Y == q.Y) // "false"
 fmt.Println(p == q)                   // "false"
 ```
 
-### Struct Embedding and Anonymous Fields (移到 oop)
-
-struct 裏還可以再包含 struct。在程式寫作上，會有點麻煩。如下：
-
-```go {.line-numbers}
-type Point struct {
-    X, Y int
-}
-
-type Circle struct {
-    Center Point
-    Radius int
-}
-
-type Wheel struct {
-    Circle Circle
-    Spokes int
-}
-
-var w Wheel
-w.Circle.Center.X = 8
-w.Circle.Center.Y = 8
-w.Circle.Radius = 5
-w.Spokes = 20
-```
-
-可以修改成下面的寫法：
-
-```go {.line-numbers}
-type Circle struct {
-    Point
-    Radius int
-}
-
-type Wheel struct {
-    Circle
-    Spokes int
-}
-
-var w Wheel
-w.X = 8         // equivalent to w.Circle.Point.X = 8
-w.Y = 8         // equivalent to w.Circle.Point.Y = 8
-w.Radius = 5    // equivalent to w.Circle.Radius = 5
-w.Spokes = 20
-
-w = Wheel{Circle{Point{8, 8}, 5}, 20}
-
-w = Wheel{
-    Circle: Circle{
-        Point:  Point{X: 8, Y: 8},
-        Radius: 5,
-    },
-    Spokes: 20, // NOTE: trailing comma necessary here (and at Radius)
-}
-```
-
-struct 可以透過 **Anonymous Field** 來達到 OO 繼承的效果。
-
 ## JSON
 
 Go 有內建處理 JSON 的套件 `encoding/json`

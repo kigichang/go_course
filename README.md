@@ -22,7 +22,7 @@
 - [06 Functions](class06/)
 - [07 Methods](class07/)
 - [08 Interface](class08/)
-- [15 OOP in Go](class15_.md)
+- [09 OOP in Go](class09/)
 - [07 Defer and Error Handling]
 - [Cyberon Package]
 - [08 Concurrency - Goroutine and Channel](class08_.md)

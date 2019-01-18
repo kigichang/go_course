@@ -10,7 +10,7 @@
 
 Books:
 
-1. [The Go Programming Language](https://www.amazon.com/Programming-Language-Addison-Wesley-Professional-Computing-ebook/dp/B0184N7WWS)(https://www.gitbook.com/book/wizardforcel/gopl-zh/details)
+1. [The Go Programming Language](https://www.amazon.com/Programming-Language-Addison-Wesley-Professional-Computing-ebook/dp/B0184N7WWS)
 1. [Go Web Programming](https://www.manning.com/books/go-web-programming)
 1. [Go System Programming](https://www.packtpub.com/networking-and-servers/go-systems-programming)
 
@@ -121,8 +121,6 @@ Books:
 ## Arguemnts
 
 重覆上述的動作，sample code 如下：
-
-**ex01-02**:
 
 ```go {.line-numbers}
 package main
