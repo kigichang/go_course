@@ -23,7 +23,7 @@
 - [07 Methods](class07/)
 - [08 Interface](class08/)
 - [09 OOP in Go](class09/)
-- [07 Defer and Error Handling]
+- [10 Defer and Error Handling](class10/)
 - [Cyberon Package]
 - [08 Concurrency - Goroutine and Channel](class08_.md)
 - [09 Testing](class09_.md)

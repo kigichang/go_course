@@ -9,5 +9,5 @@ func main() {
 
 	defer fmt.Println("call defer")
 	fmt.Println("main end")
-	os.Exit(1)
+	os.Exit(0)
 }
