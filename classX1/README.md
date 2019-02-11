@@ -91,4 +91,5 @@ module cicd.icu/root/hello
 步驟整理：
 
 1. 編輯 **go.mod**
-2. 執行 `go mod download`
+1. 執行 `go mod download`
+1. 如果要整理使用的 package，並移除沒再使用的 package，可以用 `go mod tidy`
