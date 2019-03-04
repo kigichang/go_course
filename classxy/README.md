@@ -30,7 +30,7 @@ unsafe package 主要有三個 function 與一個 data type
 - data type:
   - type Pointer: 等同 void* in c. [Go reference to C](https://golang.org/cmd/cgo/#hdr-Go_references_to_C )
      > The C type void* is represented by Go's unsafe.Pointer
-  
+
 ### Sizeof and Alignof
 
 ```go
@@ -110,20 +110,42 @@ x, y, z 在 64-bit 系統下， alignment 都是 8 bytes. 但 x 的 size 是 24 
 [^word]: 在 32 bit 系統下，1 word = 4 bytes (32bit), 64 bit 是 8 bytes (64bit)
 [^src_sample]: [unsafe.Sizeof, Alignof 和 Offsetof](https://wizardforcel.gitbooks.io/gopl-zh/ch13/ch13-01.html )
   
-### unsafe.Pointer
+### unsafe.Pointer 與 uintptr
 
 unsafe.Pointer 可以是任意型別的指標。在 Golang 的 strong type 安全機制下，不同的資料型別與指標都不可以直接轉換，如：
   
 - 不同指標的值，即使是相同 bit 數，如 int64 和 float64。
 - 指標 與 uintptr 的值。
-  
+
 unsafe.Pointer 可以破壞 Go 的安全機制；unsafe.Pointer 的功能有：
   
 1. 任何資料型別的指標，都可以轉成 unsafe.Pointer。
 1. unsafe.Pointer 也可轉成任何資料型別的指標。
 1. unsafe.Pointer 可以轉成 uintptr，之後可以利用 uintptr 做指標位移。
 1. uintptr 可以轉成 unsafe.Pointer，但有風險。
-  
+
+eg:
+
+```go
+package main
+
+import (
+    "fmt"
+    "unsafe"
+)
+
+func main() {
+    tmp := []int{1, 2, 3}
+
+    ptr := uintptr(unsafe.Pointer(&tmp[0]))
+
+    ptr += unsafe.Sizeof(tmp[0])
+
+    snd := (*int)(unsafe.Pointer(ptr))
+    fmt.Println(*snd)
+}
+```
+
 unsafe.Pointer 一定要遵守[官網](https://golang.org/pkg/unsafe/#Pointer )提到的使用模式，官網有提到，如果沒有遵守的話，現在雖然沒問題，但在未來不一定正確。
   
 1. Conversion of a *T1 to Pointer to *T2，前提 T2 的所需的記憶體空間，要小於或等於 T1。如果 T2 > T1 的話，有可能在操作 T2 時，會造成溢位。
