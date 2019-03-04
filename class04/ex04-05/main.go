@@ -11,7 +11,7 @@ func main() {
 	type Movie struct {
 		Title  string
 		Year   int  `json:"released"`
-		Color  bool `json:"color,omitempty"`
+		Color  bool `json:"color"`
 		Actors []string
 	}
 
@@ -62,5 +62,10 @@ func main() {
 	}
 
 	fmt.Println("movie1", movie1)
+
+	title2 := []string{"A", "B", "C"}
+
+	titleBytes, err := json.Marshal(title2)
+	fmt.Println("titles: ", string(titleBytes))
 
 }

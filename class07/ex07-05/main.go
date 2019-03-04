@@ -11,6 +11,12 @@ func (p *Point) ScaleBy(factor float64) {
 	p.Y *= factor
 }
 
+// ScaleBy2
+func ScaleBy2(factor float64) {
+	fmt.Println("2: ", factor)
+	return
+}
+
 func main() {
 	p := Point{1, 2}
 	q := Point{3, 4}
@@ -26,6 +32,11 @@ func main() {
 
 	x = q.ScaleBy
 	x(20)
+	fmt.Println(p) // {1000 2000}
+	fmt.Println(q) // {60 80}
+
+	x = ScaleBy2
+	x(100)
 	fmt.Println(p) // {1000 2000}
 	fmt.Println(q) // {60 80}
 }

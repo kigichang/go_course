@@ -67,16 +67,14 @@ mod 的命名規則與原本 `go get` 相同。主要是由 `source_controll_ser
 
 像我們常用的 `github.com/spf13/viper` 或 `cicd.icu/cyberon/config`。在 GO 程式 import 時，需撰寫完整的 url。eg: `import github.com/spf13/viper` 或 `cicd.icu/cyberon/config`。
 
-原本 Go 下載 package 的方式，是使用 `go get` 的工具，如 `go get -u github.com/spf13/viper`，`go get` 工具會去下載並存在 `$GOPATH/src/`，如: `$GOPATH/src/github.com/spf13/viper`。如此撰寫 import 時，就會找到相對應的 package。
-
-因為我們自建的 gitlab 沒有使用 ssl, 因此需要在 git 設定檔 **YOUR_HOME/.gitconfig** 下，加入以下設定。
+因為我們自建的 gitlab 需要帳號/密碼登入，無法直接用 http , 因此需要在 git 設定檔 **YOUR_HOME/.gitconfig** 下，加入以下設定。
 
 ```text
 [url "[git@cicd.icu:10022]:"]
     insteadOf = http://cicd.icu/
 ```
 
-並在下載時，多加 `--insecure` 參數。eg: `go get -u --insecure cicd.icu/root/hello`。
+原本 Go 下載 package 的方式，是使用 `go get` 的工具，如 `go get -u github.com/spf13/viper`，`go get` 工具會去下載並存在 `$GOPATH/src/`，如: `$GOPATH/src/github.com/spf13/viper`。如此撰寫 import 時，就會找到相對應的 package，並在下載時，多加 `--insecure` 參數。eg: `go get -u --insecure cicd.icu/root/hello`。
 
 ### Mod
 

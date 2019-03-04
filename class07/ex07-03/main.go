@@ -21,4 +21,8 @@ func main() {
 	fmt.Println(q) // &{1 2}
 
 	(&Point{3, 4}).ScaleBy(100) // an pointer can be the receiver for value method.
+
+	var empty struct{}
+	fmt.Println(empty)
+
 }
