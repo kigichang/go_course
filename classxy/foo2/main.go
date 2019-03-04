@@ -1,9 +1,11 @@
 package main
 
-//#cgo LDFLAGS: -L. -lfoo -lpthread
-//#cgo CFLAGS: -framework CoreFoundation -framework Security
-//#include "cfoo.h"
-//#include "stdlib.h"
+/*
+#cgo LDFLAGS: -L./foo -lfoo -lpthread -lstdc++
+#cgo darwin CFLAGS: -framework CoreFoundation -framework Security
+#include "./foo/cfoo.h"
+#include "stdlib.h"
+*/
 import "C"
 import (
 	"fmt"

@@ -434,12 +434,33 @@ Swig 可以將 C/C++ 與其他高階語言(eg: PHP, Java, C#，Go) 等結合的�
     1. Global 變數，也會有 Get/Set 的對應。
     1. Global function 會改成第一個字母大寫的 function.
 
+### 自行封裝
+
+專案目錄 **$GOPATH/src/go_course/classxy/foo2**
+
+```text
+.
+├── foo
+│   ├── Makefile
+│   ├── cfoo.cpp
+│   ├── cfoo.h
+│   ├── foo.cpp
+│   └── foo.hpp
+└── main.go
+```
+
+**說明**:
+
+1. foo.cpp, foo.h C/C++ 程式碼: 有兩組 Class 定義，接下來就是要封裝這兩個 Class，讓 Go 使用。
+1. cfoo.h, cfoo.cpp: 封裝 foo 裏面的兩個 Class。
+1. main.go: 測試程式。
+
 ### Generate C library from Go
 
 以 **cicd.icu/cyberon/mrcp/stt** 為例。
 
-1. 請將 Go 的專案做成是應用程式的模式，也就是說需要一個 main.go 有 `func main()`，以及 package 是 `package main`。
-1. 在 Go 的源碼中，將要匯出給 C 用的 function，緊接在宣告行的上方，加入 `//export FUNC_NAME`，eg:
+1. 請將 Go 的專案做成是應用程式的模式，也就是說需要一個 main.go 有 `func main()`，function body 可以留空白；以及 package 是 `package main`。
+1. 在 Go 的源碼中，將要匯出給 C 用的 function，緊接在宣告行的上方，加入 `//export FUNC_NAME` (`//` 與 `export` 間，**不要留空白**)，eg:
 
     ```go
     //export Init
@@ -452,6 +473,7 @@ Swig 可以將 C/C++ 與其他高階語言(eg: PHP, Java, C#，Go) 等結合的�
 1. 在 compile 時，請如入 `-buildmode=c-xxxx`，來指定是要輸入動態或靜態連結 library.
     - c-archive: 靜態連結
     - c-shared: 動態連結
+1. compile 完成後，會自動產生 **.h** 檔案，再拿產出的 **.a** 或 **.so**，給 C 程式使用。
 
 ### CGo compile and link 參數
 
