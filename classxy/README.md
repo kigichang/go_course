@@ -400,16 +400,16 @@ void*              | &nbsp;          | unsafe.Pointer
 
 在 CGo 的 pseudo-package **"C"** 有[內建幾個函式](https://golang.org/cmd/cgo/#hdr-Go_references_to_C)，可以互轉 Go 與 C 的資料型別, 在 Go 轉成 C 的型別時，將 Go 的資料 clone 一份給 C 用，因此在使用完畢後，要記得 call C 的 `free` 將記憶體釋放。
 
-- func C.CString(string) *C.char
+- func C.CString(string) \*C.char
     Go string 轉 C 的 char*，**需要用 free**。
 
 - func C.CBytes([]byte) unsafe.Pointer
     Go byte slice 轉 C 的 void*, **需要用 free**。
 
-- func C.GoString(*C.char) string
+- func C.GoString(\*C.char) string
     C 的 char* 轉 Go string
 
-- func C.GoStringN(*C.char, C.int) string
+- func C.GoStringN(\*C.char, C.int) string
     C 的 char*，並指定長度， 轉 Go string
 
 - func C.GoBytes(unsafe.Pointer, C.int) []byte
