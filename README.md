@@ -24,10 +24,11 @@
 - [08 Interface](class08/)
 - [09 OOP in Go](class09/)
 - [10 Defer and Error Handling](class10/)
+- [11 Concurrency - Goroutine and Channel](class11/)
 - [11 Testing]
 - [X1 Build and Dependency Management](classX1/)
 - [X2 Cyberon Package]
-- [11 Concurrency - Goroutine and Channel]
+
 - [11 flag and spf13 Cobra/Viper](class11_.md)
 - [12 MySQL and Web (Gorilla web toolkit)](class12_.md)
 - [13 RESTful, Protobuf and gRPC](class13_.md)
