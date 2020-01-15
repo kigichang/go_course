@@ -66,7 +66,7 @@ var name = expression
     var b, f, s = true, 2.3, "four" // bool, float64, string
     ```
 
-1. 接收 return 值
+1. 接收 return 值，可 return 多組值。
 
     ```go {.line-numbers}
     var f, err = os.Open(name) // os.Open returns a file and an error
@@ -233,7 +233,7 @@ const (
 
 ## Tuple
 
-數組，進期的程式語言，大多有支援 tuple 功能，早期的則沒有。如果沒有支援 tuple 時，就需要用 class or struct 來封裝回傳。
+數組，近期的程式語言，大多有支援 tuple 功能，早期的則沒有。如果沒有支援 tuple 時，就需要用 class or struct 來封裝回傳。
 
 1. Tuple Assignment (1)
 
@@ -395,7 +395,7 @@ func main() {
 |                  | 需做轉型 | 擴展功能  |
 | ---------------- |:-------:|:-------:|
 | Type Declaration | yes     | yes     |
-| Type Alias      | no      | no      |
+| Type Alias       | no      | no      |
 
 ## Package and Imports
 
@@ -407,9 +407,9 @@ Go Package 概念跟 Java package, C/PHP namespace 類似。主要用意：
 
 package 命名時要注意，除了 `main` 之外，目錄的名稱要與 package 相同。
 
-import 的路徑，由 `$GOPATH/src` 以下目錄開始。
+~~import 的路徑，由 `$GOPATH/src` 以下目錄開始。~~
 
-比如有一個專案路徑 `gopl.io/ch1/`，package 命名 `helloworld`, 則開一個 `helloworld` 目錄。完整路徑 `$GOPATH/src/gopl.io/ch1/helloworld`
+比如有一個專案路徑 `gopl.io/ch1/`，package 命名 `helloworld`, 則開一個 `helloworld` 目錄。完整路徑 `YOUR_PROJECT_PATH/gopl.io/ch1/helloworld`，並在該目錄下，執行 `go mod init gopl.io/ch1/helloworld`
 
 import 則用
 
@@ -417,20 +417,29 @@ import 則用
 import "gopl.io/ch1/helloworld"
 ```
 
-### Package Initialization
+### Package Initialization (ex02-04)
 
 package 中，可以在某一個程式檔案，定義 `func init()`。當 package 被載入時，會先執行 `init` 的程式碼。
 
-#### 目錄結構：
+#### 目錄結構
 
 ```text
 .
 ├── main.go
+├── go.mod
 └── util
     └── util.go
 ```
 
-#### 程式碼：
+#### 程式碼
+
+- go.mod
+
+    ```go
+    module go_course/class02/ex02-04
+
+    go 1.13
+    ```
 
 - util.go
 
@@ -456,7 +465,7 @@ package 中，可以在某一個程式檔案，定義 `func init()`。當 packag
 
     import (
         "fmt"
-        "go_course/class02/ex02-03/util"
+        "go_course/class02/ex02_04/util"
     )
 
     func main() {
@@ -473,11 +482,11 @@ package 中，可以在某一個程式檔案，定義 `func init()`。當 packag
     hello cyberon
     ```
 
-## 變數 Visible
+## 變數 Visibiility
 
 Go 沒有 **private** and **public** 關鍵字，而是利用字母的**大**、**小**寫來區分 **private** 及 **public**。如果變數或 function 是**小寫**開頭，則為 **private**，反之，**大寫**就是 **public**。
 
-注意：在同 package 下，可以存取 struct 內的 private 變數。
+注意：**在同 package 下，可以存取 struct 內的 private 變數。**
 
 ## 變數 Scope
 

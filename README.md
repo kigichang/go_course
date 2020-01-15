@@ -1,7 +1,8 @@
 # Golang 學習筆記
 
-- [Source on Github](https://github.com/kigichang/golang)
-- [Publish on Gitbook](https://kigi.gitbooks.io/golang/content/)
+- GO 版本: Go 1.13
+- 開發環境: Mac OS
+- [Source on Github](https://github.com/kigichang/go_course)
 
 資料主要來自：
 

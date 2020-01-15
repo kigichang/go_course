@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"go_course/class02/ex02-03/util"
+	"go_course/class02/ex02_04/util"
 )
 
 func main() {
