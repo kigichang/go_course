@@ -20,7 +20,7 @@ Go 的 Data Type 分成四個類別：
 
 ## Zero Value
 
-每一種資料型別在宣告時，沒有給定值的話，則 Go 會給予一個初始值，這個初始值則稱為該型別的 **zero value**
+每一種資料型別在宣告時，沒有給定值的話，則 Go 會給予一個初始值，這個初始值則稱為該型別的 **zero value**。
 
 - int: 0
 - float: 0.0
@@ -30,7 +30,7 @@ Go 的 Data Type 分成四個類別：
 - array: 指定長度，內含 zero value.
 - reference type: **nil**
 
-**ex03-01**:
+**ex03_01**:
 
 ```go {.line-numbers}
 package main
@@ -200,7 +200,7 @@ func Join(a []string, sep string) string
 
 `rune` 是 unicode chacter 的概念，它的底層型別是 **int32** 也就是 4 bytes. 一般 string 操作單位是 **byte**。
 
-**ex03-02**:
+**ex03_02**:
 
 ```go {.line-numbers}
 package main
