@@ -45,6 +45,9 @@ const (
 )
 
 func main() {
+	var x int64 = 123_456_789
+	var y float64 = 12_345.678_9
+	fmt.Println(x, y)
 	fmt.Println(Zero, One, Two, Three)
 	fmt.Println(X, W, R)
 	fmt.Println(KB, MB, GB, TB, PB, EB, ZB, YB)
