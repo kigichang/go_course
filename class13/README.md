@@ -1,16 +1,20 @@
 # 13 Context
 
-`context` package 主要用在 goroutine 或 API 間的溝通，主要有兩個 root context
+`context` package 主要用在 goroutine 或 API 間的溝通，主要有兩個 root context：
 
 1. `context.TODO()`
 1. `context.Background()`
 
-及四個 function
+及四個 function：
 
 1. `WithCancel(parent Context)`
 1. `WithDeadline(parent Context, d time.Time)`
 1. `WithTimeout(parent Context, timeout time.Duration)`
 1. `WithValue(parent Context, key, val interface{})`
+
+可以使用 `.Done()` 取得 channel，並讀取 channel，讓程式停住 (Block)，等待 context 被取消 (呼叫 cancel，或 timeout, deadline 到)。
+
+## Context 注意事項
 
 >Package context defines the Context type, which carries deadlines, cancelation signals, and other request-scoped values across API boundaries and between processes.
 
@@ -70,25 +74,44 @@ func main() {
     deadlineContext, deadlineCancelFunc := context.WithDeadline(context.Background(), deadline)
     defer deadlineCancelFunc()
 
-    go contextDemo(context.WithValue(timeoutContext, contextKey("name"), "[Timeout Context]"))
-    go contextDemo(context.WithValue(cancelContext, contextKey("name"), "[Canncel Context]"))
-    go contextDemo(context.WithValue(deadlineContext, contextKey("name"), "[Deadline Context]"))
+    contextDemo(context.WithValue(timeoutContext, contextKey("name"), "[Timeout Context]"))
+    contextDemo(context.WithValue(cancelContext, contextKey("name"), "[Canncel Context]"))
+    contextDemo(context.WithValue(deadlineContext, contextKey("name"), "[Deadline Context]"))
 
     <-timeoutContext.Done()
     log.Println("timeout ...")
 
+    log.Println("cancel error:", cancelContext.Err())
     log.Println("canncel...")
     cancelFunc()
+    log.Println("cancel error:", cancelContext.Err())
 
     <-cancelContext.Done()
     log.Println("The cancel context has been cancelled...")
-
-    log.Println("cancel error:", cancelContext.Err())
 
     <-deadlineContext.Done()
     log.Println("The deadline context has been cancelled...")
 }
 ```
+
+結果：
+
+```text
+2020/01/16 14:18:41 [Timeout Context] has dealine: 2020-01-16 14:18:44
+2020/01/16 14:18:41 [Canncel Context] does not have dealine
+2020/01/16 14:18:41 [Deadline Context] has dealine: 2020-01-16 14:18:51
+2020/01/16 14:18:44 timeout ...
+2020/01/16 14:18:44 cancel error: <nil>
+2020/01/16 14:18:44 canncel...
+2020/01/16 14:18:44 cancel error: context canceled
+2020/01/16 14:18:44 The cancel context has been cancelled...
+2020/01/16 14:18:51 The deadline context has been cancelled...
+```
+
+說明：
+
+1. 使用 `.Done` 來等待 context 回應。
+1. 可使用回傳的 cancel 函式，取消 context。
 
 ### Context Parent-Child 關係
 
@@ -116,6 +139,16 @@ func main() {
     log.Println("ctx2:", ctx2.Err())
     log.Println("end")
 }
+```
+
+結果：
+
+```text
+2020/01/16 14:17:24 cancel 1
+2020/01/16 14:17:24 ctx1: context canceled
+2020/01/16 14:17:24 ctx2: context canceled
+2020/01/16 14:17:24 end
+2020/01/16 14:17:24 cancel 2
 ```
 
 **說明**:
