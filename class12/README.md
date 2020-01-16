@@ -82,7 +82,7 @@ func main() {
 
     注意：`c chan<- int` 是 **write only** channel。
 
-### Buffered Channel
+## Buffered Channel
 
 `c := make(chan int)` 宣告時，沒有指定 channel 的容量，因此在 read/write 時，會 block。在[上一例](#channel_with_goroutine)中，因為是用 goroutine 執行, 所以不會有問題。
 
@@ -118,23 +118,23 @@ func main() {
 執行結果，發生 deadlock：
 
 ```text
-2018/01/24 16:05:25 writing...
+2020/01/16 13:54:02 writing...
 fatal error: all goroutines are asleep - deadlock!
 
 goroutine 1 [chan send]:
 main.main()
-        /Users/kigi/Data/go/src/go_test/class13-1/main.go:32 +0xd6
+        main.go:13 +0xdb
 exit status 2
 ```
 
 此時，可以設定 channel 的容量，eg: `c := make(chan int, 1)`。則結果如下：
 
 ```text
-2018/01/24 16:08:08 writing...
-2018/01/24 16:08:08 written
-2018/01/24 16:08:08 reading
-2018/01/24 16:08:08 read  10
-2018/01/24 16:08:08 exit...
+2020/01/16 13:57:29 writing...
+2020/01/16 13:57:29 written
+2020/01/16 13:57:29 reading
+2020/01/16 13:57:29 read  10
+2020/01/16 13:57:29 exit...
 ```
 
 先執 write，資料放在 channel，供之後 read。但如果程式的順序，改成先 read 再 write 時，一樣會發生 deadlock。因為還沒寫資料，根本沒資料供 read。
@@ -165,15 +165,16 @@ func main() {
 結果：
 
 ```text
-2018/01/24 16:10:51 reading
+2020/01/16 13:58:46 reading
 fatal error: all goroutines are asleep - deadlock!
 
 goroutine 1 [chan receive]:
 main.main()
-        /Users/kigi/Data/go/src/go_test/class13-1/main.go:32 +0xdd
+        main.go:13 +0xe2
+exit status 2
 ```
 
-### Producer and Consumer Pattern (Pipeline)
+## Producer and Consumer Pattern (Pipeline)
 
 Producer/Consumer 是 channel 最常用的實作模型。概念是一端產出資料 (可能是從資料庫或大檔案讀取資料)，另一端運算資料。
 
@@ -238,6 +239,17 @@ func main() {
 eg:
 
 ```go {.line-numbers}
+package main
+
+import (
+    "log"
+    "sync"
+)
+
+var (
+    waitGroup = sync.WaitGroup{}
+)
+
 func producer(min, max int, c chan<- int) {
     defer waitGroup.Done()
     log.Println("producer start...")
@@ -248,10 +260,23 @@ func producer(min, max int, c chan<- int) {
     log.Println("producer end and close channel")
 }
 
+func consumer(x int, c <-chan int) {
+    defer waitGroup.Done()
+    count := 0
+
+    log.Println("comsumer ", x, " starting...")
+    for a := range c {
+        log.Println(x, " got ", a)
+        count++
+    }
+    log.Printf("consumer %d got %d times and end\n", x, count)
+}
+
 func main() {
     log.Println("start...")
     c := make(chan int)
-    defer close(c)              // 主程序關閉 channel
+    defer close(c)
+
     waitGroup.Add(1)
     go producer(1, 100, c)
 
@@ -269,39 +294,41 @@ func main() {
 結果：
 
 ```text
-2018/01/24 16:46:15 start...
-2018/01/24 16:46:15 comsumer  2  starting...
-2018/01/24 16:46:15 comsumer  1  starting...
-2018/01/24 16:46:15 producer start...
-2018/01/24 16:46:15 1  got  2
+2020/01/16 14:02:31 start...
+2020/01/16 14:02:31 comsumer  2  starting...
+2020/01/16 14:02:31 comsumer  1  starting...
+2020/01/16 14:02:31 producer start...
+2020/01/16 14:02:31 1  got  2
 ...
-2018/01/24 16:46:15 1  got  99
-2018/01/24 16:46:15 producer end and close channel
+2020/01/16 14:02:31 1  got  98
+2020/01/16 14:02:31 producer end and close channel
+2020/01/16 14:02:31 1  got  99
+2020/01/16 14:02:31 2  got  97
 fatal error: all goroutines are asleep - deadlock!
 
 goroutine 1 [semacquire]:
-sync.runtime_Semacquire(0x11618ac)
-        /usr/local/go/src/runtime/sema.go:56 +0x39
-sync.(*WaitGroup).Wait(0x11618a0)
-        /usr/local/go/src/sync/waitgroup.go:131 +0x72
+sync.runtime_Semacquire(0x1199b68)
+        /usr/local/go/src/runtime/sema.go:56 +0x42
+sync.(*WaitGroup).Wait(0x1199b60)
+        /usr/local/go/src/sync/waitgroup.go:130 +0x64
 main.main()
-        /Users/kigi/Data/go/src/go_test/class13-1/main.go:63 +0x193
+        main.go:48 +0x198
 
-goroutine 6 [chan receive]:
-main.consumer(0x1, 0xc420072060)
-        /Users/kigi/Data/go/src/go_test/class13-1/main.go:43 +0x237
+goroutine 19 [chan receive]:
+main.consumer(0x1, 0xc000060060)
+        main.go:27 +0x1fd
 created by main.main
-        /Users/kigi/Data/go/src/go_test/class13-1/main.go:58 +0x13f
+        main.go:43 +0x144
 
-goroutine 7 [chan receive]:
-main.consumer(0x2, 0xc420072060)
-        /Users/kigi/Data/go/src/go_test/class13-1/main.go:43 +0x237
+goroutine 20 [chan receive]:
+main.consumer(0x2, 0xc000060060)
+        main.go:27 +0x1fd
 created by main.main
-        /Users/kigi/Data/go/src/go_test/class13-1/main.go:61 +0x183
+        main.go:46 +0x188
 exit status 2
 ```
 
-### Actor Pattern (Pipeline)
+## Actor Pattern (Pipeline)
 
 Actor Pattern 與 Producer/Consumer Pattern 類似，概念是每一個 Actor 只負責固定的工作。Producer 必須將資料，傳到每個 Actor。以下的範例，是模擬訂單成立後，傳給兩個 Actor，一個負責計算每個分類的業績，另一個計算全站的業績。
 
@@ -320,7 +347,7 @@ var (
     waitGroup = sync.WaitGroup{}
 )
 
-// Data ...
+// Order ...
 type Order struct {
     Category string
     Amount   float64
@@ -496,7 +523,6 @@ func main() {
     time.Sleep(1 * time.Second)
     close(finishChannel)
     log.Println("end")
-
 }
 ```
 
@@ -527,23 +553,23 @@ func main() {
 #### 執行結果
 
 ```text
-2018/01/29 15:42:14 random channel got  13
-2018/01/29 15:42:14 time out
-2018/01/29 15:42:15 random channel got  14
-2018/01/29 15:42:15 time out
-2018/01/29 15:42:16 finish channel got  false
-2018/01/29 15:42:16 random channel got  19
-2018/01/29 15:42:16 time out
-2018/01/29 15:42:17 random channel got  97
-2018/01/29 15:42:17 time out
-2018/01/29 15:42:18 random channel got  61
-2018/01/29 15:42:18 time out
-2018/01/29 15:42:19 random channel got  79
-2018/01/29 15:42:19 time out
-2018/01/29 15:42:20 random channel got  2
-2018/01/29 15:42:20 time out
-2018/01/29 15:42:21 finish channel got  true
-2018/01/29 15:42:21 createNumber end
-2018/01/29 15:42:21 readNumber end
-2018/01/29 15:42:22 end
+2020/01/16 14:08:28 random channel got  98
+2020/01/16 14:08:29 time out
+2020/01/16 14:08:29 random channel got  65
+2020/01/16 14:08:30 time out
+2020/01/16 14:08:30 random channel got  33
+2020/01/16 14:08:31 time out
+2020/01/16 14:08:31 finish channel got  false
+2020/01/16 14:08:31 random channel got  92
+2020/01/16 14:08:32 time out
+2020/01/16 14:08:32 random channel got  46
+2020/01/16 14:08:33 time out
+2020/01/16 14:08:33 random channel got  57
+2020/01/16 14:08:34 time out
+2020/01/16 14:08:34 random channel got  57
+2020/01/16 14:08:35 time out
+2020/01/16 14:08:35 finish channel got  true
+2020/01/16 14:08:35 createNumber end
+2020/01/16 14:08:35 readNumber end
+2020/01/16 14:08:36 end
 ```
