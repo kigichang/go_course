@@ -3,6 +3,7 @@
 - GO 版本: Go 1.13
 - 開發環境: Mac OS
 - [Source on Github](https://github.com/kigichang/go_course)
+- 文件使用 Markdown 撰寫，建議使用 [Markdown Preview Enhanced](https://github.com/shd101wyy/markdown-preview-enhanced) 閱讀
 
 資料主要來自：
 
