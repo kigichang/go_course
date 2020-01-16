@@ -293,7 +293,7 @@ fmt.Println(bahamut.Skill()) // bahamut has fireball and fly fast
 
 ## Visible
 
-在 Go 沒有 `public`, `protected`, 及 `private` 等關鍵字，是用名稱**第一個字母大小寫**，來分 public 還是 private. **大寫** 是 public, 小寫是 **private**。
+在 Go 沒有 `public`, `protected`, 及 `private` 等關鍵字，是用名稱**第一個字母大小寫**，來分 public 還是 private. **大寫** 是 **public**, **小寫**是 **private**。
 
 重點整理：
 

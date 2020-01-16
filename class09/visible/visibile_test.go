@@ -2,9 +2,9 @@ package visible_test
 
 import (
 	"fmt"
-	"go_course/class09/visible"
 	"os"
 	"testing"
+	"visible"
 )
 
 func TestMain(m *testing.M) {

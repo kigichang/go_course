@@ -23,7 +23,7 @@ func ResetProduct(p *Product) {
 }
 
 // GetSupplier ...
-func GetSupplier(id int) *supplier {
+func GetSupplier(id int) *supplier { // exported func GetSupplier returns unexported type *visible.supplier, which can be annoying to use
 	return &supplier{id, fmt.Sprintf("test-%d", id)}
 }
 
