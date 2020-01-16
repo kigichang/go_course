@@ -18,21 +18,17 @@ func test(x int, wait *sync.WaitGroup) {
 func main() {
 
 	log.Println("Start...")
-	waitGroup := sync.WaitGroup{}
+	wg := &sync.WaitGroup{}
 
-	waitGroup.Add(1)
+	wg.Add(1)
+	go test(10, wg)
 
-	go test(10, &waitGroup)
+	wg.Add(1)
+	go test(11, wg)
 
-	waitGroup.Add(1)
+	wg.Add(1)
+	go test(12, wg)
 
-	go test(11, &waitGroup)
-
-	waitGroup.Add(1)
-
-	go test(12, &waitGroup)
-
-	waitGroup.Wait()
+	wg.Wait()
 	log.Println("Exit....")
-
 }
