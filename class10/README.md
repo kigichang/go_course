@@ -2,15 +2,35 @@
 
 ## Deferred function call
 
-在 code block 或 function 結束前，一定要執行的程式碼。**defer** 的呼叫順序是 **stack** 的 LIFO (Last In First Out)，並且利用當下的變數值來執行。
+在 code block 或 function 結束後，一定會執行的程式碼。**defer** 的呼叫順序是 **stack** 的 LIFO (Last In First Out)，並且利用當下的變數值來執行。
 
 ```go {.line-numbers}
+package main
+
+import "fmt"
+
 func double(x int) (result int) {
     defer func() { fmt.Printf("double(%d) = %d\n", x, result) }()
+    fmt.Println("before return")
     return x + x
 }
 
-double(4) // double(4) = 8
+func main() {
+    defer func() {
+        fmt.Printf("defer end")
+    }()
+    double(4)
+    fmt.Println("main end")
+}
+```
+
+結果：
+
+```text
+before return
+double(4) = 8
+main end
+defer end
 ```
 
 在有關 I/O 處理時，一定會用到。
@@ -98,45 +118,6 @@ os.Exit(0)
 ```
 
 ## Error Handling, Panic, Revcover
-
-### errors
-
-`error` 是 Go 內建的 data type，它是一個 interface, 定義如下：
-
-```go {.line-numbers}
-type error interface {
-    Error() string
-}
-```
-
-因此，要自定義 error，只要實作這個 interface 即可。
-
-```go {.line-numbers}
-type MyError struct {
-    Code int
-    Message string
-}
-
-func (e *MyError) Error() string {
-    return fmt.Sprintf("%d: %s", e.Code, e.Message)
-}
-```
-
-在 Go 的 function 設計中，很多都會回傳包含 error 的 tuple。eg:
-
-```go {.line-numbers}
-resp, err := http.Get(url)
-
-if err != nil {
-    return nil, err
-}
-```
-
-在 Go 的 Code style 規範中，如果 function 會回傳 tuple 且含有 error 時，請把 error 放在 tuple 最後一個欄位。
-
-```go {.line-numbers}
-func FindMember(id int) (*Member, error)
-```
 
 ### Panic
 
@@ -228,4 +209,123 @@ defer 1
 defer 2
 defer 3
 internal error: runtime error: integer divide by zero
+```
+
+### Errors
+
+`error` 是 Go 內建的 data type，它是一個 interface, 定義如下：
+
+```go {.line-numbers}
+type error interface {
+    Error() string
+}
+```
+
+因此，要自定義 error，只要實作這個 interface 即可。
+
+```go {.line-numbers}
+type MyError struct {
+    Code int
+    Message string
+}
+
+func (e *MyError) Error() string {
+    return fmt.Sprintf("%d: %s", e.Code, e.Message)
+}
+```
+
+在 Go 的 function 設計中，很多都會回傳包含 error 的 tuple。eg:
+
+```go {.line-numbers}
+resp, err := http.Get(url)
+
+if err != nil {
+    return nil, err
+}
+```
+
+在 Go 的 Code style 規範中，如果 function 會回傳 tuple 且含有 error 時，請把 error 放在 tuple 最後一個欄位。
+
+```go {.line-numbers}
+func FindMember(id int) (*Member, error)
+```
+
+#### Errors in Go 1.13
+
+在 Go 1.13 的版本，Error 新增了 Wrap 另一個 error 的功能。詳細可看：[Working with Errors in Go 1.13](https://blog.golang.org/go1.13-errors)
+
+1. `fmt.Errorf` 可使用 `%w` 來包裝另一個 error
+1. 新增 `errors.As`, `errors.Is`, `errors.Unwrap`
+    - `errors.As`: 用來判斷是那種 data type。
+    - `errors.Is`: 用來判斷是否是某個 error。
+    - `errors.Unwrap`: 取得包裝的 error, 如果沒有，則回傳 nil。
+
+```go
+package main
+
+import (
+    "errors"
+    "fmt"
+)
+
+// MyError ...
+type MyError struct {
+    Code    int
+    Message string
+}
+
+func (e *MyError) Error() string {
+    return fmt.Sprintf("%d: %s", e.Code, e.Message)
+}
+
+func main() {
+    myErr := &MyError{
+        Code:    100,
+        Message: "error message",
+    }
+    var ptrMyErr *MyError
+
+    err := fmt.Errorf("test error: %w", myErr)
+    fmt.Println("err is myErr:", errors.Is(err, myErr))
+    fmt.Println("err as MyError type:", errors.As(err, &ptrMyErr))
+
+    otherErr := fmt.Errorf("other error: %w", errors.New("another error"))
+    fmt.Println("otherErr is myErr:", errors.Is(otherErr, myErr))
+    fmt.Println("otherErr as MyError type:", errors.As(otherErr, &ptrMyErr))
+
+    testErr := errors.Unwrap(err)
+
+    if testErr == nil {
+        fmt.Println("no internal error")
+    } else {
+        fmt.Println(testErr.Error())
+    }
+
+    testErr = errors.Unwrap(otherErr)
+    if testErr == nil {
+        fmt.Println("no internal error")
+    } else {
+        fmt.Println(testErr.Error())
+    }
+
+    testErr = errors.Unwrap(errors.New("error"))
+    if testErr == nil {
+        fmt.Println("no internal error")
+    } else {
+        fmt.Println(testErr.Error())
+    }
+
+}
+```
+
+結果：
+
+```text
+err is myErr: true
+err as MyError type: true
+otherErr is myErr: false
+otherErr as MyError type: false
+100: error message
+another error
+no internal error
 ```
