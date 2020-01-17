@@ -42,11 +42,11 @@
 - [15 flag and spf13 Cobra/Viper](class15/)
 - [16 MySQL](class16/)
 - [17 Web (Gorilla web toolkit)](class17/)
-- [18 RESTful, Protobuf and gRPC](class13_.md)
-- [19 Reflection and Struct Tag](class14_.md)
-- [20 Cowork with C/C++](classxy/)
-- [21 Go mobile](class20)
-- [22 Go WebAssembly](class21)
+- [18 RESTful, Protobuf and gRPC](class18/)
+- [19 Reflection and Struct Tag](class19/)
+- [20 Cowork with C/C++](class20/)
+- [21 Go mobile](class21/)
+- [22 Go WebAssembly](class22/)
 
 ## 新增
 
