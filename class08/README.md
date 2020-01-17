@@ -12,8 +12,6 @@ type Name interface {
 }
 ```
 
-eg:
-
 ```go {.line-numbers}
 type Chaincode interface {
     Init(stub ChaincodeStubInterface) pb.Response
@@ -128,8 +126,6 @@ type Stringer interface {
     String() string
 }
 ```
-
-eg:
 
 ```go {.line-numbers}
 type Point struct {
