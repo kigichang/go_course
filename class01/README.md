@@ -1,6 +1,7 @@
 # 01 開發環境與語言簡介
 
-寫 Go 建議用 Git 當 source control. 基本上，Go 相關的套件，絕大部分放在 Github 上。本文件是使用 Go 1.13 以上的版本，會使用 go module 來管理 package。
+寫 Go 建議用 Git 當 source control。基本上，Go 相關的套件，絕大部分放在 Github 上。  
+本文件是使用 Go 1.13 以上的版本，會使用 go module 來管理 package。
 
 資源：
 
@@ -50,10 +51,11 @@ Books:
 - bin: 主要放 Go 相關的工具程式，及專案的執行檔
 - pkg: 編譯過程會產生的中間檔
 - src: 放 source code.
+- 使用 Go Module 的話，則專案不需要放在 GOPATH 下。
 
 ### Soruce code 放法
 
-1. 在 src 下，每個專案自己開一個目錄。自己有各自的 git repo。
+1. 每個專案自己開一個目錄。自己有各自的 git repo。
 1. 專案的主目錄下，每個 package 開一個目錄。
 1. 一個目錄只能有一個 package 及測試的 package。package 名稱建議要與目錄名稱相同；如此比較好維護程式碼，想找某個 package 時，只要去找相對應的目錄即可。
 
