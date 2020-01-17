@@ -8,7 +8,7 @@ channel 的注意事項：
 1. 一個 channel 只能包含一種 data type
 1. channel 當作參數傳給 function 時，最好指定是要做 read or write。
 
-eg:
+## Channel
 
 ```go {.line-numbers}
 package main
@@ -84,9 +84,9 @@ func main() {
 
 ## Buffered Channel
 
-`c := make(chan int)` 宣告時，沒有指定 channel 的容量，因此在 read/write 時，會 block。在[上一例](#channel_with_goroutine)中，因為是用 goroutine 執行, 所以不會有問題。
+`c := make(chan int)` 宣告時，沒有指定 channel 的容量，因此在 read/write 時，會 block。在上例中，因為是用 goroutine 執行, 所以不會有問題。
 
-eg:
+### Deadlock 1: Reading/Writing with Non-Buffered Channel
 
 ```go {.line-numbers}
 package main
@@ -137,9 +137,11 @@ exit status 2
 2020/01/16 13:57:29 exit...
 ```
 
-先執 write，資料放在 channel，供之後 read。但如果程式的順序，改成先 read 再 write 時，一樣會發生 deadlock。因為還沒寫資料，根本沒資料供 read。
+先執 write，資料放在 channel，供之後 read。
 
-eg:
+### Deadlock 2: Reading Before Writing with Buffered Channel
+
+但如果程式的順序，改成先 read 再 write 時，一樣會發生 deadlock。因為還沒寫資料，根本沒資料供 read。
 
 ```go {.line-numbers}
 func main() {
@@ -178,7 +180,7 @@ exit status 2
 
 Producer/Consumer 是 channel 最常用的實作模型。概念是一端產出資料 (可能是從資料庫或大檔案讀取資料)，另一端運算資料。
 
-eg 利用 goroutine 執行 1 個 producer 及 2 個 consumer:
+### 利用 goroutine 執行 1 個 producer 及 2 個 consumer
 
 ```go {.line-numbers}
 package main
@@ -234,9 +236,9 @@ func main() {
 
 與先前的範例最大不同是，這次關閉 channel 是在 `producer` 執行，而非主程序，也就是說在產生完資料後，就關閉 channel，之後就不能再寫入。而 `consumer` 端，在 channel 資料讀完後，就會跳出 for-range 的迴圈而執行完畢。
 
-如果不在 `producer` 關閉 channel，而是在主程序，則會發生 deadlock。
+#### Deadlock: Closing Channel in Main Instead of Producer
 
-eg:
+如果不在 `producer` 關閉 channel，而是在主程序，則會發生 deadlock。
 
 ```go {.line-numbers}
 package main
@@ -331,8 +333,6 @@ exit status 2
 ## Actor Pattern (Pipeline)
 
 Actor Pattern 與 Producer/Consumer Pattern 類似，概念是每一個 Actor 只負責固定的工作。Producer 必須將資料，傳到每個 Actor。以下的範例，是模擬訂單成立後，傳給兩個 Actor，一個負責計算每個分類的業績，另一個計算全站的業績。
-
-eg:
 
 ```go {.line-numbers}
 package main
@@ -526,7 +526,7 @@ func main() {
 }
 ```
 
-### 說明
+### Select and Timeout 說明
 
 #### createNumber
 
