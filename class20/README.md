@@ -444,7 +444,7 @@ func main() {
     1. interface 的檔名，要與 package 名稱相同
     1. 因為是 go build 會自定 module 名稱，因此檔案中的 `module myfoo` 就無用
     1. interface 的寫法，就把 C++ 的 header 放入
-    ~~1. 如果想看中繼檔，可到 `$WORK` 目錄。eg: `/var/folders/5t/jkthvjgn0gxc7k98wczh5k1c0000gn/T/go-build519318596/b023/`~~
+    1. 如果想看中繼檔，可到 `$WORK` 目錄。eg: `/var/folders/5t/jkthvjgn0gxc7k98wczh5k1c0000gn/T/go-build519318596/b023/`
 - swig 封裝原則
     1. C++ 的 class 會轉成 Go interface
     1. class 的 public member data 會產生對應的 Get 及 Set Functions.
