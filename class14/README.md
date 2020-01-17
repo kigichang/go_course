@@ -13,7 +13,7 @@ VSCode Go Plugins 設定：
 }
 ```
 
-eg:
+## 目錄與檔案
 
 ```text
 .
@@ -23,7 +23,7 @@ eg:
 
 測試 function 命名是以 **Test** 開頭，通常會針對要測試的 function 來命名，比如：有一個 `Sum` 的 function, 測試 `Sum` 的 function 則命名為 `TestSum`。
 
-util.go
+### util.go
 
 ```go { .line-numbers }
 package util
@@ -50,7 +50,7 @@ func Sum(x ...int) int {
 }
 ```
 
-util_test.go
+### util_test.go
 
 ```go { .line-numbers }
 package util_test
@@ -141,8 +141,6 @@ ok      util    0.005s
 
 很多情況下，unit test 會需要先產生測試資料，在完成後，刪除測試資料。此時，撰寫 unit test 就好像在寫一個完整的執行程式，此時就會用到 `testing.M`.
 
-eg:
-
 ```go { .line-numbers }
 func TestSum(t *testing.T) {
 
@@ -167,8 +165,6 @@ func TestMain(m *testing.M) {
 ## Benchmark
 
 Go Unit Test 套件，也可以做 benchmark 測試，程式碼撰寫在 `xxx_test.go` 中，function 命名與 Test 類似，以 **Benchmark** 開頭。
-
-eg:
 
 ```go { .line-numbers }
 func BenchmarkSum(b *testing.B) {
@@ -197,10 +193,8 @@ ok      go_test/class10 2.421s
 
 **Example** 開頭的 function 也可用來測試程式，主要是比對輸出是否正確。在程式碼中，需加入一段**註解**來說明該程式正確的輸出結果為何？
 
-- // Output: 比對輸出結果，且順序都要一致。
-- // Unordered Output: 比對輸出結果，但順序可以不同。
-
-eg:
+- `// Output`: 比對輸出結果，且順序都要一致。
+- `// Unordered Output`: 比對輸出結果，但順序可以不同。
 
 ```go {.line-numbers}
 func ExampleSum() {
