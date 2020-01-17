@@ -1,6 +1,6 @@
 # 13 Context
 
-`context` package 主要用在 goroutine 或 API 間的溝通，主要有兩個 root context：
+`context` package 主要用在 goroutine 或 API 間的溝通。主要有兩個 root context：
 
 1. `context.TODO()`
 1. `context.Background()`
@@ -108,8 +108,6 @@ func main() {
 2020/01/16 14:18:51 The deadline context has been cancelled...
 ```
 
-說明：
-
 1. 使用 `.Done` 來等待 context 回應。
 1. 可使用回傳的 cancel 函式，取消 context。
 
@@ -151,8 +149,6 @@ func main() {
 2020/01/16 14:17:24 cancel 2
 ```
 
-**說明**:
-
 1. 當 `ctx1` 的 cancel function `cancel1` 被呼叫時，child `ctx2` 也會一併被取消
 1. 即使 `ctx2` 已經被取消了，也記得呼叫 `ctx2` 的 cancel function `cancel2`。
 
@@ -160,7 +156,7 @@ func main() {
 
 以下的程式，摸擬有多個 channel 一直接受資料，再匯流到一個 channel 來讀取。當發生 timeout (5 sec.) 時，結果程式。主要是練習 `context` 及 `reflect.Select`。
 
-**資料匯流**:
+### 資料匯流
 
 ```mermaid
 graph LR
@@ -172,7 +168,7 @@ channel_2 --> out;
 channel_3 --> out;
 ```
 
-**channel 與 relect.Select**:
+### Channel 與 reflect.Select
 
 ```mermaid
 graph LR
@@ -182,7 +178,7 @@ Channel_2 --> reflect.Select;
 Channel_3 --> reflect.Select;
 ```
 
-sample code:
+### Sample Code
 
 ```go {.line-numbers}
 package main
@@ -284,8 +280,6 @@ func main() {
 
 }
 ```
-
-**說明**:
 
 1. 可用使用 `reflect.Select` 及 `reflect.SelectCase` 來控制不固定數量的 channel。請見 `ReadAll`.
     1. `i, v, ok := reflect.Select(cases)`: 如果其中有一個 channel 被關閉時，v 會是 zero-value, ok 會是 `false`
