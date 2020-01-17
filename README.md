@@ -45,8 +45,8 @@
 - [18 RESTful, Protobuf and gRPC](class18/)
 - [19 Reflection and Struct Tag](class19/)
 - [20 Cowork with C/C++](class20/)
-- [21 Go mobile](class21/)
-- [22 Go WebAssembly](class22/)
+- [21 Go WebAssembly](class21/)
+- [22 Go mobile](class22/)
 
 ## 新增
 
