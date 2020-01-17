@@ -37,8 +37,6 @@ func main() {
 
 在定義 method 也可以使用 struct pointer。
 
-eg:
-
 ```go {.line-numbers}
 package main
 
