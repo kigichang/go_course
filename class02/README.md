@@ -40,13 +40,13 @@ panic  recover
 var name type = expression
 ```
 
-不給初始值時，可以省略 **= expression**。如下：
+#### 不給初始值時，可以省略 `= expression`
 
 ```go
 var name type
 ```
 
-給初始值時，則可以省略 **type**。如下：
+#### 給初始值時，則可以省略 ==type==
 
 ```go
 var name = expression
@@ -74,7 +74,7 @@ var name = expression
 
 ### 簡寫
 
-宣告時，省略 `var`。
+#### 宣告時，省略 `var`
 
 ```go {.line-numbers}
 name := expression
@@ -242,7 +242,7 @@ const (
 
 ## Tuple
 
-數組，近期的程式語言，大多有支援 tuple 功能，早期的則沒有。如果沒有支援 tuple 時，就需要用 class or struct 來封裝回傳。
+近期的程式語言，大多有支援 tuple 功能，早期的則沒有。如果沒有支援 tuple 時，就需要用 class or struct 來封裝回傳。
 
 1. Tuple Assignment (1)
 
@@ -272,17 +272,15 @@ const (
     }
     ```
 
-## type Keyword
+## ==type== Keyword
 
-在 Go 可以使用 **type** 來宣告一個新的 data type，或幫舊的 data type 取一個別名，來增加程式碼的可讀性。
+在 Go 可以使用 `type` 來宣告一個新的 data type，或幫舊的 data type 取一個別名，來增加程式碼的可讀性。
 
 ### Type Declaration
 
-可以使用 **type** 來宣告一個新的 data type，通常用在宣告 struct 或 interface。我們也可以使用 **type** 的擴充既有型別的功能。
+可以使用 `type` 來宣告一個新的 data type，通常用在宣告 struct 或 interface。我們也可以使用 `type` 的擴充既有型別的功能。
 
-eg:
-
-1. 華氏、攝氏型別宣告與轉換
+#### 華氏、攝氏型別宣告與轉換
 
 ```go {.line-numbers}
 // Celsius ...
@@ -426,7 +424,7 @@ import 則用
 import "gopl.io/ch1/helloworld"
 ```
 
-### Package Initialization (ex02-04)
+### Package Initialization
 
 package 中，可以在某一個程式檔案，定義 `func init()`。當 package 被載入時，會先執行 `init` 的程式碼。
 
@@ -445,7 +443,7 @@ package 中，可以在某一個程式檔案，定義 `func init()`。當 packag
 - go.mod
 
     ```go
-    module go_course/class02/ex02-04
+    module ex02_04
 
     go 1.13
     ```
@@ -473,8 +471,8 @@ package 中，可以在某一個程式檔案，定義 `func init()`。當 packag
     package main
 
     import (
+        "ex02_04/util"
         "fmt"
-        "go_course/class02/ex02_04/util"
     )
 
     func main() {

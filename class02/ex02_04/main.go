@@ -1,8 +1,8 @@
 package main
 
 import (
+	"ex02_04/util"
 	"fmt"
-	"go_course/class02/ex02_04/util"
 )
 
 func main() {
