@@ -78,13 +78,11 @@ fmt.Println(summer) // ["June" "July" "August"]
 
 ![Slice](slice.png)
 
-- 記憶體處理
+#### 記憶體管理
 
 由於 Array, Struct 都**不是** reference type，因此在傳入 function 時，都會 clone 一份新的資料，給 function 使用，也因此如果 array/struct 的資料很龐大時，就會造成記憶體上的浪費。因此在設計上，function 的參數有 array 時，可以改用 slice, struct 請用 pointer。
 
 由於 slice 是用 pointer 指到 array, 因此修改 slice 的值時，也會異動到原本的 array.
-
-eg:
 
 ```go {.line-numbers}
 package main
@@ -118,7 +116,7 @@ func main() {
 }
 ```
 
-### Slice Append
+##### Slice Append
 
 可以使用 `append` 新增資料進 slice
 
