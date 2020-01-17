@@ -1,14 +1,12 @@
 # 06 Functions
 
-語法：
+## 宣告
 
 ```go {.line-numbers}
 func name(parameter-list) (result-list) {
     body
 }
 ```
-
-## 宣告
 
 ```go {.line-numbers}
 func hypot(x float64, y float64) float64 {
@@ -99,77 +97,76 @@ Go 在傳遞參數時，是以 **by value** 的方式進行，也就是說在傳
 此時要特別注意傳入的資料型別：
 
 - Aggregate Types (Array, Struct)，在 Java 的定義下，是屬於 Value Types，也就是說會產生一筆新的資料給 function，function 做任何修改，都**不會**異動到原本的資料，如果 array/struct 資料很龐大時，會造成記憶體的浪費。
-
 - Reference Types (Pointer, Slice, Map, Function, Channel)，一樣在傳入 function 時，會複製新的值給 function，只是這新的值，只是 copy 原本的參照值(reference, 可以當作記憶體位址)，因此 function 做任何修改時，也都是透過原來的參照值在做資料異動，會修改到原本的資料，要特別小心。
 
-1. pass by value with struct and struct pointer
+### Pass by Value with Struct and Struct Pointer
 
-    ```go {.line-numbers}
-    package main
+```go {.line-numbers}
+package main
 
-    import "fmt"
+import "fmt"
 
-    // Person ...
-    type Person struct {
-        Age  int
-        Name string
+// Person ...
+type Person struct {
+    Age  int
+    Name string
+}
+
+func test(p Person) {
+    p.Age++
+    p.Name += " by test"
+}
+
+func testByPtr(p *Person) {
+    p.Age++
+    p.Name += " by test"
+}
+
+func main() {
+    p := Person{
+        Age:  5,
+        Name: "Test",
     }
 
-    func test(p Person) {
-        p.Age++
-        p.Name += " by test"
+    fmt.Println(p) // {0 Test}
+    test(p)        // 用原本的 struct
+    fmt.Println(p) // {0 Test}
+
+    testByPtr(&p)  // 改用 pointer
+    fmt.Println(p) // {1 Test by test}
+}
+```
+
+### Pass by Value with Aray and Slice
+
+```go {.line-numbers}
+package main
+
+import "fmt"
+
+func arrTest(a [3]int) {
+    for i, x := range a {
+        a[i] = x + 1
     }
+}
 
-    func testByPtr(p *Person) {
-        p.Age++
-        p.Name += " by test"
+func arrTestBySlice(a []int) {
+    for i, x := range a {
+        a[i] = x + 1
     }
+}
 
-    func main() {
-        p := Person{
-            Age:  5,
-            Name: "Test",
-        }
+func main() {
+    a := [3]int{1, 2, 3}
 
-        fmt.Println(p) // {0 Test}
-        test(p)        // 用原本的 struct
-        fmt.Println(p) // {0 Test}
+    fmt.Println(a) // [1 2 3]
+    arrTest(a)     // 用原本的 array
+    fmt.Println(a) // [1 2 3]
 
-        testByPtr(&p)  // 改用 pointer
-        fmt.Println(p) // {1 Test by test}
-    }
-    ```
-
-1. pass by value with aray and slice
-
-    ```go {.line-numbers}
-    package main
-
-    import "fmt"
-
-    func arrTest(a [3]int) {
-        for i, x := range a {
-            a[i] = x + 1
-        }
-    }
-
-    func arrTestBySlice(a []int) {
-        for i, x := range a {
-            a[i] = x + 1
-        }
-    }
-
-    func main() {
-        a := [3]int{1, 2, 3}
-
-        fmt.Println(a) // [1 2 3]
-        arrTest(a)     // 用原本的 array
-        fmt.Println(a) // [1 2 3]
-
-        arrTestBySlice(a[:]) // 改用 Slice
-        fmt.Println(a)       // [2 3 4]
-    }
-    ```
+    arrTestBySlice(a[:]) // 改用 Slice
+    fmt.Println(a)       // [2 3 4]
+}
+```
 
 ## Signature
 
@@ -199,42 +196,42 @@ fmt.Printf("%T\n", zero)  // "func(int, int) int"
 function 也有資料型別，可以當作變數，或當作另一個 function 的參數及回傳值。
 以 Go 來說，**signature** 是 Function 的資料型別。當宣告 funcation 沒有指定 name 時，則稱為 **anonymous function**
 
-1. Assignment:
+#### Assignment
 
-    ```go {.line-numbers}
-    func square(n int) int { return n * n }
-    func negative(n int) int { return -n }
-    func product(m, n int) int { return m * n }
+```go {.line-numbers}
+func square(n int) int { return n * n }
+func negative(n int) int { return -n }
+func product(m, n int) int { return m * n }
 
-    var f func(int) int     // signature
-    fmt.Printf("%T\n", f)   // "func(int) int"
+var f func(int) int     // signature
+fmt.Printf("%T\n", f)   // "func(int) int"
 
-    f = square
-    fmt.Println(f(3))       // "9"
+f = square
+fmt.Println(f(3))       // "9"
 
-    f = negative
-    fmt.Println(f(3))       // "-3"
+f = negative
+fmt.Println(f(3))       // "-3"
 
-    f = product // cannot use product (type func(int, int) int) as type func(int) int in assignment
-    ```
+f = product // cannot use product (type func(int, int) int) as type func(int) int in assignment
+```
 
-1. As parameter and return:
+#### As Parameter and Return
 
-    ```go {.line-numbers}
-    func square(n int) int { return n * n }
-    func negative(n int) int { return -n }
+```go {.line-numbers}
+func square(n int) int { return n * n }
+func negative(n int) int { return -n }
 
-    func compose(f, g func(int) int) func(int) int {
-        return func(a int) int {        // anonymous function
-            return g(f(a))
-        }
+func compose(f, g func(int) int) func(int) int {
+    return func(a int) int {        // anonymous function
+        return g(f(a))
     }
+}
 
-    k1 := compose(square, negative)
-    fmt.Printf("%T\n", k1)              // func(int) int
-    fmt.Println(k1(10))                 // -100 negative(square(10))
+k1 := compose(square, negative)
+fmt.Printf("%T\n", k1)              // func(int) int
+fmt.Println(k1(10))                 // -100 negative(square(10))
 
-    k2 := compose(negative, square)
-    fmt.Printf("%T\n", k2)              // func(int) int
-    fmt.Println(k2(10))                 // 100 square(negative(10))
-    ```
+k2 := compose(negative, square)
+fmt.Printf("%T\n", k2)              // func(int) int
+fmt.Println(k2(10))                 // 100 square(negative(10))
+```
