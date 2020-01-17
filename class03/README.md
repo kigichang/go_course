@@ -18,6 +18,8 @@ Go 的 Data Type 分成四個類別：
 - Interface Types
   - interface
 
+Basic 與 Aggregate Type 對應到 Java 是 Value Type，Reference Type 對應至 Java 的 Reference Type。
+
 ## Zero Value
 
 每一種資料型別在宣告時，沒有給定值的話，則 Go 會給予一個初始值，這個初始值則稱為該型別的 **zero value**。
@@ -29,8 +31,6 @@ Go 的 Data Type 分成四個類別：
 - struct: struct that field with zero value
 - array: 指定長度，內含 zero value.
 - reference type: **nil**
-
-**ex03_01**:
 
 ```go {.line-numbers}
 package main
@@ -92,8 +92,6 @@ func main() {
 - int64, uint64
 - int, uint: 會依作業系統(32bit, or 64bit)，變成 int32/int64 or uint32/uint64
 
-eg:
-
 ```go {.line-numbers}
 var a int32   // zero value: 0
 b := 10       // type: int
@@ -117,8 +115,6 @@ d := 0.0      // type: float64
 
 - complex64: 由兩個 float32 組成
 - complex128: 由兩個 float64 組成
-
-eg:
 
 1. 複數宣告
 
@@ -183,7 +179,7 @@ ok := true
   c := a + b    // "hello world"
   ```
 
-套件: **strings**
+### ==strings== Package
 
 常用 functions:
 
@@ -199,8 +195,6 @@ func Join(a []string, sep string) string
 ### Rune
 
 `rune` 是 unicode chacter 的概念，它的底層型別是 **int32** 也就是 4 bytes. 一般 string 操作單位是 **byte**。
-
-**ex03_02**:
 
 ```go {.line-numbers}
 package main
