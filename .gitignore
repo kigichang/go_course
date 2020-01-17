@@ -3,3 +3,4 @@
 *.so
 .DS_Store
 go.sum
+*.pb.go

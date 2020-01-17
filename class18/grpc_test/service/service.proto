@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package service;
+
+import "grpc_test/protos/test.proto";
+
+option go_package = "grpc_test/service";
+
+message Request {
+    string name = 1;
+}
+
+service HelloService {
+    rpc Hello(Request) returns (protos.Hello) {}
+}

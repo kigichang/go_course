@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package protos;
+
+import "github.com/golang/protobuf/ptypes/timestamp/timestamp.proto";
+
+option go_package = "grpc_test/protos";
+
+message Hello {
+  string name = 1;
+  google.protobuf.Timestamp time = 99;
+}
