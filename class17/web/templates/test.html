@@ -1,0 +1,111 @@
+{{ define "content" }}
+
+<script languate="javascript">
+    var pair = {{ .TestStruct }};
+    var array = {{ .TestArray }};
+    var str1 = "{{ .TestString }}";
+    var str2 = "{{ .SimpleString }}";
+</script>
+
+<p>有特殊字元<br />
+    {{ .TestString }} <br />
+    <a title='{{ .TestString }}'>{{ .TestString }}</a> <br />
+    <a href="/{{ .TestString }}">{{ .TestString }}</a> <br />
+    <a href="?q={{ .TestString }}">{{ .TestString }}</a> <br />
+    <a onx='f("{{ .TestString }}")'>{{ .TestString }}</a> <br />
+    <a onx='f({{ .TestString }})'>{{ .TestString }}</a> <br />
+    <a onx='pattern = /{{ .TestString }}/;'>{{.TestString }}</a> <br />
+</p>
+
+<p>無特殊字元<br />
+    {{ .SimpleString }} <br />
+    <a title='{{ .SimpleString }}'>{{ .SimpleString }}</a> <br />
+    <a href="/{{ .SimpleString }}">{{ .SimpleString }}</a> <br />
+    <a href="?q={{ .SimpleString }}">{{ .SimpleString }}</a> <br />
+    <a onx='f("{{ .SimpleString }}")'>{{ .SimpleString }}</a> <br />
+    <a onx='f({{ .SimpleString }})'>{{ .SimpleString }}</a> <br />
+    <a onx='pattern = /{{ .SimpleString }}/;'>{{ .SimpleString }}</a> <br />
+</p>
+
+<p>Compare<br />
+    {{ with . }}
+    {{ if eq .Num1 .Num2 }} eq {{ else }} ne {{end}}<br/>
+    {{ if ne .Num1 .Num2 }} ne {{ else }} eq {{end}}<br/>
+    {{ if lt .Num1 .Num2 }} lt {{ else if gt .Num1 .Num2 }} gt {{ else if le .Num1 .Num2 }} le {{ else }} ge {{end}}
+    {{ end }}
+</p>
+
+<p>Array Index<br />
+    {{ index .TestArray 0 }}<br />
+    {{ index .TestArray 1 }}<br />
+    {{ index .TestArray 2 }}<br />
+    len: {{ len .TestArray }}<br />
+</p>
+
+<p>Map<br />
+    abc : {{ index .TestMap "abc" }} <br />
+    A : {{ index .TestMap "A" }} <br />
+    B : {{ index .TestMap "B" }} <br />
+</p>
+
+<p>Range Array 1<br />
+    {{ range .TestArray}}
+        {{.}} <br />
+    {{ else }}
+        No Data
+    {{ end }}
+    <br />
+</p>
+
+<p>Range Array 2<br />
+    {{ range $idx, $elm := .TestArray }}
+        {{ $idx }} : {{ $elm }} <br />
+    {{else}}
+        No Data
+    {{end}}
+    <br />
+</p>
+
+<p>Range Empty<br />
+    {{ range .EmptyArray}}
+        {{ . }} <br />
+    {{ else }}
+        No Data
+    {{ end }}
+    <br />
+</p>
+
+<p>Range Map<br />
+    {{ range $key, $elm := .TestMap }}
+        {{ $key }} : {{ $elm }} <br />
+    {{else}}
+        No Data
+    {{end}}
+    <br />
+</p>
+
+<p>With Empty<br />
+    {{with .EmptyArray}}
+        Have Data
+    {{else}}
+        No Data
+    {{end}}
+</p>
+
+<p>With Int Zero Value<br />
+    {{with .ZeroInt}}
+        Have Data
+    {{else}}
+        No Data
+    {{end}}
+</p>
+
+<p>Reference Outside Variable<br />
+    {{ range $idx, $elm := .TestArray }}
+        {{$.SimpleString}} {{ $idx }} : {{ $elm }} <br />
+    {{else}}
+        No Data
+    {{end}}
+    <br />
+</p>
+{{ end }}
