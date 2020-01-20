@@ -69,7 +69,7 @@
   - Defer
     - Closure Binding
   - Panic and Recover
-  - Erros (new feature in Go 1.13)
+  - Errors (new feature in Go 1.13)
 - [11 Concurrency - Goroutine](class11/)
   - Keyword `go`
   - `sync.WaitGroup`
