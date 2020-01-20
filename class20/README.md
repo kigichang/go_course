@@ -734,6 +734,62 @@ clean:
 
 [^import-path]: `command-line-arguments` 關係，請見 [go build](http://wiki.jikexueyuan.com/project/go-command-tutorial/0.1.html)
 
+## C Call Go (Static Linking)
+
+Go 可以產生 C 的 library 提供給 C 使用。在編譯時，加 `-buildmode=c-archive` 參數。詳細說明，可看 [Build modes](https://golang.org/cmd/go/#hdr-Build_modes)。
+
+### 程式目錄
+
+```text
+static_link
+├── mygo
+│   ├── go.mod
+│   ├── main.go
+|   └── Makefile
+├── Makefile
+└── mytest.c
+```
+
+1. mygo 是 Go 程式，準備給 C 使用。
+1. mytest.c 是 C 程式，會使用 Go 產出的 C 靜態 library。
+
+#### mygo/main.go
+
+```go {.line-numbers}
+package main
+
+import "fmt"
+import "C"
+
+// Hello ...
+//export Hello
+func Hello(name *C.char) {
+    fmt.Println("Hello,", C.GoString(name))
+}
+
+func main() {
+
+}
+```
+
+1. 在 Go 程式中，一定要加 `import "C"`，否則在編譯時，不會產生出 C 的 header file (*.h)。
+1. 在要給 C 使用的 function，緊接 CGO 的註解 `//export` 在該 function 上方。
+1. 編譯指令：`go build -buildmode=c-archive -o mygo.a .`，會產生出 **mygo.h** 及 **mygo.a**。
+
+#### mytest.c
+
+```c
+#include "mygo/mygo.h"
+
+int main(void) {
+  Hello("world");
+  return 0;
+}
+```
+
+1. `Hello("world");` 使用 Go 的 `Hello` function.
+1. 編譯指令：`gcc -o mytest mygo/mygo.a mytest.c`
+
 ## reference
 
 1. [[译]Go里面的unsafe包详解Ｖ](https://gocn.io/question/371)
