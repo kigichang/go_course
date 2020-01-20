@@ -71,7 +71,7 @@
 - Call
   - call object methods or global functions.
 - Truthy
-  - returns javascript truthiness values. 
+  - returns javascript truthiness values.
   - javascript values are false, 0, “”, null, undefined and NaN return false.
 - Index/SetIndex:
   - manipulate iterable or array types.
@@ -137,3 +137,152 @@ Followings are fine.
     - cURL 7.57
 
 ## Hello World and DOM Manipulation
+
+### 目錄結構
+
+```text
+wasm_demo
+├── Makefile
+├── index.html(`$GOROOT/misc/wasm/wasm_exec.html)
+├── wasm_exec.js
+└── main.go
+```
+
+1. copy `$GOROOT/misc/wasm/wasm_exec.html` and rename to `index.html' into prject folder.
+1. copy `$GOROOT/misc/wasm/wasm_exec.js` to project folder.
+1. execute `go get -u github.com/shurcooL/goexec` to get **goexec** tool.
+    1. add `$GOPATH/bin` to `$PATH`
+
+
+### WASM Demo
+
+1. execute `make clean; make` in wasm_demo.
+1. open `http://127.0.0.1:8080/` in browser (==Google Chrome== preferred)
+1. Open **Console** tab in **Developer Tools** to trace log.
+1. click **My Button**
+1. click `choose file` to open a file and get ==Base64== string in console.
+
+### wasm_demo/index.html
+
+```html
+<!doctype html>
+<!--
+Copyright 2018 The Go Authors. All rights reserved.
+Use of this source code is governed by a BSD-style
+license that can be found in the LICENSE file.
+-->
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Go wasm</title>
+</head>
+
+<body>
+    <!--
+    Add the following polyfill for Microsoft Edge 17/18 support:
+    <script src="https://cdn.jsdelivr.net/npm/text-encoding@0.7.0/lib/encoding.min.js"></script>
+    (see https://caniuse.com/#feat=textencoder)
+    -->
+    <script src="wasm_exec.js"></script>
+    <script>
+        if (!WebAssembly.instantiateStreaming) { // polyfill
+            WebAssembly.instantiateStreaming = async (resp, importObject) => {
+                const source = await (await resp).arrayBuffer();
+                return await WebAssembly.instantiate(source, importObject);
+            };
+        }
+
+        const go = new Go();
+        let mod, inst;
+        WebAssembly.instantiateStreaming(fetch("test.wasm"), go.importObject).then((result) => {
+            mod = result.module;
+            inst = result.instance;
+            /*document.getElementById("runButton").disabled = false;*/
+            run();
+        }).catch((err) => {
+            console.error(err);
+        });
+
+        async function run() {
+            console.clear();
+            await go.run(inst);
+            inst = await WebAssembly.instantiate(mod, go.importObject); // reset instance
+        }
+    </script>
+
+    <!--<button onClick="run();" id="runButton" disabled>Run</button>-->
+    <button id='mybtn'>My Button</button>
+    <input type='file' id='myfile' disabled>
+</body>
+
+</html>
+```
+
+### wasm_demo/main.go
+
+```go {.line-numbers}
+package main
+
+import (
+    "encoding/base64"
+    "fmt"
+    "syscall/js"
+)
+
+var window = js.Global().Get("window")
+var doc = js.Global().Get("document")
+
+func alert(f string, a ...interface{}) {
+    window.Call("alert", fmt.Sprintf(f, a...))
+}
+
+func hello(_ js.Value, args []js.Value) interface{} {
+    return fmt.Sprintf("hello, %s", args[0].String())
+}
+
+func main() {
+    myfile := doc.Call("querySelector", "#myfile")
+    myfile.Call("addEventListener", "change", js.FuncOf(func(_this js.Value, _args []js.Value) interface{} {
+        reader := js.Global().Get("FileReader").New()
+
+        reader.Call("addEventListener", "load", js.FuncOf(func(this js.Value, _args []js.Value) interface{} {
+            result := this.Get("result")
+            srcBuf := js.Global().Get("Uint8Array").New(result)
+            size := srcBuf.Length()
+            dest := make([]byte, size)
+            js.CopyBytesToGo(dest, srcBuf)
+
+            fmt.Println(base64.StdEncoding.EncodeToString(dest))
+
+            return nil
+        }))
+        reader.Call("readAsArrayBuffer", _this.Get("files").Index(0))
+        return nil
+    }))
+
+    mybtn := doc.Call("querySelector", "#mybtn")
+    mybtn.Call("addEventListener", "click", js.FuncOf(func(_this js.Value, _args []js.Value) interface{} {
+        alert("hello, world")
+        myfile.Set("disabled", false)
+        return nil
+    }))
+
+    js.Global().Set("hello", js.FuncOf(hello))
+    fmt.Println("hello world!")
+    select {}
+}
+```
+
+1. `select{}` to block main procedure.
+1. `js.Value.Get` to get DOM element property.
+1. `js.Value.Set` to set DOM element property.
+1. `js.Value.Index` to get value in Array.
+1. `js.Value.Call` to invoke a Javascript object method.
+1. `js.Value.Get(construtor).New(arguments)` to create a Javascript Object.
+1. `js.FuncOf` to make a function, or event handler.
+1. convert Javascript Array Buffer with `Uint8Array` view and `js.CopyBytesToGo`.
+    - `srcBuf := js.Global().Get("Uint8Array").New(result)`, result is an ==Array Buffer==.
+    - `js.CopyBytesToGo(dest, srcBuf)` copy Javascript `Uint8Array` to Go Byte Slice.
+1. `js.Global().Set("func_name", js.FuncOf(func))` to export a function for Javascript.
+    - `<button onclick='window.alert(hello(this.innerText))'>Click Me</button>` invokes `hello` defined in Go.

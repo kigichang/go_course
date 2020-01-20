@@ -239,7 +239,7 @@ func main() {
     1. 再使用 `reflect.Type.Elem` 取得 interface 的 `reflect.Type`。
 1. 使用 `reflect.Type.Implements` 來判斷是否有實作該 interface。
 
-### About Slice
+### Slice
 
 ```go {.line-numbers}
 package main
