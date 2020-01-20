@@ -17,6 +17,18 @@ func hello(_ js.Value, args []js.Value) interface{} {
 	return fmt.Sprintf("hello, %s", args[0].String())
 }
 
+func isNaN(v js.Value) bool {
+	return js.Global().Call("isNaN", v).Bool()
+}
+
+func parseInt(val string, radix int) (int, bool) {
+	x := js.Global().Call("parseInt", val, radix)
+	if isNaN(x) {
+		return 0, false
+	}
+	return x.Int(), true
+}
+
 func main() {
 	myfile := doc.Call("querySelector", "#myfile")
 	myfile.Call("addEventListener", "change", js.FuncOf(func(_this js.Value, _args []js.Value) interface{} {
@@ -45,6 +57,7 @@ func main() {
 	}))
 
 	js.Global().Set("hello", js.FuncOf(hello))
+	fmt.Println(parseInt("abc", 10))
 	fmt.Println("hello world!")
 	select {}
 }

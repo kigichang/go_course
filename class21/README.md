@@ -152,7 +152,7 @@ wasm_demo
 1. copy `$GOROOT/misc/wasm/wasm_exec.js` to project folder.
 1. execute `go get -u github.com/shurcooL/goexec` to get **goexec** tool.
     1. add `$GOPATH/bin` to `$PATH`
-
+1. compile with `GOOS=js GOARCH=wasm`
 
 ### WASM Demo
 
@@ -241,6 +241,18 @@ func hello(_ js.Value, args []js.Value) interface{} {
     return fmt.Sprintf("hello, %s", args[0].String())
 }
 
+func isNaN(v js.Value) bool {
+    return js.Global().Call("isNaN", v).Bool()
+}
+
+func parseInt(val string, radix int) (int, bool) {
+    x := js.Global().Call("parseInt", val, radix)
+    if isNaN(x) {
+        return 0, false
+    }
+    return x.Int(), true
+}
+
 func main() {
     myfile := doc.Call("querySelector", "#myfile")
     myfile.Call("addEventListener", "change", js.FuncOf(func(_this js.Value, _args []js.Value) interface{} {
@@ -269,6 +281,7 @@ func main() {
     }))
 
     js.Global().Set("hello", js.FuncOf(hello))
+    fmt.Println(parseInt("abc", 10))
     fmt.Println("hello world!")
     select {}
 }
@@ -286,3 +299,4 @@ func main() {
     - `js.CopyBytesToGo(dest, srcBuf)` copy Javascript `Uint8Array` to Go Byte Slice.
 1. `js.Global().Set("func_name", js.FuncOf(func))` to export a function for Javascript.
     - `<button onclick='window.alert(hello(this.innerText))'>Click Me</button>` invokes `hello` defined in Go.
+1. `js.Global().Call("func_name", args...)` to invoke Javascipt build-in functions.
