@@ -1,5 +1,0 @@
-%module myfoo
-%{
-#include "foo.hpp"
-%}
-%include "foo.hpp"
