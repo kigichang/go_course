@@ -214,6 +214,7 @@ license that can be found in the LICENSE file.
     <!--<button onClick="run();" id="runButton" disabled>Run</button>-->
     <button id='mybtn'>My Button</button>
     <input type='file' id='myfile' disabled>
+    <button onclick='window.alert(hello(this.innerText))'>Click Me</button>
 </body>
 
 </html>
