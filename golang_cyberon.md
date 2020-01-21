@@ -72,7 +72,7 @@ presentation:
 ## Go Characteristics
 
 - Statically typed, Compiled language (like C)
-- Momory safety
+- Memory safety
 - Garbage Collection
 - CSP concurrency
 - UTF8 encoding
