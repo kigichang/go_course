@@ -75,7 +75,7 @@
   - `sync.WaitGroup`
 - [12 Concurrency - Channel](class12/)
   - Buffered channel
-  - Producre and Comsumer Pattern
+  - Producer and Consumer Pattern
   - Actor Pattern
   - `select` to monitor channels
 - [13 Context](class13/)
