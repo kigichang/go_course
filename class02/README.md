@@ -491,7 +491,7 @@ package 中，可以在某一個程式檔案，定義 `func init()`。當 packag
 
 ## 變數 Visibiility
 
-Go 沒有 **private** and **public** 關鍵字，而是利用字母的**大**、**小**寫來區分 **private** 及 **public**。如果變數或 function 是**小寫**開頭，則為 **private**，反之，**大寫**就是 **public**。
+Go 沒有 **private** and **public** 關鍵字，而是利用字母的**大**、**小**寫來區分 **public** 及 **private**。如果變數或 function 是**小寫**開頭，則為 **private**，反之，**大寫**就是 **public**。
 
 注意：**在同 package 下，可以存取 struct 內的 private 變數。**
 
