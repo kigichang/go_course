@@ -38,6 +38,7 @@ Books:
 1. [markdownlint](https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint)
 1. [hexdump for VSCode](https://marketplace.visualstudio.com/items?itemName=slevesque.vscode-hexdump)
 1. [Compareit](https://marketplace.visualstudio.com/items?itemName=in4margaret.compareit)
+1. [TabNine Autocomplete AI](https://marketplace.visualstudio.com/items?itemName=TabNine.tabnine-vscode)
 
 ## GOPATH 目錄說明
 
