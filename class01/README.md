@@ -20,7 +20,7 @@ Books:
 ## 環境設定
 
 1. 下載 golang。[~下載連結~](https://golang.org/dl/)
-1. 設定環境變數 **`$GOPATH`**: `$GOPATH` 是專門放 Go 開發專案的目錄，所有 Go 相關的工具，也會一併裝在這個目錄。
+1. 設定環境變數 **`$GOPATH`**: `$GOPATH` ~~是專門放 Go 開發專案的目錄~~，所有 Go 相關的工具，會一併裝在這個目錄。
 1. Go 1.11 之後，有官方有支援 module  的功能，撰寫程式，不一定要放在 `$GOPATH` 下，可以依專案有各自的目錄，也不需要將目錄設定在 `$GOPATH` 內。
 
 ## IDE 建議
@@ -99,7 +99,7 @@ OOP 有三個基本特性: 封裝，繼承，多型。而 Go 沒有繼承。在 
 
 - 寫 Go 與寫 C 類似，但有 GC，可以省去記憶體管理工作.
 - 因為沒有 OO，只有封裝，沒有繼承等功能
-- 沒有泛型 (Generic) 所以有關型別方面的寫作，就沒這個彈性。
+- 沒有泛型 (Generic) 目前已計劃實作 [A Proposal for Adding Generics to Go](https://blog.golang.org/generics-proposal)。
 - 有工具會自動校正 coding style.
 - 檔案的編碼，一定要是 **UTF-8**。
 - Function paramenter **pass by value** (call by value)
