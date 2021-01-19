@@ -189,3 +189,21 @@ func main() {
     fmt.Println(q) // {60 80}
 }
 ```
+
+## Side Effects in Functional Language
+
+程式的函式有以下的行為時，就會稱該函式有 **Side Effects**。
+
+* Reassigning a variable (val v.s. var)
+* Modify a data structure in place (mutable v.s. immutable)
+* Setting a field on an object (change object state)
+  * 這裏指的 object 是 OOP 的 Object 不是 Scala 的 object (singleton)
+  * OOP 修改物件的值，在程式語言的術語：改變物件的狀態，如上說的 **changing-state**
+* Throwing an exception or halting with error
+* Printing to the console or reading user input (I/O)
+* Reading from or write to a file (I/O)
+* Drawing on the screen (I/O)
+
+截自 [Functional Language in Scala](http://www.amazon.com/Functional-Programming-Scala-Paul-Chiusano/dp/1617290653)
+
+就實際狀況來說，我們寫程式不可能不去碰 I/O。
