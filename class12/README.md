@@ -31,8 +31,9 @@ func writeChannel(c chan<- int, x int) {
 }
 
 func readChannel(c <-chan int) {
-    log.Println("reading from channel")
     defer waitGroup.Done()
+
+    log.Println("reading from channel")
     x := <-c
     log.Println("read: ", x)
 }
