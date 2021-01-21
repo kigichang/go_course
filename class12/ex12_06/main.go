@@ -16,19 +16,19 @@ func producer(min, max int, c chan<- int) {
 		c <- i
 	}
 	//close(c)
-	log.Println("producer end and close channel")
+	log.Println("producer end")
 }
 
-func consumer(x int, c <-chan int) {
+func consumer(id int, c <-chan int) {
 	defer waitGroup.Done()
 	count := 0
 
-	log.Println("comsumer ", x, " starting...")
+	log.Println("comsumer ", id, " starting...")
 	for a := range c {
-		log.Println(x, " got ", a)
+		log.Println(id, " got ", a)
 		count++
 	}
-	log.Printf("consumer %d got %d times and end\n", x, count)
+	log.Printf("consumer %d got %d times and end\n", id, count)
 }
 
 func main() {

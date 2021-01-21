@@ -183,57 +183,7 @@ Producer/Consumer 是 channel 最常用的實作模型。概念是一端產出�
 
 ### 利用 goroutine 執行 1 個 producer 及 2 個 consumer
 
-```go {.line-numbers}
-package main
-
-import (
-    "log"
-    "sync"
-)
-
-var (
-    waitGroup = sync.WaitGroup{}
-)
-
-func producer(min, max int, c chan<- int) {
-    defer waitGroup.Done()
-    log.Println("producer start...")
-    for i := min; i < max; i++ {
-        c <- i
-    }
-    close(c)
-    log.Println("producer end and close channel")
-}
-
-func consumer(x int, c <-chan int) {
-    defer waitGroup.Done()
-    count := 0
-
-    log.Println("comsumer ", x, " starting...")
-    for a := range c {
-        log.Println(x, " got ", a)
-        count++
-    }
-    log.Printf("consumer %d got %d times and end\n", x, count)
-}
-
-func main() {
-    log.Println("start...")
-    c := make(chan int)
-
-    waitGroup.Add(1)
-    go producer(1, 100, c)
-
-    waitGroup.Add(1)
-    go consumer(1, c)
-
-    waitGroup.Add(1)
-    go consumer(2, c)
-
-    waitGroup.Wait()
-    log.Println("end")
-}
-```
+@import "ex12_05/main.go" {.line-numbers}
 
 與先前的範例最大不同是，這次關閉 channel 是在 `producer` 執行，而非主程序，也就是說在產生完資料後，就關閉 channel，之後就不能再寫入。而 `consumer` 端，在 channel 資料讀完後，就會跳出 for-range 的迴圈而執行完畢。
 
@@ -241,58 +191,7 @@ func main() {
 
 如果不在 `producer` 關閉 channel，而是在主程序，則會發生 deadlock。
 
-```go {.line-numbers}
-package main
-
-import (
-    "log"
-    "sync"
-)
-
-var (
-    waitGroup = sync.WaitGroup{}
-)
-
-func producer(min, max int, c chan<- int) {
-    defer waitGroup.Done()
-    log.Println("producer start...")
-    for i := min; i < max; i++ {
-        c <- i
-    }
-    //close(c)
-    log.Println("producer end and close channel")
-}
-
-func consumer(x int, c <-chan int) {
-    defer waitGroup.Done()
-    count := 0
-
-    log.Println("comsumer ", x, " starting...")
-    for a := range c {
-        log.Println(x, " got ", a)
-        count++
-    }
-    log.Printf("consumer %d got %d times and end\n", x, count)
-}
-
-func main() {
-    log.Println("start...")
-    c := make(chan int)
-    defer close(c)
-
-    waitGroup.Add(1)
-    go producer(1, 100, c)
-
-    waitGroup.Add(1)
-    go consumer(1, c)
-
-    waitGroup.Add(1)
-    go consumer(2, c)
-
-    waitGroup.Wait()
-    log.Println("end")
-}
-```
+@import "ex12_06/main.go" {class="line-numbers"}
 
 結果：
 
