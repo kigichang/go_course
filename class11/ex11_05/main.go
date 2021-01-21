@@ -5,24 +5,24 @@ import (
 	"sync"
 )
 
-// Test ...
-type Test struct {
+// Job ...
+type Job struct {
 	ID int
 }
 
 func main() {
-	var tests []Test
+	var jobs []Job
 	for i := 0; i < 2; i++ {
-		tests = append(tests, Test{i})
+		jobs = append(jobs, Job{i})
 	}
 
 	wait := sync.WaitGroup{}
 
-	for _, x := range tests {
+	for _, x := range jobs {
 		wait.Add(1)
-		go func(t *Test) {
+		go func(job *Job) {
 			defer wait.Done()
-			fmt.Println(t.ID)
+			fmt.Println(job.ID)
 		}(&x)
 	}
 

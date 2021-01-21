@@ -167,24 +167,24 @@ import (
     "sync"
 )
 
-// Test ...
-type Test struct {
+// Job ...
+type Job struct {
     ID int
 }
 
 func main() {
-    var tests []Test
+    var jobs []Job
     for i := 0; i < 2; i++ {
-        tests = append(tests, Test{i})
+        jobs = append(jobs, Job{i})
     }
 
     wait := sync.WaitGroup{}
 
-    for _, x := range tests {
+    for _, x := range jobs {
         wait.Add(1)
-        go func(t *Test) {
+        go func(job *Job) {
             defer wait.Done()
-            fmt.Println(t.ID)
+            fmt.Println(job.ID)
         }(&x)
     }
 
@@ -243,4 +243,4 @@ func main() {
 0
 ```
 
-因為 goroutine 會需要時間做初始化，所以在 Loop 的宣告的 goroutine, 有很大的機會會在 Loop 結束後，才執行。因此在 closure binding 時，會有很大的機會會 binding 到最後一個值。在 Puzzlers Example 1 中，最後 `x` binding 的值會是最後一個。建議有這種情形時，要明確指定值。
+因為 goroutine 會需要時間做初始化，所以在 Loop 的宣告的 goroutine, 有很大的機會會在 Loop 結束後才執行。因此在 closure binding 時，會有很大的機會會 binding 到最後一個值。在 Puzzlers Example 1 中，最後 `x` binding 的值會是最後一個，並取記憶體位址傳入。建議有這種情形時，要明確指定值。
