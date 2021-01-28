@@ -1,4 +1,10 @@
+/**
+此範例程式，需要 https://github.com/shurcooL/goexec.
+請使用 make goexec 或 go generate 安裝
+**/
 package main
+
+//go:generate go get -u github.com/shurcooL/goexec
 
 import (
 	"encoding/base64"
