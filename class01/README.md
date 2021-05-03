@@ -31,13 +31,9 @@ Books:
 
 其他相關的 plugin (非必要，但為了開發方便，還是裝一下)
 
-1. [gotemplate-syntax](https://marketplace.visualstudio.com/items?itemName=casualjim.gotemplate)
-1. [vscode-proto3](https://marketplace.visualstudio.com/items?itemName=zxh404.vscode-proto3)
-1. [Docker by Microsoft](https://marketplace.visualstudio.com/items?itemName=PeterJausovec.vscode-docker)
 1. [Markdown Preview Enhanced](https://marketplace.visualstudio.com/items?itemName=shd101wyy.markdown-preview-enhanced)
 1. [markdownlint](https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint)
 1. [hexdump for VSCode](https://marketplace.visualstudio.com/items?itemName=slevesque.vscode-hexdump)
-1. [Compareit](https://marketplace.visualstudio.com/items?itemName=in4margaret.compareit)
 1. [TabNine Autocomplete AI](https://marketplace.visualstudio.com/items?itemName=TabNine.tabnine-vscode)
 
 ## GOPATH 目錄說明
