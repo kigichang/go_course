@@ -123,8 +123,8 @@ OOP 有三個基本特性: 封裝，繼承，多型。而 Go 沒有繼承。在 
 
 1. 寫執行檔的程式，檔名不一定要命名成 `main.go`，但程式碼的 package 宣告一定要是 **main**。
 1. 經過 build 之後，產生的執行檔名，會是當初 go module 初始化的名稱。eg: `go mod init mytest`，則編譯的檔名就會是 `mytest`。
-1. 可以使用 `go run main.go` 直接執行程式，如果程式是拆分成多個 .go 的檔案，則需要將每個檔名也加入。eg: `go run main.go a.go b.go`，也可進到目錄下，執行 `go run .` 的方式來執行。
-1. `import` 是將會用到的 package 加入，跟 Java 一樣，有用到的 package 用 import 加入。Go 的工具，會幫忙找內建的 package ，自動加入到程式碼中，很方便。如果是第三方套件，就要修改 `go.mod`，通當 IDE 工具都會自動編輯這個檔案。如果沒有的話，則自己修改後，在該目錄下執行 `go mod tidy` 則會自動更新依賴的 package。
+1. 進到目錄下，執行 `go run .` 的方式來執行。
+1. `import` 是將會用到的 package 加入，跟 Java 一樣，有用到的 package 用 import 加入。Go 的工具，會幫忙找內建的 package ，自動加入到程式碼中，很方便。如果是第三方套件，就要修改 `go.mod`，通常 IDE 工具都會自動編輯這個檔案。如果沒有的話，則自己修改後，在該目錄下執行 `go mod tidy` 則會自動更新依賴的 package。
 1. 程式的進入點 (Entry point): `func main()`，跟大多數的程式語言一樣，寫執行檔都會需要有一個主函式 **main**
 
 ## Arguemnts (ex01-02)
