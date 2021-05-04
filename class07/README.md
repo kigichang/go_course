@@ -147,14 +147,14 @@ func main() {
 
 [From Effective Go](https://golang.org/doc/effective_go.html#pointers_vs_values)
 
-|                | Pointer | Value |
-|:--------------:|:-------:|:-----:|
-| Pointer Method | O       | X     |
-| Value Method   | O       | O     |
+|         | Pointer Method | Value Method |
+|:-------:|:--------------:|:------------:|
+| Pointer | O              | O            |
+| Value   | X              | O            |
 
 ## Method Signature
 
-method 本身就是 funcation，因此也有 signature.
+Method 本身就是 funcation，因此也有 signature.
 
 ```go {.line-numbers}
 package main
