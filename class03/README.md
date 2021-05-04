@@ -20,7 +20,7 @@ Go 的 Data Type 分成四個類別：
 
 Basic 與 Aggregate Type 對應到 Java 是 Value Type，Reference Type 對應至 Java 的 Reference Type。
 
-## Zero Value
+## Zero Value (ex03_01)
 
 每一種資料型別在宣告時，沒有給定值的話，則 Go 會給予一個初始值，這個初始值則稱為該型別的 **zero value**。
 
@@ -144,6 +144,9 @@ ok := true
 
 ## Strings
 
+Go 的字串處理方式與 Swift 同，但與 Java 不同，在 Go 是屬於 Value type, 而在 Java 是 Class (Reference type)。
+Go 的 `string` 有以下特性：
+
 - **Immutable** sequence of bytes
 - **UTF-8** encoded
 
@@ -192,7 +195,7 @@ func Index(s, sep string) int
 func Join(a []string, sep string) string
 ```
 
-### Rune
+### Rune (ex03_02)
 
 `rune` 是 unicode chacter 的概念，它的底層型別是 **int32** 也就是 4 bytes. 一般 string 操作單位是 **byte**。
 
@@ -222,7 +225,7 @@ func main() {
 }
 ```
 
-## Conversions between Strings and Numbers
+## Conversions between Strings and Numbers (ex03_03)
 
 使用 `fmt.Sprintf()` 與 `strconv` 這個套件。
 
