@@ -51,12 +51,6 @@ Books:
 - src: 放 source code.
 - 使用 Go Module 的話，則專案不需要放在 GOPATH 下。
 
-### Soruce code 放法
-
-1. 每個專案自己開一個目錄。自己有各自的 git repo。
-1. 專案的主目錄下，每個 package 開一個目錄。
-1. 一個目錄只能有一個 package 及測試的 package。package 名稱建議要與目錄名稱相同；如此比較好維護程式碼，想找某個 package 時，只要去找相對應的目錄即可。
-
 ## 語言特性
 
 ### 編譯式語言
@@ -100,6 +94,12 @@ OOP 有三個基本特性: 封裝，繼承，多型。而 Go 沒有繼承。在 
 - 有工具會自動校正 coding style.
 - 檔案的編碼，一定要是 **UTF-8**。
 - Function paramenter **pass by value** (call by value)
+
+### Soruce Code 放法
+
+1. 每個專案自己開一個目錄。自己有各自的 git repo。
+1. 專案的主目錄下，每個 package 開一個目錄。
+1. 一個目錄只能有一個 package 及測試的 package。package 名稱建議要與目錄名稱相同；如此比較好維護程式碼，想找某個 package 時，只要去找相對應的目錄即可。
 
 ## Hello World (ex01-01)
 
