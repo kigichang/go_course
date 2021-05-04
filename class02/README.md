@@ -164,7 +164,7 @@ const (
 )
 ```
 
-## iota
+## iota (ex02_01)
 
 [itoa 詳細說明](https://github.com/golang/go/wiki/Iota)
 
@@ -276,7 +276,7 @@ const (
 
 在 Go 可以使用 `type` 來宣告一個新的 data type，或幫舊的 data type 取一個別名，來增加程式碼的可讀性。
 
-### Type Declaration
+### Type Declaration (ex02_02)
 
 可以使用 `type` 來宣告一個新的 data type，通常用在宣告 struct 或 interface。我們也可以使用 `type` 的擴充既有型別的功能。
 
@@ -336,7 +336,7 @@ func FToC(f Fahrenheit) Celsius { return Celsius((f - 32) * 5 / 9) }
 
     注意，雖然 `Celsius` 及 `Fahrenheit` 底層都是 `float64`，但都還是要視為不同的型別。
 
-### Type Alias
+### Type Alias (ex02_03)
 
 Go 可以幫 type 取別名 (alias), 宣告的語法：
 
@@ -346,7 +346,7 @@ type type1 = type2
 
 如此一來，type1 就直接等於是 type2，可以不用轉型。
 
-```go
+```go {.line-numbers}
 package main
 
 import "fmt"
@@ -424,7 +424,7 @@ import 則用
 import "gopl.io/ch1/helloworld"
 ```
 
-### Package Initialization
+### Package Initialization (ex02_04)
 
 package 中，可以在某一個程式檔案，定義 `func init()`。當 package 被載入時，會先執行 `init` 的程式碼。
 
@@ -477,7 +477,7 @@ package 中，可以在某一個程式檔案，定義 `func init()`。當 packag
 
     func main() {
         fmt.Println("start...")
-        fmt.Println(util.Hello("cyberon"))
+        fmt.Println(util.Hello("NuEiP"))
     }
     ```
 
@@ -486,14 +486,14 @@ package 中，可以在某一個程式檔案，定義 `func init()`。當 packag
     ```text
     package util initialize
     start...
-    hello cyberon
+    hello NuEiP
     ```
 
 ## 變數 Visibiility
 
 Go 沒有 **private** and **public** 關鍵字，而是利用字母的**大**、**小**寫來區分 **public** 及 **private**。如果變數或 function 是**小寫**開頭，則為 **private**，反之，**大寫**就是 **public**。
 
-注意：**在同 package 下，可以存取 struct 內的 private 變數。**
+注意：**在同 package 下，可以存取 struct 內的 private 變數 (Package Private)。**
 
 ## 變數 Scope
 
