@@ -2,8 +2,8 @@
 
 此章節的資料，來自 [Go Systems Programming](https://www.packtpub.com/networking-and-servers/go-systems-programming)
 
-1. A **goroutine** is the minimum Go entity that can be executed concurrently
-1. goroutine is live in **Thread**, so it is not an autonomous entity
+1. A **goroutine** is the minimum Go entity that can be executed concurrently.
+1. goroutine is live in **Thread**, so it is not an autonomous entity.
 1. 當主程式結束時，goroutine 也一併會結束，即使還沒執行完畢。
 
 ## ==go== Keyword
