@@ -32,7 +32,6 @@ Books:
 其他相關的 plugin (非必要，但為了開發方便，還是裝一下)
 
 1. [Markdown Preview Enhanced](https://marketplace.visualstudio.com/items?itemName=shd101wyy.markdown-preview-enhanced)
-1. [markdownlint](https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint)
 1. [hexdump for VSCode](https://marketplace.visualstudio.com/items?itemName=slevesque.vscode-hexdump)
 1. [TabNine Autocomplete AI](https://marketplace.visualstudio.com/items?itemName=TabNine.tabnine-vscode)
 1. [GitLens](https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens)
@@ -107,15 +106,15 @@ OOP 有三個基本特性: 封裝，繼承，多型。而 Go 沒有繼承。在 
 1. 在上述 1 的目錄下，執行 `go mod init ex01-01`，產生 `go.mod` 檔案。此檔案是用來設定依賴的 package。
 1. 產生一個檔案 `main.go` 內容如下：
 
-    ```go {.line-numbers}
-    package main
+	```go {.line-numbers}
+	package main
 
-    import "fmt"
+	import "fmt"
 
-    func main() {
-        fmt.Println("Hello, 世界")
-    }
-    ```
+	func main() {
+		fmt.Println("Hello, 世界")
+	}
+	```
 
 1. 在目錄下，執行 `go run .`，可以看到結果。
 1. 在目錄下，執行 `go build`，編繹成執行檔。
@@ -136,17 +135,17 @@ OOP 有三個基本特性: 封裝，繼承，多型。而 Go 沒有繼承。在 
 package main
 
 import (
-    "fmt"
-    "os"
+	"fmt"
+	"os"
 )
 
 func main() {
-    fmt.Println(os.Args[0])
+	fmt.Println(os.Args[0])
 
-    if len(os.Args) > 1 {
-        fmt.Println("hi, ", os.Args[1])
-    }
-    fmt.Println("hello world")
+	if len(os.Args) > 1 {
+		fmt.Println("hi, ", os.Args[1])
+	}
+	fmt.Println("hello world")
 }
 ```
 
