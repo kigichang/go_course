@@ -26,14 +26,14 @@
 
 1. 不要在 struct 內，宣告變數存 `Context`，而是要透過 function 的參數傳遞，並且是該 function 的第一個參數, 命名為 `ctx`。eg:
 
-    ```go {.line-numbers}
-    func DoSomething(ctx context.Context, arg Arg) error {
-        // ... use ctx ...
-    }
-    ```
+	```go {.line-numbers}
+	func DoSomething(ctx context.Context, arg Arg) error {
+		// ... use ctx ...
+	}
+	```
 
-1. 不要傳 nil Context 給 function。如果還不確定要做什麼功能時，可用`context.TODO()`。
-1. Context (`context.withValue`) 只能做 request-socped[^request-scoped] 使用，不做類似選項資料傳入函式。
+1. 不要傳 nil Context 給 function。如果還不確定要做什麼功能時，可用 `context.TODO()` 或 `context.Background()`。
+1. Context (`context.withValue`) 只能做 request-socped[^request-scoped] 使用，不要將函式需要的參數值，放在裏面。
 1. 可以在不同的 goroutine 中共用同一個 Context。(Thread-Safe)
 
 [^request-scoped]: 類似 JAVA Servlet 中 `ServletRuquest.GetAttribute` 及 `ServletRequest.SetAttribute`，當請求結束後，在 Attribute 的資料也被消滅了。
@@ -44,53 +44,53 @@
 package main
 
 import (
-    "context"
-    "log"
-    "time"
+	"context"
+	"log"
+	"time"
 )
 
 func contextDemo(ctx context.Context) {
-    dealine, ok := ctx.Deadline()
-    name := ctx.Value(contextKey("name"))
+	dealine, ok := ctx.Deadline()
+	name := ctx.Value(contextKey("name"))
 
-    if ok {
-        log.Println(name, "has dealine:", dealine.Format("2006-01-02 15:04:05"))
-    } else {
-        log.Println(name, "does not have dealine")
-    }
+	if ok {
+		log.Println(name, "has dealine:", dealine.Format("2006-01-02 15:04:05"))
+	} else {
+		log.Println(name, "does not have dealine")
+	}
 }
 
 type contextKey string
 
 func main() {
-    timeout := 3 * time.Second
-    deadline := time.Now().Add(10 * time.Second)
+	timeout := 3 * time.Second
+	deadline := time.Now().Add(10 * time.Second)
 
-    timeoutContext, timeoutCancelFunc := context.WithTimeout(context.Background(), timeout)
-    defer timeoutCancelFunc()
+	timeoutContext, timeoutCancelFunc := context.WithTimeout(context.Background(), timeout)
+	defer timeoutCancelFunc()
 
-    cancelContext, cancelFunc := context.WithCancel(context.Background())
+	cancelContext, cancelFunc := context.WithCancel(context.Background())
 
-    deadlineContext, deadlineCancelFunc := context.WithDeadline(context.Background(), deadline)
-    defer deadlineCancelFunc()
+	deadlineContext, deadlineCancelFunc := context.WithDeadline(context.Background(), deadline)
+	defer deadlineCancelFunc()
 
-    contextDemo(context.WithValue(timeoutContext, contextKey("name"), "[Timeout Context]"))
-    contextDemo(context.WithValue(cancelContext, contextKey("name"), "[Canncel Context]"))
-    contextDemo(context.WithValue(deadlineContext, contextKey("name"), "[Deadline Context]"))
+	contextDemo(context.WithValue(timeoutContext, contextKey("name"), "[Timeout Context]"))
+	contextDemo(context.WithValue(cancelContext, contextKey("name"), "[Canncel Context]"))
+	contextDemo(context.WithValue(deadlineContext, contextKey("name"), "[Deadline Context]"))
 
-    <-timeoutContext.Done()
-    log.Println("timeout ...")
+	<-timeoutContext.Done()
+	log.Println("timeout ...")
 
-    log.Println("cancel error:", cancelContext.Err())
-    log.Println("canncel...")
-    cancelFunc()
-    log.Println("cancel error:", cancelContext.Err())
+	log.Println("cancel error:", cancelContext.Err())
+	log.Println("canncel...")
+	cancelFunc()
+	log.Println("cancel error:", cancelContext.Err())
 
-    <-cancelContext.Done()
-    log.Println("The cancel context has been cancelled...")
+	<-cancelContext.Done()
+	log.Println("The cancel context has been cancelled...")
 
-    <-deadlineContext.Done()
-    log.Println("The deadline context has been cancelled...")
+	<-deadlineContext.Done()
+	log.Println("The deadline context has been cancelled...")
 }
 ```
 
@@ -117,25 +117,25 @@ func main() {
 package main
 
 import (
-    "context"
-    "log"
-    "time"
+	"context"
+	"log"
+	"time"
 )
 
 func main() {
-    ctx1, cancel1 := context.WithCancel(context.Background())
-    ctx2, cancel2 := context.WithTimeout(ctx1, 10*time.Second)
-    defer func() {
-        log.Println("cancel 2")
-        cancel2()
-    }()
+	ctx1, cancel1 := context.WithCancel(context.Background())
+	ctx2, cancel2 := context.WithTimeout(ctx1, 10*time.Second)
+	defer func() {
+		log.Println("cancel 2")
+		cancel2()
+	}()
 
-    <-time.After(2 * time.Second)
-    log.Println("cancel 1")
-    cancel1()
-    log.Println("ctx1:", ctx1.Err())
-    log.Println("ctx2:", ctx2.Err())
-    log.Println("end")
+	<-time.After(2 * time.Second)
+	log.Println("cancel 1")
+	cancel1()
+	log.Println("ctx1:", ctx1.Err())
+	log.Println("ctx2:", ctx2.Err())
+	log.Println("end")
 }
 ```
 
@@ -184,103 +184,103 @@ Channel_3 --> reflect.Select;
 package main
 
 import (
-    "context"
-    "fmt"
-    "log"
-    "reflect"
-    "sync"
-    "time"
+	"context"
+	"fmt"
+	"log"
+	"reflect"
+	"sync"
+	"time"
 )
 
 // ReadAll redirect channels to one out channel
 func ReadAll(ctx context.Context, wait *sync.WaitGroup, channels ...chan interface{}) <-chan interface{} {
-    out := make(chan interface{})
+	out := make(chan interface{})
 
-    var cases []reflect.SelectCase
-    cases = append(cases, reflect.SelectCase{
-        Dir:  reflect.SelectRecv,
-        Chan: reflect.ValueOf(ctx.Done()),
-    })
+	var cases []reflect.SelectCase
+	cases = append(cases, reflect.SelectCase{
+		Dir:  reflect.SelectRecv,
+		Chan: reflect.ValueOf(ctx.Done()),
+	})
 
-    for _, c := range channels {
-        cases = append(cases, reflect.SelectCase{
-            Dir:  reflect.SelectRecv,
-            Chan: reflect.ValueOf(c),
-        })
-    }
+	for _, c := range channels {
+		cases = append(cases, reflect.SelectCase{
+			Dir:  reflect.SelectRecv,
+			Chan: reflect.ValueOf(c),
+		})
+	}
 
-    go func() {
-        defer func() {
-            close(out)
-            wait.Done()
-            log.Println("close out and done")
-        }()
+	go func() {
+		defer func() {
+			close(out)
+			wait.Done()
+			log.Println("close out and done")
+		}()
 
-        for len(cases) > 1 {
-            i, v, ok := reflect.Select(cases)
-            log.Println(i, v, ok)
-            if i == 0 { // timeout and exit
-                log.Println("cancel !!!")
-                return
-            }
-            if !ok { // some channel is closed and remove from cases
-                cases = append(cases[:i], cases[i+1:]...)
-            }
+		for len(cases) > 1 {
+			i, v, ok := reflect.Select(cases)
+			log.Println(i, v, ok)
+			if i == 0 { // timeout and exit
+				log.Println("cancel !!!")
+				return
+			}
+			if !ok { // some channel is closed and remove from cases
+				cases = append(cases[:i], cases[i+1:]...)
+			}
 
-            out <- v.Interface()
-        }
-    }()
+			out <- v.Interface()
+		}
+	}()
 
-    return out
+	return out
 }
 
 func main() {
-    channels := []chan interface{}{
-        make(chan interface{}),
-        make(chan interface{}),
-        make(chan interface{}),
-    }
+	channels := []chan interface{}{
+		make(chan interface{}),
+		make(chan interface{}),
+		make(chan interface{}),
+	}
 
-    defer func() {
-        for _, c := range channels {
-            close(c)
-        }
-        log.Println("close channels completed")
-    }()
+	defer func() {
+		for _, c := range channels {
+			close(c)
+		}
+		log.Println("close channels completed")
+	}()
 
-    timeout, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-    defer func() {
-        cancel()
-        log.Println("cancel context")
-    }()
-    wait := sync.WaitGroup{}
-    wait.Add(1)
-    out := ReadAll(timeout, &wait, channels...)
+	timeout, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer func() {
+		cancel()
+		log.Println("cancel context")
+	}()
+	wait := sync.WaitGroup{}
+	wait.Add(1)
+	out := ReadAll(timeout, &wait, channels...)
 
-    // generate goroutines for each channel to write data
-    for i, c := range channels {
-        go func(a int, c chan<- interface{}) {
-            for {
-                <-time.After(time.Second)
-                c <- fmt.Sprintf("%d:%s", a, time.Now().Format("2006-01-02 15:04:05"))
-            }
-        }(i, c)
-    }
+	// generate goroutines for each channel to write data
+	for i, c := range channels {
+		go func(a int, c chan<- interface{}) {
+			for {
+				<-time.After(time.Second)
+				c <- fmt.Sprintf("%d:%s", a, time.Now().Format("2006-01-02 15:04:05"))
+			}
+		}(i, c)
+	}
 
-    // generate goroutine to read data from out channel
-    go func() {
-        for x := range out {
-            log.Println("out got:", x)
-        }
-    }()
+	// generate goroutine to read data from out channel
+	go func() {
+		for x := range out {
+			log.Println("out got:", x)
+		}
+	}()
 
-    // wait for goroutine in ReadAll
-    wait.Wait()
-    log.Println("end")
+	// wait for goroutine in ReadAll
+	wait.Wait()
+	log.Println("end")
 
 }
 ```
 
 1. 可用使用 `reflect.Select` 及 `reflect.SelectCase` 來控制不固定數量的 channel。請見 `ReadAll`.
-    1. `i, v, ok := reflect.Select(cases)`: 如果其中有一個 channel 被關閉時，v 會是 zero-value, ok 會是 `false`
+	1. `i, v, ok := reflect.Select(cases)`: 如果其中有一個 channel 被關閉時，v 會是 zero-value, ok 會是 `false`
 1. 當 `timeout` Context 發生 timeout 時，`reflect.Select` 會接到，然後結束 goroutine.
