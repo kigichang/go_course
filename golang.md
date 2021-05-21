@@ -13,7 +13,7 @@ presentation:
 
 <!-- slide -->
 
-# Golang (Go) 簡介與在公司的應用
+# Golang (Go) 簡介
 
 <!-- slide -->
 
