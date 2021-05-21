@@ -141,14 +141,6 @@ func main() {
 
 <!-- slide -->
 
-## Go in Cyberon
-
-- Web Tool
-- Corpus Crawler
-- Go call STT libary
-
-<!-- slide -->
-
 ```go
 package main
 
