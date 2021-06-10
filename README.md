@@ -83,16 +83,18 @@
 - [14 Testing](class14/)
 - [15 flag and spf13 Cobra/Viper](class15/)
 - [16 MySQL](class16/)
-- [17 Web (Gorilla web toolkit)](class17/)
+- [17 Web](class17/)
   - Go Template 語法
   - Context in Request (Request-Scoped)
   - Cookie
-  - Gorilla
-    - Mux
-      - Middleware
-    - Shema
-    - Secure Cookie
-    - CSRF
+- [Gorilla](gorilla/)
+  - Mux
+  - Middleware
+  - Shema
+  - Secure Cookie
+  - CSRF
+- [Echo](echo/)
+  - Hello world
 - [18 RESTful, Protobuf and gRPC](class18/)
   - RESTful using Gorilla
   - Protobuf
