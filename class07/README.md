@@ -141,16 +141,6 @@ func main() {
 1. 避免 pass by value 的記憶體浪費
 1. 避免 golang 在 struct pointer 語法上的 puzzle (因為 struct 與 struct pointer 在 call method 的語法都一樣，不像 C 有分 `.` 與 `->`).
 
-## Summary
-
->The rule about pointers vs. values for receivers is that value methods can be invoked on pointers and values, but pointer methods can only be invoked on pointers.
-
-[From Effective Go](https://golang.org/doc/effective_go.html#pointers_vs_values)
-
-|         | Pointer Method | Value Method |
-|:-------:|:--------------:|:------------:|
-| Pointer | O              | O            |
-| Value   | X              | O            |
 
 ## Method Signature
 
