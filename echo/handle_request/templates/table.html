@@ -1,0 +1,18 @@
+{{ define "table" }}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+    </head>
+    <body>
+        {{ template "head" . }}
+		<table>
+			<thead><th>ID</th><th>Name</th><th>Email</th></thead>
+			<tbody>
+				<tr><td>{{.ID}}</td><td>{{.Name}}</td><td>{{.Email}}</td></tr>
+			</tbody>
+		</table>
+		{{ template "foot" . }}
+    </body>
+</html>
+{{ end }}

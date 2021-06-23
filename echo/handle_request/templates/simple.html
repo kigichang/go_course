@@ -1,0 +1,13 @@
+{{ define "simple" }}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+    </head>
+    <body>
+        {{ template "head" . }}
+		{{ .ID }} / {{.Name}} / {{.Email}}
+		{{ template "foot" . }}
+    </body>
+</html>
+{{ end }}

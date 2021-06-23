@@ -31,3 +31,8 @@ func main() {
 	- Echo 有自定義 handler function `func(c echo.Context) error`。
 - 回應字串: `c.String(http.StatusOK, "hello world")`。第一個參數為 http status code。
 -  啟動 Web server，監聽 `8080` port: `e.Logger.Fatal(e.Start(":8080"))`
+
+@import "handle_request_and_response.md"
+@import "bind_validate.md"
+@import "cookie.md"
+@import "middleware_and_custom_context.md"

@@ -55,9 +55,6 @@
   - First Class
 - [07 Methods](class07/)
   - Methods in Value and Pointer
-- [Build and Dependency](class_build_dependency)
-  - Build cross platform
-  - Go Module `go mod`
 - [08 Interface](class08/)
   - Interface in Struct and Pointer
   - Interface value
@@ -127,8 +124,11 @@
   - Javascript Call Go
   - File and FileReader
   - Conversion Javascript Uint8Array and Go Byte Slice
-
+- [Build and Dependency](class_build_dependency)
+  - Build cross platform
+  - Go Module `go mod`
 ## 新增
 
-- Go 1.13 Error 新功能
+- Go 1.13 Error 功能
+- Go 1.16 embed 功能
 - Go WebAssembly
