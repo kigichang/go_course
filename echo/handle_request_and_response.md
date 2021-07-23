@@ -170,3 +170,5 @@ e.GET("/render", func(c echo.Context) error {
 - `curl -v http://127.0.0.1:8080/render`
 - `curl -v http://127.0.0.1:8080/render?tmpl=table`
 - `curl -v http://127.0.0.1:8080/render?tmpl=simple`
+
+### Group Router

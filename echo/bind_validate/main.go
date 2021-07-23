@@ -18,7 +18,7 @@ type (
 	}
 
 	User struct {
-		ID    int    `json:"id"`
+		ID    int    `json:"id" param:"id" form:"id"`
 		Name  string `json:"name" query:"name" form:"name"`
 		Email string `json:"email" query:"email" form:"email"`
 	}
@@ -62,6 +62,20 @@ func main() {
 		return c.JSONPretty(http.StatusOK, echo.Map{
 			"code": "0000",
 			"data": users,
+		}, "\t")
+	})
+
+	g.PUT("/user/:id", func(c echo.Context) error {
+		user := new(User)
+		if err := c.Bind(user); err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, err)
+		}
+
+		data[user.ID] = user
+
+		return c.JSONPretty(http.StatusOK, echo.Map{
+			"cdoe": "0000",
+			"data": user,
 		}, "\t")
 	})
 
