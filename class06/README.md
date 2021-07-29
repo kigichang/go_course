@@ -193,7 +193,7 @@ fmt.Printf("%T\n", zero)  // "func(int, int) int"
 
 ### First-Class
 
-function 也有資料型別，可以當作變數，或當作另一個 function 的參數及回傳值。
+function 也是一種資料型別，可以當作變數，或當作另一個 function 的參數及回傳值。
 以 Go 來說，**signature** 是 Function 的資料型別。當宣告 funcation 沒有指定 name 時，則稱為 **anonymous function**
 
 #### Assignment
