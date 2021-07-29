@@ -412,17 +412,19 @@ Go Package 概念跟 Java package, C/PHP namespace 類似。主要用意：
 1. Encapsulation
 1. Reuse
 
-package 命名時要注意，除了 `main` 之外，目錄的名稱要與 package 相同。
+package 命名時要注意，除了 `main` 之外，目錄的名稱建議與 package 相同。
 
 ~~import 的路徑，由 `$GOPATH/src` 以下目錄開始。~~
 
-比如有一個專案路徑 `gopl.io/ch1/`，package 命名 `helloworld`, 則開一個 `helloworld` 目錄。完整路徑 `YOUR_PROJECT_PATH/gopl.io/ch1/helloworld`，並在該目錄下，執行 `go mod init gopl.io/ch1/helloworld`
+比如有一個 package 為 `gopl.io/ch1/helloworld`, 則開一個 `helloworld` 目錄。完整路徑 `YOUR_PROJECT_PATH/helloworld`，並在該目錄下，執行 `go mod init gopl.io/ch1/helloworld`
 
 import 則用
 
 ```go {.line-numbers}
 import "gopl.io/ch1/helloworld"
 ```
+
+package 名稱會是在 `go mod init` 定義。
 
 ### Package Initialization (ex02_04)
 
