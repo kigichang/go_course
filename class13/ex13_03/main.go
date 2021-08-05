@@ -85,7 +85,9 @@ func main() {
 	}
 
 	// generate goroutine to read data from out channel
+	wait.Add(1)
 	go func() {
+		defer wait.Done()
 		for x := range out {
 			log.Println("out got:", x)
 		}
