@@ -178,7 +178,7 @@ func main() {
         jobs = append(jobs, Job{i})
     }
 
-    wait := sync.WaitGroup{}
+    wait := &sync.WaitGroup{}
 
     for _, x := range jobs {
         wait.Add(1)

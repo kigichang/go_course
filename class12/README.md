@@ -19,7 +19,7 @@ import (
 )
 
 var (
-    waitGroup = sync.WaitGroup{}
+    waitGroup = &sync.WaitGroup{}
 )
 
 func writeChannel(c chan<- int, x int) {
