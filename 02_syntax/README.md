@@ -1,6 +1,41 @@
 # 02 程式結構與語法
 
-## 關鍵字
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [02 程式結構與語法](#02-程式結構與語法)
+  - [1. Build-in](#1-build-in)
+    - [1.1 關鍵字](#11-關鍵字)
+    - [1.2 內建常數](#12-內建常數)
+    - [1.3 資料型別](#13-資料型別)
+    - [1.4 內建 Function](#14-內建-function)
+  - [2. 宣告 Declaraion](#2-宣告-declaraion)
+    - [2.1 完整寫法](#21-完整寫法)
+    - [2.2 簡寫](#22-簡寫)
+    - [2.3 Default Type](#23-default-type)
+    - [2.4 注意事項](#24-注意事項)
+  - [3. 數值宣告](#3-數值宣告)
+  - [4. Constants](#4-constants)
+  - [5. iota (ex02_01)](#5-iota-ex02_01)
+  - [6. 指標 (Pointer)](#6-指標-pointer)
+  - [7. 元組 (Tuple)](#7-元組-tuple)
+  - [8. ==type== Keyword](#8-type-keyword)
+    - [8.1 Type Declaration (ex02_02)](#81-type-declaration-ex02_02)
+      - [華氏、攝氏型別宣告與轉換](#華氏-攝氏型別宣告與轉換)
+    - [8.2 Type Alias (ex02_03)](#82-type-alias-ex02_03)
+    - [8.3 Type Declaration & Alias 差別](#83-type-declaration-alias-差別)
+  - [9. Package and Imports](#9-package-and-imports)
+    - [9.1 Package Initialization (ex02_04)](#91-package-initialization-ex02_04)
+    - [9.2 目錄結構](#92-目錄結構)
+      - [程式碼](#程式碼)
+  - [10. 變數 Visibiility](#10-變數-visibiility)
+  - [11. 變數 Scope](#11-變數-scope)
+
+<!-- /code_chunk_output -->
+
+## 1. Build-in
+### 1.1 關鍵字
 
 ```go
 break    default     func   interface select
@@ -10,13 +45,13 @@ const    fallthrough if     range     type
 continue for         import return    var
 ```
 
-## 內建常數
+### 1.2 內建常數
 
 ```go
 true  false  iota  nil
 ```
 
-## 資料型別
+### 1.3 資料型別
 
 ```go
 int  int8  int16  int32  int64 uint  uint8  uint16  uint32  uint64 uintptr
@@ -24,7 +59,7 @@ float32  float64  complex64  complex128
 bool  byte  rune  string  error
 ```
 
-## 內建 Function
+### 1.4 內建 Function
 
 ```go
 make  len  cap  new  append  copy delete close
@@ -32,83 +67,87 @@ complex  real  imag
 panic  recover
 ```
 
-## 宣告 Declaraion
+## 2. 宣告 Declaraion
 
-### 完整寫法
+### 2.1 完整寫法
 
 ```go
 var name type = expression
 ```
 
-#### 不給初始值時，可以省略 `= expression`
+- 不給初始值時，可以省略 `= expression`
 
-```go
-var name type
-```
-
-#### 給初始值時，則可以省略 ==type==
-
-```go
-var name = expression
-```
-
-1. 宣告變數，不給初始值
-
-	```go {.line-numbers}
-	var s string
-	fmt.Println(s) // ""
+	```go
+	var name type
 	```
 
-1. 一次宣告多個變數，並給初始值(可省略型別)
+- 給初始值時，則可以省略 ==type==
 
-	```go {.line-numbers}
-	var i, j, k int                 // int, int, int
-	var b, f, s = true, 2.3, "four" // bool, float64, string
+	```go
+	var name = expression
 	```
 
-1. 接收 return 值，可 return 多組值。
+- 使用方式如下：
+
+	1. 宣告變數，不給初始值
+
+		```go {.line-numbers}
+		var s string
+		fmt.Println(s) // ""
+		```
+
+	1. 一次宣告多個變數，並給初始值(可省略型別)
+
+		```go {.line-numbers}
+		var i, j, k int                 // int, int, int
+		var b, f, s = true, 2.3, "four" // bool, float64, string
+		```
+
+	1. 接收 return 值，可 return 多組值。
+
+		```go {.line-numbers}
+		var f, err = os.Open(name) // os.Open returns a file and an error
+		```
+
+### 2.2 簡寫
+
+- 宣告時，省略 `var`
 
 	```go {.line-numbers}
-	var f, err = os.Open(name) // os.Open returns a file and an error
+	name := expression
 	```
 
-### 簡寫
+- 使用方式如下：
 
-#### 宣告時，省略 `var`
+	1. 省略型別宣告
 
-```go {.line-numbers}
-name := expression
-```
+		```go {.line-numbers}
+		i, j := 0, 1
+		```
 
-1. 省略型別宣告
+	1. 接收 return 值
 
-	```go {.line-numbers}
-	i, j := 0, 1
-	```
+		```go {.line-numbers}
+		anim := gif.GIF{LoopCount: nframes}
+		freq := rand.Float64() * 3.0
+		t := 0.0
 
-1. 接收 return 值
+		f, err := os.Open(name)
+		if err != nil {
+			return err
+		}
 
-	```go {.line-numbers}
-	anim := gif.GIF{LoopCount: nframes}
-	freq := rand.Float64() * 3.0
-	t := 0.0
+		// ...use f...
 
-	f, err := os.Open(name)
-	if err != nil {
-		return err
-	}
+		f.Close()
+		```
 
-	// ...use f...
-
-	f.Close()
-	```
-
-#### Default Type
+### 2.3 Default Type
 
 當省略型別時，
 
-- 整數型別預設是 int
-- 浮點數預設是 float64
+- 整數型別預設是 __int__
+- 浮點數預設是 __float64__
 
 ```go {.line-numbers}
 i := 0      // int
@@ -116,7 +155,7 @@ f := 0.0    // float64
 s := ""     // string
 ```
 
-##### 注意事項
+### 2.4 注意事項
 
 使用 `:=` 時，左邊的變數名稱，至少要有一個是新的。
 
@@ -140,7 +179,7 @@ s := ""     // string
 
 	以上，`f` 與 `err` 都是舊的變數，所以在第二次，還是使用 `:=` 時，compile 會錯。通常 compile 會報錯，都不是什麼大問題，修正就好了。
 
-## 數值宣告
+## 3. 數值宣告
 
 以往宣告很大數值時，無法像 excel 每千分位，用 `,` 來區隔。現在 Go 也支援這項功能，可以使用 `_` 來區隔。
 
@@ -149,7 +188,7 @@ var x int64 = 123_456_789
 var y float64 = 12_345.678_9
 ```
 
-## Constants
+## 4. Constants
 
 與 C 相同，利用 `const` 這個關鍵字來宣告常數。
 
@@ -164,7 +203,12 @@ const (
 )
 ```
 
-## iota (ex02_01)
+## 5. iota (ex02_01)
+
+可以使用 `iota` 來實作 Enumeraion 的功能。
+
+1. 使用在 `const`。
+1. 從 0 開始。
 
 [itoa 詳細說明](https://github.com/golang/go/wiki/Iota)
 
@@ -216,7 +260,7 @@ const (
 )
 ```
 
-## 指標 (Pointer)
+## 6. 指標 (Pointer)
 
 使用方法及觀念與 C 相同，`&` 取變數的指標，`*` 取指標內的值；需注意的是，C 可以對指標做位移，但 Go 不行。[^unsafe]
 
@@ -240,7 +284,7 @@ const (
 	b++     // invalid operation: b++ (non-numeric type *int)
 	```
 
-## Tuple
+## 7. 元組 (Tuple)
 
 近期的程式語言，大多有支援 tuple 功能，早期的則沒有。如果沒有支援 tuple 時，就需要用 class or struct 來封裝回傳。
 
@@ -272,11 +316,11 @@ const (
 	}
 	```
 
-## ==type== Keyword
+## 8. ==type== Keyword
 
 在 Go 可以使用 `type` 來宣告一個新的 data type，或幫舊的 data type 取一個別名，來增加程式碼的可讀性。
 
-### Type Declaration (ex02_02)
+### 8.1 Type Declaration (ex02_02)
 
 可以使用 `type` 來宣告一個新的 data type，通常用在宣告 struct 或 interface。我們也可以使用 `type` 的擴充既有型別的功能。
 
@@ -336,7 +380,7 @@ func FToC(f Fahrenheit) Celsius { return Celsius((f - 32) * 5 / 9) }
 
 	注意，雖然 `Celsius` 及 `Fahrenheit` 底層都是 `float64`，但都還是要視為不同的型別。
 
-### Type Alias (ex02_03)
+### 8.2 Type Alias (ex02_03)
 
 Go 可以幫 type 取別名 (alias), 宣告的語法：
 
@@ -395,7 +439,7 @@ func main() {
 }
 ```
 
-### 差別
+### 8.3 Type Declaration & Alias 差別
 
 **Type Declaration** 與 **Type Alias** 主要的差別：
 
@@ -404,7 +448,7 @@ func main() {
 | Type Declaration | yes     | yes     |
 | Type Alias       | no      | no      |
 
-## Package and Imports
+## 9. Package and Imports
 
 Go Package 概念跟 Java package, C/PHP namespace 類似。主要用意：
 
@@ -426,11 +470,11 @@ import "gopl.io/ch1/helloworld"
 
 package 名稱會是在 `go mod init` 定義。
 
-### Package Initialization (ex02_04)
+### 9.1 Package Initialization (ex02_04)
 
 package 中，可以在某一個程式檔案，定義 `func init()`。當 package 被載入時，會先執行 `init` 的程式碼。
 
-#### 目錄結構
+### 9.2 目錄結構
 
 ```text
 .
@@ -447,7 +491,7 @@ package 中，可以在某一個程式檔案，定義 `func init()`。當 packag
 	```go
 	module ex02_04
 
-	go 1.13
+	go 1.17
 	```
 
 - util.go
@@ -479,7 +523,7 @@ package 中，可以在某一個程式檔案，定義 `func init()`。當 packag
 
 	func main() {
 		fmt.Println("start...")
-		fmt.Println(util.Hello("NuEiP"))
+		fmt.Println(util.Hello("Gopher"))
 	}
 	```
 
@@ -488,16 +532,16 @@ package 中，可以在某一個程式檔案，定義 `func init()`。當 packag
 	```text
 	package util initialize
 	start...
-	hello NuEiP
+	hello Gopher
 	```
 
-## 變數 Visibiility
+## 10. 變數 Visibiility
 
 Go 沒有 **private** and **public** 關鍵字，而是利用字母的**大**、**小**寫來區分 **public** 及 **private**。如果變數或 function 是**小寫**開頭，則為 **private**，反之，**大寫**就是 **public**。
 
 注意：**在同 package 下，可以存取 struct 內的 private 變數 (Package Private)。**
 
-## 變數 Scope
+## 11. 變數 Scope
 
 與其他語言相同，與 java 不同點是有 global 變數。
 

@@ -7,5 +7,5 @@ import (
 
 func main() {
 	fmt.Println("start...")
-	fmt.Println(util.Hello("NuEiP"))
+	fmt.Println(util.Hello("Gopher"))
 }
