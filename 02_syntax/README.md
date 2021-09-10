@@ -29,8 +29,9 @@
     - [9.1 Package Initialization (ex02_04)](#91-package-initialization-ex02_04)
     - [9.2 目錄結構](#92-目錄結構)
       - [程式碼](#程式碼)
-  - [10. 變數 Visibiility](#10-變數-visibiility)
-  - [11. 變數 Scope](#11-變數-scope)
+  - [10. Go Wildcard](#10-go-wildcard)
+  - [11. 變數 Visibiility](#11-變數-visibiility)
+  - [12. 變數 Scope](#12-變數-scope)
 
 <!-- /code_chunk_output -->
 
@@ -535,13 +536,31 @@ package 中，可以在某一個程式檔案，定義 `func init()`。當 packag
 	hello Gopher
 	```
 
-## 10. 變數 Visibiility
+## 10. Go Wildcard
+
+Go 的 wildcard 是 `_`，可以用在以下情境：
+
+1. 因為 Go compiler 會檢查沒有使用的變數，如果不想使用該數值時，可以使用 `_` 來取代。
+
+```go {.line-numbers}
+_ = test()
+```
+
+1. 在宣告函式時，有些參數確定不會被用到，可以在宣告時使用 `_`。
+
+```go {.line-numbers}
+func mytest(_ int, str string) {
+	
+}
+```
+
+## 11. 變數 Visibiility
 
 Go 沒有 **private** and **public** 關鍵字，而是利用字母的**大**、**小**寫來區分 **public** 及 **private**。如果變數或 function 是**小寫**開頭，則為 **private**，反之，**大寫**就是 **public**。
 
 注意：**在同 package 下，可以存取 struct 內的 private 變數 (Package Private)。**
 
-## 11. 變數 Scope
+## 12. 變數 Scope
 
 與其他語言相同，與 java 不同點是有 global 變數。
 
