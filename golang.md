@@ -22,7 +22,6 @@ presentation:
 - Go History
 - Projects and Companies Using Go
 - Go Pros and Cons
-- Go in Cyberon
 
 <!-- slide -->
 
