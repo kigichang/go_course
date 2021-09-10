@@ -1,11 +1,15 @@
 # Golang 學習筆記
 
-- GO 版本: Go 1.16
-- 開發環境: Mac OS
-- [Source on Github](https://github.com/kigichang/go_course)
-- 文件使用 Markdown 撰寫，建議使用 [Markdown Preview Enhanced](https://github.com/shd101wyy/markdown-preview-enhanced) 閱讀
+個人多年來學習與實作上的心得筆記。如有錯誤或建議，可以隨時與我連絡。
+## 開發環境
 
-資料主要來自：
+- GO 版本: Go 1.17
+- 開發環境: Mac OS (amd64)
+- 開發工具: [VSCode](https://code.visualstudio.com/)
+- 文件使用 Markdown 撰寫，建議使用 [Markdown Preview Enhanced](https://github.com/shd101wyy/markdown-preview-enhanced) 閱讀
+- [Source on Github](https://github.com/kigichang/go_course)
+
+## 主要資料來源
 
 1. 官網：[https://golang.org/](https://golang.org/)
 1. 線上學習：[A tour of Go](https://tour.golang.org/list)
@@ -15,16 +19,18 @@
 1. [Go Mobile](https://github.com/golang/go/wiki/Mobile)
 1. [Go WebAssembly](https://github.com/golang/go/wiki/WebAssembly)
 
-其他資源：
+## 其他資料
 
 1. [Go Dev](https://go.dev/)
 1. [Go Wiki](https://github.com/golang/go/wiki)
 1. [Awesome Go](https://awesome-go.com/)
-1. [Effective Go](https://golang.org/doc/effective_go)
+1. [Effective Go](https://golang.org/doc/effective_go) (必讀)
 
 ## Summary
 
-- [Summary](README.md)
+- [本文件](README.md)
+### 一、Go 基礎說明
+
 - [01 開發環境與語言簡介](class01/)
   - 參考文件
   - IDE 設定
@@ -68,6 +74,12 @@
     - Closure Binding
   - Panic and Recover
   - Errors (new feature in Go 1.13)
+- [14 Testing](class14/)
+
+- [Build and Dependency](class_build_dependency)
+  - Build cross platform
+  - Go Module `go mod`
+### 二、多執行緒
 - [11 Concurrency - Goroutine](class11/)
   - Keyword `go`
   - `sync.WaitGroup`
@@ -77,7 +89,8 @@
   - Actor Pattern
   - `select` to monitor channels
 - [13 Context](class13/)
-- [14 Testing](class14/)
+
+### 三、實作應用
 - [15 flag and spf13 Cobra/Viper](class15/)
 - [16 MySQL](class16/)
 - [17 Web](class17/)
@@ -97,6 +110,9 @@
   - Protobuf
     - Protoc (Protobuf Compliler)
   - gRPC (Client and Service)
+
+### 四、Go 進階功能
+
 - [19 Reflection and Struct Tag](class19/)
   - Type and Value
   - Strut Tag
@@ -112,6 +128,9 @@
     - Swig
     - DIY
   - C Call Go with Static Library
+
+### 五、實驗中功能
+
 - [21 Go WebAssembly](class21/)
   - WebAssembly Introduction
   - DOM in Go WASM
@@ -124,11 +143,12 @@
   - Javascript Call Go
   - File and FileReader
   - Conversion Javascript Uint8Array and Go Byte Slice
-- [Build and Dependency](class_build_dependency)
-  - Build cross platform
-  - Go Module `go mod`
+
+- [x Type Parameters and Go Generic]
+
 ## 新增
 
 - Go 1.13 Error 功能
 - Go 1.16 embed 功能
 - Go WebAssembly
+- Go Generic & Go2Go (Go 1.8)
