@@ -35,14 +35,14 @@
   - 參考文件
   - IDE 設定
   - 與 C/Java/PHP 簡單比較
-- [02 程式結構與語法](02_syntax)
+- [02 程式結構與語法](02_syntax/)
   - 關鍵字
   - 基本語法
   - `iota`
   - `type`
   - 指標
   - Package
-- [03 Data Types - Basic Types](class03/)
+- [03 Data Types - Basic Types](03_basic_types/)
   - Number
   - Boolean
   - String
