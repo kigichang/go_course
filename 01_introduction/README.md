@@ -19,11 +19,11 @@
     - [3.5 有指標 (Pointer)](#35-有指標-pointer)
     - [3.6 沒有物件導向 (OO, Object Oriented)](#36-沒有物件導向-oo-object-oriented)
     - [3.7 變數 Visibility](#37-變數-visibility)
-    - [3.7 Summary](#37-summary)
+    - [3.8 Summary](#38-summary)
   - [4. Soruce Code 放法](#4-soruce-code-放法)
   - [5. Hello World (ex01-01)](#5-hello-world-ex01-01)
     - [5.1 說明](#51-說明)
-  - [Arguemnts (ex01-02)](#arguemnts-ex01-02)
+  - [6. Arguemnts (ex01-02)](#6-arguemnts-ex01-02)
 
 <!-- /code_chunk_output -->
 
@@ -128,7 +128,7 @@ Go __沒有繼承__。但 Go 可以透 Anonymous Embbed 與 Interface 達到繼�
 - 大寫：__Public__
 - 小寫：__Private__
 
-### 3.7 Summary
+### 3.8 Summary
 
 - 寫 Go 與寫 C 類似，但有 GC，可以省去記憶體管理工作.
 - 因為沒有 OO，只有封裝，沒有繼承等功能
@@ -194,4 +194,5 @@ func main() {
 }
 ```
 
+1. 執行方式：`go run .` or `go run . Gopher`
 利用 `os.Args` 來接 command line 傳進來的參數。`os.Args[0]` 是執行檔的完整檔名，所以傳入的參數值要從 `os.Args[1]` 開始。Golang 有內建 `flag` 套件來管理參數，但如果要寫較複雜的 command line 程式，建議用 [spf13/cobra](https://github.com/spf13/cobra)。
