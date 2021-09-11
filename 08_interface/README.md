@@ -33,7 +33,7 @@ Interface 對於初學程式的人，會是個很抽象的概念。Interface 有
 1. 建立關聯
 1. 去耦合(Decouple)
 
-可以想像一種情境，進到公園，寵物需要繫上牽繩。繫上牽繩這備行為，是就是一種 Interface。
+可以想像一種情境，進到公園，寵物需要繫上牽繩。繫上牽繩這種行為，是就是一種 Interface。
 
 1. 限制 (Constrain)：凡是要進公園的寵物，都要繫上牽繩。
 1. 建立關聯：只有繫上牽繩的寵物都可以進公園。
@@ -43,7 +43,7 @@ Interface 對於初學程式的人，會是個很抽象的概念。Interface 有
 
 當發現程式內的多個 Struct 都有相同的行為時，可以透過設計 Interface，來讓程式更有彈性，也更好維護。
 
-比如，`DB`, `Net` 與 `File` 都有共同的行為 `Read`，礙於 Go 是強型別的程式語言，主程式需會要設計不同 Function (`ReadDB`, `ReadNet`, `ReadFile`)，來讀取不同資料來源的資料。
+比如，`DB`, `Net` 與 `File` 都有共同的行為 `Read`，礙於 Go 是強型別的程式語言，主程式需會要設計不同 Functions (`ReadDB`, `ReadNet`, `ReadFile`)，來讀取不同資料來源的資料。
 
 ```go {.line-numbers}
 type DB struct{}
