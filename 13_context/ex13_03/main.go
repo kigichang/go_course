@@ -35,7 +35,7 @@ func ReadAll(ctx context.Context, wait *sync.WaitGroup, channels ...chan interfa
 
 		for len(cases) > 1 {
 			i, v, ok := reflect.Select(cases)
-			log.Println(i, v, ok)
+			log.Println("selected", i, v, ok)
 			if i == 0 { // timeout and exit
 				log.Println("cancel !!!")
 				return
