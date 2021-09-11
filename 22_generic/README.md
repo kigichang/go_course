@@ -1,0 +1,4 @@
+# Generic
+
+## Type Parameters
+

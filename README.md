@@ -104,7 +104,7 @@
   - CSRF
 - [Echo](echo/)
   - Hello world
-- [18 RESTful, Protobuf and gRPC](class18/)
+- [18 RESTful, Protobuf and gRPC](18_restful_and_grpc)
   - RESTful using Gorilla
   - Protobuf
     - Protoc (Protobuf Compliler)
@@ -112,7 +112,7 @@
 
 ### 四、Go 進階功能
 
-- [19 Reflection and Struct Tag](class19/)
+- [19 Reflection and Struct Tag](19_reflect)
   - Type and Value
   - Strut Tag
   - Check Interface implementation
@@ -120,7 +120,7 @@
   - Make Slice
   - Make Map
   - Make Function
-- [20 Cowork with C/C++](class20/)
+- [20 Cowork with C/C++](20_cgo)
   - Go `unsafe` Package
   - Go String and *C.char
   - Go call C

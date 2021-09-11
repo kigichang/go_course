@@ -94,8 +94,8 @@ func getCookie(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, allCookie)
 }
 
-func toNUEiP(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Location", "https://www.nueip.com/")
+func toGo(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Location", "https://go.dev/")
 	w.WriteHeader(http.StatusFound)
 }
 
@@ -107,7 +107,7 @@ func main() {
 	mux.HandleFunc("/", test)
 	mux.HandleFunc("/set_cookie", setCookie)
 	mux.HandleFunc("/get_cookie", getCookie)
-	mux.HandleFunc("/nueip", toNUEiP)
+	mux.HandleFunc("/nueip", toGo)
 
 	if err := http.ListenAndServe(":8080", mux); err != nil {
 		log.Fatal(err)
