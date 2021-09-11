@@ -1,43 +1,38 @@
 # 15 flag and spf13 Cobra/Viper
 
+
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [15 flag and spf13 Cobra/Viper](#15-flag-and-spf13-cobraviper)
+  - [0. 說明](#0-說明)
+  - [1. Go flag](#1-go-flag)
+  - [2. Viper](#2-viper)
+    - [2.1 取值](#21-取值)
+    - [2.2 自定 Viper, 不使用預設的 viper](#22-自定-viper-不使用預設的-viper)
+  - [3 Cobra](#3-cobra)
+    - [3.1 Cobra 參數管理方式](#31-cobra-參數管理方式)
+    - [3.2 定義 Sub commands](#32-定義-sub-commands)
+    - [3.3 定義 flag，參數與工作](#33-定義-flag參數與工作)
+    - [3.3 測試](#33-測試)
+    - [3.4 與 Viper 結合](#34-與-viper-結合)
+      - [main.go](#maingo)
+      - [config.json](#configjson)
+      - [執行](#執行)
+      - [Summary](#summary)
+
+<!-- /code_chunk_output -->
+
+## 0. 說明
+
 - Go flag: 內建程式參數管理。
 - spf13/Cobra: 進階程式參數管理，可實作類似 `go` 或 `docker` 程式效果。
 - spf13/Viper: 設定檔套件，支援多種設定檔格式(.json, .yaml 等)。
 
-## Go flag
+## 1. Go flag
 
-```go {.line-numbers}
-package main
-
-import (
-    "flag"
-    "log"
-)
-
-var (
-    account, password string
-    debug             bool
-)
-
-func main() {
-    flag.StringVar(&account, "account", account, "account to login")
-    flag.StringVar(&password, "password", password, "password for account")
-    flag.BoolVar(&debug, "debug", debug, "dump account and password or not")
-
-    flag.Parse()
-
-    if account == "" || password == "" {
-        flag.PrintDefaults()
-        return
-    }
-
-    if debug {
-        log.Println("account:", account, "password:", password)
-    }
-
-    log.Println("end")
-}
-```
+@import "ex15_01/main.go" {class="line-numbers"}
 
 說明：
 
@@ -79,7 +74,7 @@ func main() {
     2020/01/16 15:22:44 end
     ```
 
-## Viper
+## 2. Viper
 
 - [Viper](https://github.com/spf13/viper) 設定檔套件。
 - 支援 JSON, TOML, YAML, HCL, and Java properties 等格式
@@ -91,39 +86,11 @@ eg: 在專案的目錄下，放置一個 **config.json** 的設定檔，Viper �
 
 eg:
 
-```go { .line-numbers }
-package main
-
-import (
-    "fmt"
-    "os"
-
-    "github.com/spf13/viper"
-)
-
-func main() {
-
-    viper.AddConfigPath(".")
-    viper.SetConfigName("config")
-
-    if err := viper.ReadInConfig(); err != nil {
-        fmt.Println(err)
-        os.Exit(1)
-    }
-    fmt.Println("abc: ", viper.GetString("abc"))
-    fmt.Println("aaa: ", viper.GetBool("aaa"))
-    fmt.Println("def: ", viper.GetString("cccccc"))
-}
-```
+@import "ex15_02/main.go" {class="line-numbers"}
 
 設定檔 **config.json**:
 
-```json {.line-numbers}
-{
-    "abc": "def",
-    "aaa": true
-}
-```
+@import "ex15_02/config.json" {class="line-numbers"}
 
 結果：
 
@@ -133,53 +100,7 @@ aaa:  true
 def:
 ```
 
-### 自定 Viper, 不使用預設的 viper
-
-Viper 也允許自己產生一個全新的 viper，方便管理不同的設定檔。
-
-eg:
-
-```go { .line-numbers }
-package main
-
-import (
-    "fmt"
-    "log"
-    "os"
-
-    "github.com/spf13/viper"
-)
-
-// LoadFile ...
-func LoadFile(config string) (*viper.Viper, error) {
-    v := viper.New()
-
-    v.SetConfigFile(config)
-    if err := v.ReadInConfig(); err != nil {
-        return nil, err
-    }
-    return v, nil
-}
-
-func main() {
-
-    config, err := LoadFile("myconfig.json")
-    if err != nil {
-        log.Println(err)
-        return
-    }
-
-    if err := config.ReadInConfig(); err != nil {
-        fmt.Println(err)
-        os.Exit(1)
-    }
-    fmt.Println("abc: ", config.GetString("abc"))
-    fmt.Println("aaa: ", config.GetBool("aaa"))
-    fmt.Println("def: ", config.GetString("cccccc"))
-}
-```
-
-### 取值
+### 2.1 取值
 
 ```go { .line-numbers }
 Get(key string) : interface{}
@@ -199,13 +120,21 @@ IsSet(key string) : bool
 
 [詳細說明](https://github.com/spf13/viper#getting-values-from-viper)
 
-## Cobra
+### 2.2 自定 Viper, 不使用預設的 viper
+
+Viper 也允許自己產生一個全新的 viper，方便管理不同的設定檔。
+
+eg:
+
+@import "ex15_03/main.go" {class="line-numbers"}
+
+## 3 Cobra
 
 [Cobra](https://github.com/spf13/cobra)
 
 管理 Command line 程式參數的套件，雖然 Go 已有內建 Flag 套件，但很多第三方套件還是用 Cobra。
 
-### Cobra 參數管理方式
+### 3.1 Cobra 參數管理方式
 
 以 docker 為例，當執行 `docker` 時：
 
@@ -262,7 +191,7 @@ Options:
 
 以下，是模擬以上的效果。
 
-### Step 1 Sub commands
+### 3.2 定義 Sub commands
 
 先產生 root 及 sub commands
 
@@ -303,7 +232,7 @@ Additional help topics:
 
 執行 `go run . create` or `go run . update` 會立即執行完畢，因為我們還沒定義 sub command 要做什麼事情。
 
-### 定義 flag，參數與工作
+### 3.3 定義 flag，參數與工作
 
 接下來定義每個 sub command 需要的 flag, 參數與工作。
 
@@ -376,7 +305,7 @@ func main() {
     }
     ```
 
-### 測試
+### 3.3 測試
 
 1. `go run . create`
 
@@ -430,7 +359,7 @@ func main() {
 
     boolean 型別的 flag，後面可以不用接值。
 
-### 與 Viper 結合
+### 3.4 與 Viper 結合
 
 可以將 flag 當作設定檔的資料。如此一來，在大型的程式中，就可以統一都使用 Viper 來當共用設定，而這些設定可以是來自設定檔或者是 command line 的 flag。
 
@@ -440,73 +369,11 @@ eg:
 
 #### main.go
 
-```go { .line-numbers }
-package main
-
-import (
-    "fmt"
-    "os"
-
-    "github.com/spf13/cobra"
-    "github.com/spf13/viper"
-)
-
-var (
-    name  string
-    proxy bool
-    test  string
-)
-
-func main() {
-    viper.AddConfigPath(".")
-    viper.SetConfigName("config")
-
-    if err := viper.ReadInConfig(); err != nil {
-        fmt.Println(err)
-        os.Exit(1)
-    }
-
-    rootCmd := &cobra.Command{Use: "myapp"}
-
-    createCmd := &cobra.Command{Use: "create"}
-
-    updateCmd := &cobra.Command{Use: "update"}
-
-    createCmd.Flags().StringVarP(&name, "name", "n", "myname", "assign a name")
-    createCmd.Flags().BoolVarP(&proxy, "proxy", "p", false, "use proxy to connect")
-
-    createCmd.Args = cobra.ExactArgs(1)
-
-    createCmd.Run = func(cmd *cobra.Command, args []string) {
-        fmt.Println("creating")
-        fmt.Println("name:", name)
-        fmt.Println("proxy:", proxy)
-        fmt.Println("args:", args)
-    }
-
-    updateCmd.Run = func(cmd *cobra.Command, args []string) {
-        fmt.Println("viper test:", viper.GetString("test"))
-        fmt.Println(args)
-    }
-
-    rootCmd.PersistentFlags().StringVarP(&test, "test", "t", "my test", "test string")
-    viper.BindPFlag("test", rootCmd.PersistentFlags().Lookup("test"))
-
-    rootCmd.AddCommand(createCmd, updateCmd)
-
-    rootCmd.Execute()
-}
-```
+@import "ex15_04/main.go" {class="line-numbers"}
 
 #### config.json
 
-```json
-{
-    "abc": "def",
-    "aaa": true,
-    "test": "xyz"
-}
-```
+@import "ex15_04/config.json" {class="line-numbers"}
 
 #### 執行
 
