@@ -10,8 +10,13 @@ func double(x int) (result int) {
 
 func main() {
 	defer func() {
-		fmt.Printf("defer end")
+		fmt.Println("defer end 1")
 	}()
-	double(4)
+
+	defer func() {
+		fmt.Println("defer end 2")
+	}()
+
+	fmt.Println("double of 4 is", double(4))
 	fmt.Println("main end")
 }

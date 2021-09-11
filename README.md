@@ -69,7 +69,7 @@
   - Encapsulation
   - Inheritance (fake)
   - Polymorphism
-- [10 Defer and Error Handling](class10/)
+- [10 Defer and Error Handling](10_defer_and_error_handling)
   - Defer
     - Closure Binding
   - Panic and Recover

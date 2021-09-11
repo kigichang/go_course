@@ -1,8 +1,24 @@
 # 10 Defer and Error Handling
 
-## Deferred function call
 
-在 code block 或 function 結束後，一定會執行的程式碼。**defer** 的呼叫順序是 **stack** 的 LIFO (Last In First Out)，並且利用當下的變數值來執行。
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [10 Defer and Error Handling](#10-defer-and-error-handling)
+  - [1. Deferred](#1-deferred)
+    - [1.1 Defer in Loop](#11-defer-in-loop)
+    - [1.2 Defer 與 os.Exit](#12-defer-與-osexit)
+  - [2. Panic](#2-panic)
+  - [3. Recover](#3-recover)
+  - [4. Errors](#4-errors)
+    - [4.1 Errors in Go 1.13](#41-errors-in-go-113)
+
+<!-- /code_chunk_output -->
+
+## 1. Deferred
+
+在 code block 或 function 結束後，如果有一定會執行的程式碼，可以使用 __defer__。__defer__ 的呼叫順序是 __stack__ 的 LIFO (Last In First Out)，並且利用當下的變數值來執行。
 
 ```go {.line-numbers}
 package main
@@ -10,17 +26,22 @@ package main
 import "fmt"
 
 func double(x int) (result int) {
-    defer func() { fmt.Printf("double(%d) = %d\n", x, result) }()
-    fmt.Println("before return")
-    return x + x
+	defer func() { fmt.Printf("double(%d) = %d\n", x, result) }()
+	fmt.Println("before return")
+	return x + x
 }
 
 func main() {
-    defer func() {
-        fmt.Printf("defer end")
-    }()
-    double(4)
-    fmt.Println("main end")
+	defer func() {
+		fmt.Println("defer end 1")
+	}()
+
+	defer func() {
+		fmt.Println("defer end 2")
+	}()
+
+	fmt.Println("double of 4 is", double(4))
+	fmt.Println("main end")
 }
 ```
 
@@ -29,8 +50,10 @@ func main() {
 ```text
 before return
 double(4) = 8
+double of 4 is 8
 main end
-defer end
+defer end 2
+defer end 1
 ```
 
 在有關 I/O 處理時，一定會用到。
@@ -48,7 +71,7 @@ func ReadFile(filename string) ([]byte, error) {
 }
 ```
 
-### defer in loop
+### 1.1 Defer in Loop
 
 在 loop 使用 defer 時，要注意：
 
@@ -107,7 +130,7 @@ func main() {
 
 使用 **defer** 要特別小心被呼叫的時機點與綁定的變數值。
 
-### defer 與 os.Exit
+### 1.2 Defer 與 os.Exit
 
 當使用 `os.Exit` 時，設定的 defer function 並**不會被執行**。因此在宣告 defer 之後，就不要再用 `os.Exit` 中斷程式。
 
@@ -117,9 +140,7 @@ fmt.Println("main end")
 os.Exit(0)
 ```
 
-## Error Handling, Panic, Revcover
-
-### Panic
+## 2. Panic
 
 `panic` 會導致程式中斷。在 Go 的設計中，除非是很嚴重的錯誤，才會使用 **panic**，如像 I/O, 設定檔錯誤等。如是預期到，在撰寫程式時，則儘量檢查並用 **error** 來處理。
 
@@ -171,7 +192,7 @@ func Reset(x *Buffer) {
 }
 ```
 
-### Recover
+## 3. Recover
 
 用在取得 panic 發生的原因，通常與 **defer** 撘配使用，用在 debug 執行時期(runtime)的錯誤。
 
@@ -211,7 +232,7 @@ defer 3
 internal error: runtime error: integer divide by zero
 ```
 
-### Errors
+## 4. Errors
 
 `error` 是 Go 內建的 data type，它是一個 interface, 定義如下：
 
@@ -250,7 +271,7 @@ if err != nil {
 func FindMember(id int) (*Member, error)
 ```
 
-#### Errors in Go 1.13
+### 4.1 Errors in Go 1.13
 
 在 Go 1.13 的版本，Error 新增了 Wrap 另一個 error 的功能。詳細可看：[Working with Errors in Go 1.13](https://blog.golang.org/go1.13-errors)
 
@@ -260,7 +281,7 @@ func FindMember(id int) (*Member, error)
     - `errors.Is`: 用來判斷是否是某個 error。
     - `errors.Unwrap`: 取得包裝的 error, 如果沒有，則回傳 nil。
 
-```go
+```go {.line-numbers}
 package main
 
 import (
