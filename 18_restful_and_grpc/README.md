@@ -361,7 +361,7 @@ func main() {
 - Update a category: `curl --include --request PUT --header "Content-type: application/json" --data '{"name": "NB-2", "parent": 1}' http://localhost:8080/categories/2`
 - Delete a category: `curl --include --request DELETE http://localhost:8080/categories/2`
 
-## Protobuf and gRPC
+## gRPC (need updated)
 
 ProtoBuf 是 Google 開發的工具，主要來取代 JSON, 與 XML，通常會用在 RPC (Remote Procedure Call) 上，也因此 ProtoBuf 會撘配 Google 開發的 gRPC 使用。ProtoBuf 本身支援多種常用的程式語言，也因此可以利用 ProtoBuf 當作中介的橋樑，在不同的程式語言間，交換資料。
 
