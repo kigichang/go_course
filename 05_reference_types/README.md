@@ -1,29 +1,113 @@
 # 05 Data Types - Reference Types
 
-- Pointer
-- Slices
-- Maps
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [05 Data Types - Reference Types](#05-data-types-reference-types)
+  - [0. 前言](#0-前言)
+  - [1. Pointer & Passing By Value](#1-pointer-passing-by-value)
+  - [Slices](#slices)
+    - [Slice Declaration](#slice-declaration)
+    - [Array and Slice Relation](#array-and-slice-relation)
+      - [記憶體管理](#記憶體管理)
+        - [Slice Append](#slice-append)
+    - [Slice Travel](#slice-travel)
+  - [Maps](#maps)
+    - [Map Declaration](#map-declaration)
+    - [Put](#put)
+    - [Delete](#delete)
+    - [Get](#get)
+    - [Map Travel](#map-travel)
+
+<!-- /code_chunk_output -->
+
+## 0. 前言
+
+Reference types 有：
+
+- __Pointer__
+- __Slices__
+- __Maps__
 - Functions
 - Channel
 
-## Pointer
+## 1. Pointer & Passing By Value
 
-- 與 C 相同，使用 `&` 來取得 pointer 位置，用 `*` 來存取 pointer 指定的值。
-- 與 C 不同，不能直接對 pointer 做位移。
+Pointer 就好比資料在記憶體的地址 (術語：位址, Address)，每一筆資料都會有自己的位址，且可以透過這組位址，來存取該資料。操作的方式如下：
+
+- 取得 Pointer 的方式，與 C 相同，使用 `&` 來取得 Pointer。
+- 透過 Pointer 取得資料，與 C 相同，用 `*` 來存取 Pointer 指向的資料。
+- 與 C 不同，不能直接對 Pointer 做位移。
 
 ```go {.line-numbers}
-a := 10
-b := &a
-*b = 20
+package main
 
-fmt.Println(a) // 20
+import "fmt"
 
-arr := [3]int{0, 1, 2}
+func AddByValue(a int) {
+	fmt.Printf("Point(%p), Value(%d) of Parameter a\n", &a, a)
+	a += 1
+}
 
-p := &arr
-p++ // invalid operation: p++ (non-numeric type *[3]int)
-fmt.Printf("%p: %v, %v", p, p, *p)
+func AddByPointer(a *int) {
+	fmt.Printf("Pointer(%p), Value(%x) of Paramter a\n", &a, a)
+	*a = *a + 1
+}
+
+func main() {
+	a := 10
+	b := &a
+	*b = 20
+
+	fmt.Println(a) // 20
+
+	arr := [3]int{0, 1, 2}
+
+	p := &arr
+	//p++ // invalid operation: p++ (non-numeric type *[3]int)
+	fmt.Printf("%p: %v, %v\n", p, p, *p)
+
+	fmt.Printf("Point(%p), Value(%d) of a\n", &a, a)
+	AddByValue(a)
+	fmt.Printf("%d\n", a) // 20
+
+	fmt.Printf("Pointer(%p), Value(%x) of b (Pointer of a)\n", &b, b)
+	AddByPointer(b)
+	fmt.Printf("%d\n", a) // 21
+}
 ```
+
+1. 宣告變數，並給定初始值。如：`a := 10`。
+1. 取得變數的 Pointer，並命名變數。如：`b := &a`，取得 `a` 的 Pointer，並命名為 `b`。
+1. 透過 Pointer，改寫資料。如：`*b = 20`。
+1. 此時 `a` 的值，會被改寫成 `20`。
+1. 可以透過 `%p`，來列印 Pointer 內的值。`%p` 只能用在 Pointer。
+
+Pointer 可以視作資料的位址，因此每一個變數，都會有自己的 Pointer。Passing by Value 的步驟如下：
+
+1. 宣告一組相同資料型別的變數，將要傳入函式的變數值，複製一份到新的變數。
+1. 上述的動作，通常稱為 __Clone__。
+1. 函式內的操作都是這組新的變數。
+
+`AddByValue` 與 `AddByPointer` 分別是傳入原生的資料型別與 Pointer。因此也會有不同結果。
+
+執行的結果會類似：
+
+```c
+Point(0xc0000160a0), Value(20) of a
+Point(0xc0000160d8), Value(20) of Parameter a
+20
+Pointer(0xc00000e028), Value(c0000160a0) of b (Pointer of a)
+Pointer(0xc00000e038), Value(c0000160a0) of Paramter a
+21
+```
+
+1. `AddByVale` 與 `AddByValue` 的參數 `a`，與傳入的變數，他們的 Pointer 值不同，代表執行了 clone 的動作，產出了新的一份資料，值是原來傳入的變數值。
+    - `Point(0xc0000160a0)` v.s. `Point(0xc0000160d8)`
+    - `Pointer(0xc00000e028)` v.s. `Pointer(0xc00000e038)`
+1. 在 `AddByValue` 中，因為 clone 了 a，因此資料的位址已經不同了，也就是操作不同的資料。
+1. 在 `AddByPointer` 中，因為 clone 了 a 的 Pointer，因此再透過 Pointer 值(`Value(c0000160a0)`)操作資料時，因為都是用相同的 Pointer 值，就會修改到 `a`。
 
 ## Slices
 
