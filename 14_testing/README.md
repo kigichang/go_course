@@ -1,8 +1,27 @@
 # 14 Testing
 
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [14 Testing](#14-testing)
+  - [0. 前言](#0-前言)
+  - [1. 目錄與檔案](#1-目錄與檔案)
+    - [util.go](#utilgo)
+    - [util_test.go](#util_testgo)
+  - [2. tesint.T](#2-tesintt)
+  - [3. testing.M](#3-testingm)
+  - [4. Benchmark](#4-benchmark)
+  - [5. Example](#5-example)
+  - [6. Package 命名](#6-package-命名)
+
+<!-- /code_chunk_output -->
+
+## 0. 前言
+
 Go 有自帶一個 Unit Test 的工具包。程式寫作時，可以自動做 unit test。使用上的慣例：在當下的目錄下，為每一個程式檔案，再新增一個 xxx_test.go 的檔案，裏面撰寫 unit test 程式。
 
-VSCode Go Plugins 設定：
+VSCode Go Plugins 建議設定：
 
 ```json
 {
@@ -13,7 +32,7 @@ VSCode Go Plugins 設定：
 }
 ```
 
-## 目錄與檔案
+## 1. 目錄與檔案
 
 ```text
 .
@@ -125,7 +144,7 @@ PASS
 ok      util    0.005s
 ```
 
-## tesint.T
+## 2. tesint.T
 
 `testing.T` 是做 unit test 會帶入的參數，它的功能很多 (可參考[官方說明](https://golang.org/pkg/testing/#T))，以下列出常用的 function。
 
@@ -137,9 +156,9 @@ ok      util    0.005s
 
 通常會用到的是 `Log`, `Logf`, `Error`, `Errorf`, `Fatal`, `Fatalf`
 
-## testing.M
+## 3. testing.M
 
-很多情況下，unit test 會需要先產生測試資料，在完成後，刪除測試資料。此時，撰寫 unit test 就好像在寫一個完整的執行程式，此時就會用到 `testing.M`.
+很多情況下，unit test 會需要先產生測試資料，在完成後，刪除測試資料。此時，撰寫 unit test 就好像在寫一個完整的執行程式，此時就會用到 `testing.M`。如果沒有額外的資源，需要在測試前先準備好，則 `TestMain` 是可以省略。
 
 ```go { .line-numbers }
 func TestSum(t *testing.T) {
@@ -162,7 +181,7 @@ func TestMain(m *testing.M) {
 }
 ```
 
-## Benchmark
+## 4. Benchmark
 
 Go Unit Test 套件，也可以做 benchmark 測試，程式碼撰寫在 `xxx_test.go` 中，function 命名與 Test 類似，以 **Benchmark** 開頭。
 
@@ -174,24 +193,24 @@ func BenchmarkSum(b *testing.B) {
 }
 ```
 
-VS Code 預設不會執行 benchmark，因此可以在 console 下，切換到專案目錄，執行 `go test -bench="."`。可以得到以下的結果：
+VS Code 預設不會執行 benchmark，因此可以在 console 下，切換到專案目錄，執行 `go test -bench=.`。可以得到以下的結果：
 
 ```text
+util init
 goos: darwin
 goarch: amd64
-pkg: go_test/class10
-BenchmarkSum-4
-200000000                8.01 ns/op
+pkg: util
+cpu: Intel(R) Core(TM) i5-7267U CPU @ 3.10GHz
+BenchmarkSum-4          170493644                6.997 ns/op
 PASS
-ok      go_test/class10 2.421s
+ok      util    2.192s
 ```
 
-以中 `200000000                8.01 ns/op` 是指本次 benchmark 執行 **200000000** 次數，**8.01 ns/op** 每次花費 **8.01 ns**。
-1 ns/op** 每次花費 **8.01 ns**。
+以中 `170493644                6.997 ns/op` 是指本次 benchmark 執行 **170493644** 次數，**6.997 ns/op** 每次花費 **6.997 ns**。
 
-## Example
+## 5. Example
 
-**Example** 開頭的 function 也可用來測試程式，主要是比對輸出是否正確。在程式碼中，需加入一段**註解**來說明該程式正確的輸出結果為何？
+**Example** 開頭的 function 也可用來測試程式，主要是比對輸出是否正確。在程式碼中，需加入一段**註解**來說明該程式正確的輸出結果為何。這邊的測試，在輸出成說明文件時，也會被當作範例呈現。
 
 - `// Output`: 比對輸出結果，且順序都要一致。
 - `// Unordered Output`: 比對輸出結果，但順序可以不同。
@@ -216,7 +235,7 @@ func ExampleHello() {
 }
 ```
 
-## Package 命名
+## 6. Package 命名
 
 在上例中，`util` 目錄下，有兩個 packages: `util` 及 `util_test`。Golang 在同一個目錄下，只能有一個 package (`util`)及對應的測試 package(`util_test`)。
 

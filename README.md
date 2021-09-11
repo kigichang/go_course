@@ -74,7 +74,7 @@
     - Closure Binding
   - Panic and Recover
   - Errors (new feature in Go 1.13)
-- [14 Testing](class14/)
+- [14 Testing](14_testing)
 - [Build and Dependency](class_build_dependency)
   - Build cross platform
   - Go Module `go mod`
