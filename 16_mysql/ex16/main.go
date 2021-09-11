@@ -38,7 +38,7 @@ type Member struct {
 }
 
 func (m *Member) String() string {
-	memberBytes, err := json.Marshal(m)
+	memberBytes, err := json.MarshalIndent(m, "", "\t")
 	if err != nil {
 		return err.Error()
 	}
@@ -74,7 +74,7 @@ func main() {
 	}
 	defer db.Close()
 
-	birthday := time.Date(0, time.January, 1, 0, 0, 0, 0, time.UTC) //time.Parse("2006-01-02", "1000-01-01")
+	birthday := time.Date(0, time.January, 1, 0, 0, 0, 0, time.UTC)
 	register := time.Date(0, time.January, 1, 0, 0, 0, 0, time.UTC)
 	login := time.Now()
 
@@ -88,6 +88,7 @@ func main() {
 	}
 	log.Println("member:", m1)
 
+	/* Insert start */
 	ins, err := db.Prepare("insert into member(name, info, birthday, register, login, vip) values(?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		log.Println("prepare insert:", err)
@@ -106,7 +107,26 @@ func main() {
 		log.Println("last id:", err)
 		return
 	}
+	/* Insert end */
 
+	/* Update start */
+	upt, err := db.Prepare("update member set name = ? where id = ?")
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	defer upt.Close()
+
+	result, err = upt.Exec("小小明", id)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	rowAffected, _ := result.RowsAffected()
+	log.Println("update record", rowAffected)
+	/* Update start */
+
+	/* Select start */
 	sel, err := db.Prepare("select id, name, info, birthday, register, login, vip, created, updated from member where id = ?")
 	if err != nil {
 		log.Println("prepare select:", err)
@@ -134,16 +154,64 @@ func main() {
 		log.Printf("data (%d) not found\n", id)
 	}
 
+	/* Select end */
+
 	other, err := GetMember(db, 100)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			fmt.Println("id 100 not found")
+			log.Println("id 100 not found")
 		} else {
-			fmt.Println("other error:", err)
+			log.Println("other error:", err)
 		}
 	} else {
-		fmt.Println("other member:", other)
+		log.Println("other member:", other)
 	}
 
-	fmt.Println("end")
+	/* Transaction start */
+	tx, err := db.Begin()
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	result, err = tx.Exec(
+		"insert into member(name, info, birthday, register, login, vip) values(?, ?, ?, ?, ?, ?)",
+		"小華", "小華", birthday, register, login, "B")
+
+	if err != nil {
+		log.Println(err)
+		tx.Rollback()
+		return
+	}
+
+	id, err = result.LastInsertId()
+	if err != nil {
+		log.Println("last id:", err)
+		tx.Rollback()
+		return
+	}
+
+	result, err = tx.Exec("update member set name= ? where id = ?", "小小華", id)
+	if err != nil {
+		log.Println(err)
+		tx.Rollback()
+		return
+	}
+	rowAffected, _ = result.RowsAffected()
+	log.Println("update record", rowAffected)
+	tx.Commit()
+
+	other, err = GetMember(db, id)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			log.Printf("id %d not found\n", id)
+		} else {
+			log.Println("other error:", err)
+		}
+	} else {
+		log.Printf("member(%d): %s\n", id, other)
+	}
+	/* Transaction start */
+
+	log.Println("end")
 }

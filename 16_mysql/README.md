@@ -12,7 +12,8 @@
   - [2. Insert](#2-insert)
   - [3. Select](#3-select)
   - [4. Fast Query/Insert](#4-fast-queryinsert)
-  - [5. Connect, Prepared Statement, Rows, Cursor 關係](#5-connect-prepared-statement-rows-cursor-關係)
+  - [5. Transaction](#5-transaction)
+  - [6. Connect, Prepared Statement, Rows, Cursor 關係](#6-connect-prepared-statement-rows-cursor-關係)
 
 <!-- /code_chunk_output -->
 
@@ -233,6 +234,13 @@ func GetMember(db *sql.DB, id int64) (*Member, error) {
 
 可利用 `errors.Is(err, sql.ErrNoRows)` 來判斷資料是否存在。
 
-## 5. Connect, Prepared Statement, Rows, Cursor 關係
+## 5. Transaction
+
+要進行 Transction，可以先用 `DB.Begin` 取得 transaction 物件，如：`tx, err := db.Begin()`。之後的資料操作都是透過此物件進行，步驟與方法，與上面雷同。
+
+1. 當有錯誤時，請用 `Rollback()`，回復先前修改的資料，如：`tx.Rollback()`。
+1. 最後成功時，請用 `Commit()`，寫入資料庫，如：`tx.Commit()`。
+
+## 6. Connect, Prepared Statement, Rows, Cursor 關係
 
 ![DB](db.png)
