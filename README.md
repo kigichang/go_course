@@ -87,7 +87,7 @@
   - Producer and Consumer Pattern
   - Actor Pattern
   - `select` to monitor channels
-- [13 Context](class13/)
+- [13 Context](13_context)
 
 ### 三、實作應用
 - [15 flag and spf13 Cobra/Viper](class15/)
