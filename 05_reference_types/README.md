@@ -7,18 +7,17 @@
 - [05 Data Types - Reference Types](#05-data-types-reference-types)
   - [0. 前言](#0-前言)
   - [1. Pointer & Passing By Value](#1-pointer-passing-by-value)
-  - [Slices](#slices)
-    - [Slice Declaration](#slice-declaration)
-    - [Array and Slice Relation](#array-and-slice-relation)
-      - [記憶體管理](#記憶體管理)
-        - [Slice Append](#slice-append)
-    - [Slice Travel](#slice-travel)
-  - [Maps](#maps)
-    - [Map Declaration](#map-declaration)
-    - [Put](#put)
-    - [Delete](#delete)
-    - [Get](#get)
-    - [Map Travel](#map-travel)
+  - [2. Slices](#2-slices)
+    - [2.1 Slice Declaration](#21-slice-declaration)
+    - [2.2 Array and Slice Relation](#22-array-and-slice-relation)
+    - [2.3 Slice Append](#23-slice-append)
+    - [2.4 Slice Travel](#24-slice-travel)
+  - [3 Maps](#3-maps)
+    - [3.1 Map Declaration](#31-map-declaration)
+    - [3.2 Put](#32-put)
+    - [3.3 Delete](#33-delete)
+    - [3.5 Get](#35-get)
+    - [3.6 Map Travel](#36-map-travel)
 
 <!-- /code_chunk_output -->
 
@@ -109,21 +108,19 @@ Pointer(0xc00000e038), Value(c0000160a0) of Paramter a
 1. 在 `AddByValue` 中，因為 clone 了 a，因此資料的位址已經不同了，也就是操作不同的資料。
 1. 在 `AddByPointer` 中，因為 clone 了 a 的 Pointer，因此再透過 Pointer 值(`Value(c0000160a0)`)操作資料時，因為都是用相同的 Pointer 值，就會修改到 `a`。
 
-## Slices
+## 2. Slices
 
 Slice 與 Array 類似，與 Array 最大不同點是 Slice 的長度是可變動的，但 Array 是固定的。
 
 Slice 組成元素：
 
-- Pointer
-- Length
-- Capacity
+- Pointer: 指向內部的 array。
+- Length: 目前該 slice 可操作的最大長度。
+- Capacity: 實際內部 array 的大小，可視做目前最大的容量。
 
-Slice 的 zero value 是 **nil**
+### 2.1 Slice Declaration
 
-### Slice Declaration
-
-`[]T` T 是指資料型別, eg:
+Slice 的 __zero value__ 是 **nil**。宣告的方式可以是：`[]T` T 是指資料型別, 或用 `make`，指定 Length 及 Capacity。如:
 
 ```go {.line-numbers}
 var s []int
@@ -148,9 +145,9 @@ s = make([]int, 5, 6)
 fmt.Println(s, s == nil, len(s), cap(s))    // [0 0 0 0 0] false 5 6
 ```
 
-### Array and Slice Relation
+### 2.2 Array and Slice Relation
 
-實際上，Slice 底層還是 Array，Slice 的 pointer 會指定 array 的位置。
+實際上，Slice 底層有一組 Array 存放資料，Slice 的 Pointer 會指向該 Array。。
 
 ```go {.line-numbers}
 months := [...]string{1: "January", /* ... */, 12: "December"}
@@ -162,9 +159,9 @@ fmt.Println(summer) // ["June" "July" "August"]
 
 ![Slice](slice.png)
 
-#### 記憶體管理
+1. `Q2`是取 `April`, `May`, `June` 值，Pointer 會指到 `April` 為開啟。 Q2 只取三個月份，因此 Length 是 __3__；全部資料有 12 筆，Q2 是從 `April` 開始，捨棄前面 4 筆資料，因此 Capacity 為 __9___ (12 - 4 = 9)。
 
-由於 Array, Struct 都**不是** reference type，因此在傳入 function 時，都會 clone 一份新的資料，給 function 使用，也因此如果 array/struct 的資料很龐大時，就會造成記憶體上的浪費。因此在設計上，function 的參數有 array 時，可以改用 slice, struct 請用 pointer。
+由於 Array, Struct __都不是__ Reference Types，因此在傳入 Function 時，都會 clone 一份新的資料，給 Function 使用，也因此如果 array/struct 的資料很龐大時，就會造成記憶體上的浪費。因此在設計上，Function 的參數有 array 時，可以改用 slice, struct 請用 pointer。
 
 由於 slice 是用 pointer 指到 array, 因此修改 slice 的值時，也會異動到原本的 array.
 
@@ -200,7 +197,7 @@ func main() {
 }
 ```
 
-##### Slice Append
+### 2.3 Slice Append
 
 可以使用 `append` 新增資料進 slice
 
@@ -237,15 +234,30 @@ fmt.Println(s2) // [1 2 30]
 
 [^append]: 在進行 append 時，會先檢查 capacity 是否有足夠空間，來加入新的資料，如果沒有時，則會再產生一組新的記憶體空間，先將舊的資料，**copy** 進新的空間，再把新的資料加入。也因此，如果要大量 append 資料時，應該先計算好可能的容量大小，以免一直在做 copy 的動作，影響效能。
 
-### Slice Travel
+### 2.4 Slice Travel
 
 與 array 同，用 `for-range`
 
-## Maps
+```go {.line-numbers}
+a := []int{1, 2, 3}
+for i := range a {
+    fmt.Println(a[i])
+}
+
+for i, v := range a {
+    fmt.Println(i, v)
+}
+
+for _, v := range a {
+    fmt.Println(v)
+}
+```
+
+## 3 Maps
 
 Key-Value 結構，也就是 hashtable 的結構。
 
-### Map Declaration
+### 3.1 Map Declaration
 
 ```go {.line-numbers}
 ages := map[string]int{
@@ -260,20 +272,20 @@ ages := map[string]int{
 ages := make(map[string]int) // mapping from strings to ints
 ```
 
-### Put
+### 3.2 Put
 
 ```go {.line-numbers}
 ages["alice"] = 32      // alice = 32
 ages["alice"]++         // alice = 33
 ```
 
-### Delete
+### 3.3 Delete
 
 ```go {.line-numbers}
 delete(ages, "cat")
 ```
 
-### Get
+### 3.5 Get
 
 Map 在取值時，如果 key 不存在，會回值 value 型別的 **zero value**，也因此無法直接從回傳值來判斷該 key 是否存在。可以利用 `value, ok := map[key]` 的方式，透過驗証 `ok` 來判斷 key 是否存在。
 
@@ -284,12 +296,25 @@ a, ok := ages["bob"]
 fmt.Println(a, ok)          // 0, false
 ```
 
-### Map Travel
+### 3.6 Map Travel
 
 與 array 同，用 `for-range`
 
 ```go {.line-numbers}
-for name, age := range ages {
-    fmt.Printf("%s\t%d\n", name, age)
+m := map[int]string{
+    1: "a",
+    2: "b",
+}
+
+for key := range m {
+    fmt.Println(key, m[key])
+}
+
+for key, val := range m {
+    fmt.Println(key, val)
+}
+
+for _, val := range m {
+    fmt.Println(val)
 }
 ```
