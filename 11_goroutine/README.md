@@ -1,12 +1,28 @@
 # 11 Concurrency - Goroutine
 
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [11 Concurrency - Goroutine](#11-concurrency-goroutine)
+  - [0. 前言](#0-前言)
+  - [1. ==go== Keyword](#1-go-keyword)
+  - [2. Wait for goroutine](#2-wait-for-goroutine)
+    - [2.1 已知有幾個 goroutine 會被執行](#21-已知有幾個-goroutine-會被執行)
+    - [2.2 每執行 goroutine 前，WaitGroup Counter + 1](#22-每執行-goroutine-前waitgroup-counter-1)
+
+<!-- /code_chunk_output -->
+
+## 0. 前言
 此章節的資料，來自 [Go Systems Programming](https://www.packtpub.com/networking-and-servers/go-systems-programming)
 
-1. A **goroutine** is the minimum Go entity that can be executed concurrently.
-1. goroutine is live in **Thread**, so it is not an autonomous entity.
+> A **goroutine** is the minimum Go entity that can be executed concurrently.
+> goroutine is live in **Thread**, so it is not an autonomous entity.
+
+1. Goroutine 不等同於 thread。goroutine 是需要利用 thread 來執行，但並不會為每個 goroutine 產生一個專屬的 thread.
 1. 當主程式結束時，goroutine 也一併會結束，即使還沒執行完畢。
 
-## ==go== Keyword
+## 1. ==go== Keyword
 
 使用 `go` 這個關鍵字來啟動一個 goroutine.
 
@@ -63,11 +79,11 @@ func main() {
     }
     ```
 
-## Wait for goroutine
+## 2. Wait for goroutine
 
 可以利用 `sync.WaitGroup` 來等待 goroutine 結束。
 
-### 已知有幾個 goroutine 會被執行
+### 2.1 已知有幾個 goroutine 會被執行
 
 ```go {.line-numbers}
 package main
@@ -112,7 +128,7 @@ func main() {
 
 1. `waitGroup.Wait()`: 主程序 wait
 
-### 每執行 goroutine 前，WaitGroup Counter + 1
+### 2.2 每執行 goroutine 前，WaitGroup Counter + 1
 
 也可以每需要一個 goroutine 時，wait group 就加 1。記得 `waitGroup.Add(1)` 要在 `go nameFunction()` 之前。
 
@@ -153,94 +169,3 @@ func main() {
 }
 ```
 
-## Go Routine Puzzlers
-
-使用 go routine 時，要注意 closure 的 binding 時機。
-
-### Puzzlers Example 1
-
-```go {.line-numbers}
-package main
-
-import (
-    "fmt"
-    "sync"
-)
-
-// Job ...
-type Job struct {
-    ID int
-}
-
-func main() {
-    var jobs []Job
-    for i := 0; i < 2; i++ {
-        jobs = append(jobs, Job{i})
-    }
-
-    wait := &sync.WaitGroup{}
-
-    for _, x := range jobs {
-        wait.Add(1)
-        go func(job *Job) {
-            defer wait.Done()
-            fmt.Println(job.ID)
-        }(&x)
-    }
-
-    wait.Wait()
-}
-```
-
-結果：
-
-```text
-1
-1
-```
-
-修正:
-
-### Puzzlers Example 2
-
-```go {.line-numbers}
-package main
-
-import (
-    "fmt"
-    "sync"
-)
-
-// Test ...
-type Test struct {
-    ID int
-}
-
-func main() {
-    var tests []Test
-    for i := 0; i < 2; i++ {
-        tests = append(tests, Test{i})
-    }
-
-    wait := sync.WaitGroup{}
-
-    for i := range tests {
-        wait.Add(1)
-        go func(t *Test) {
-            defer wait.Done()
-            fmt.Println(t.ID)
-        }(&tests[i])
-    }
-
-    wait.Wait()
-}
-```
-
-結果：
-
-```text
-1
-0
-```
-
-因為 goroutine 會需要時間做初始化，所以在 Loop 的宣告的 goroutine, 有很大的機會會在 Loop 結束後才執行。因此在 closure binding 時，會有很大的機會會 binding 到最後一個值。在 Puzzlers Example 1 中，最後 `x` binding 的值會是最後一個，並取記憶體位址傳入。建議有這種情形時，要明確指定值。

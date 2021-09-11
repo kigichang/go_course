@@ -79,7 +79,7 @@
   - Build cross platform
   - Go Module `go mod`
 ### 二、多執行緒
-- [11 Concurrency - Goroutine](class11/)
+- [11 Concurrency - Goroutine](11_goroutine)
   - Keyword `go`
   - `sync.WaitGroup`
 - [12 Concurrency - Channel](class12/)
