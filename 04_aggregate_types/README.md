@@ -63,6 +63,12 @@ x := [...]int{5: -1} // [0, 0, 0, 0, 0, -1]
 可以使用 `range`，來依序取得 array 內的值。
 
 ```go {.line-numbers}
+x := [...]int{1, 2, 3}
+// Print elements via indices.
+for i := range x {
+    fmt.Println(x[i])
+}
+
 // Print the indices and elements.
 for i, v := range x {
     fmt.Printf("%d %d\n", i, v)
