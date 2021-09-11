@@ -90,7 +90,7 @@
 - [13 Context](13_context)
 
 ### 三、實作應用
-- [15 flag and spf13 Cobra/Viper](class15/)
+- [15 flag and spf13 Cobra/Viper](15_flag_cobra_viper)
 - [16 MySQL](class16/)
 - [17 Web](class17/)
   - Go Template 語法
