@@ -130,7 +130,7 @@
 
 ### 五、實驗中功能
 
-- [21 Go WebAssembly](class21/)
+- [21 Go WebAssembly](21_wasm)
   - WebAssembly Introduction
   - DOM in Go WASM
     - Selector
@@ -143,7 +143,7 @@
   - File and FileReader
   - Conversion Javascript Uint8Array and Go Byte Slice
 
-- [x Type Parameters and Go Generic]
+- [22 Type Parameters and Go Generic](22_generic)
 
 ## 新增
 
