@@ -46,8 +46,8 @@ func (m *Member) String() string {
 	return string(memberBytes)
 }
 
-// Connect ...
-func Connect() (*sql.DB, error) {
+// InitDB ...
+func InitDB() (*sql.DB, error) {
 	db, err := sql.Open("mysql", "abc:1234test@tcp(localhost)/mytest?charset=utf8mb4,utf8&parseTime=true")
 	if err != nil {
 		return nil, err
@@ -68,9 +68,9 @@ func GetMember(db *sql.DB, id int64) (*Member, error) {
 
 func main() {
 
-	db, err := Connect()
+	db, err := InitDB()
 	if err != nil {
-		log.Fatal("connect:", err)
+		log.Fatal("initial db:", err)
 	}
 	defer db.Close()
 

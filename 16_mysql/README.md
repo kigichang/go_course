@@ -1,171 +1,34 @@
 # 16 MySQL
 
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [16 MySQL](#16-mysql)
+  - [0. 前言](#0-前言)
+    - [Test table schema (MySQL):](#test-table-schema-mysql)
+    - [Sample Code](#sample-code)
+  - [1. Initial Connection Pool](#1-initial-connection-pool)
+  - [2. Insert](#2-insert)
+  - [3. Select](#3-select)
+  - [4. Fast Query/Insert](#4-fast-queryinsert)
+  - [5. Connect, Prepared Statement, Rows, Cursor 關係](#5-connect-prepared-statement-rows-cursor-關係)
+
+<!-- /code_chunk_output -->
+
+## 0. 前言
+
 與 Java JDBC 類似，Go 有定義一套 interface，所有要連 DB 的 driver，都需要實作這些 interface (["database/sql/driver"](https://golang.org/pkg/database/sql/driver/))。以下我是用 [go-sql-driver/mysql](https://github.com/go-sql-driver/mysql)
 
-**Test table schema** (MySQL):
+### Test table schema (MySQL):
 
-```sql
-CREATE TABLE `member` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL DEFAULT '',
-  `info` text,
-  `birthday` date DEFAULT NULL,
-  `register` datetime NOT NULL,
-  `login` datetime NOT NULL,
-  `vip` char(1) NOT NULL DEFAULT 'A',
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
-```
+@import "ex16/init.sql" {class="line-numbers"}
 
-**sample code**:
+### Sample Code
 
-```go { .line-numbers }
-package main
+@import "ex16/main.go" {class="line-numbers"}
 
-//go:generate docker rm -f go_course_db
-//go:generate docker build -t go_course_ex16/db:latest .
-//go:generate docker run -d --name=go_course_db -p 3306:3306 go_course_ex16/db:latest
-
-import (
-    "database/sql"
-    "encoding/json"
-    "errors"
-    "fmt"
-    "log"
-    "time"
-
-    _ "github.com/go-sql-driver/mysql"
-)
-
-// Member ...
-type Member struct {
-    ID       int
-    Name     string
-    Info     string
-    Birthday time.Time // MySQL min Date: 1000-01-01
-    Register time.Time // MySQL min DateTime: 1000-01-01 00:00:00
-    Login    time.Time // MySQL min DateTime: 1000-01-01 00:00:00
-    VIP      string
-    Created  time.Time
-    Updated  time.Time
-}
-
-func (m *Member) String() string {
-    memberBytes, err := json.Marshal(m)
-    if err != nil {
-        return err.Error()
-    }
-
-    return string(memberBytes)
-}
-
-// Connect ...
-func Connect() (*sql.DB, error) {
-    db, err := sql.Open("mysql", "abc:1234test@tcp(localhost)/mytest?charset=utf8mb4,utf8&parseTime=true")
-    if err != nil {
-        return nil, err
-    }
-    return db, nil
-}
-
-// GetMember ...
-func GetMember(db *sql.DB, id int64) (*Member, error) {
-    mem := &Member{}
-    err := db.QueryRow("select id, name, info, birthday, register, login, vip, created, updated from member where id = ?", id).Scan(&mem.ID, &mem.Name, &mem.Info, &mem.Birthday, &mem.Register, &mem.Login, &mem.VIP, &mem.Created, &mem.Updated)
-
-    if err != nil {
-        return nil, err
-    }
-    return mem, nil
-}
-
-func main() {
-
-    db, err := Connect()
-    if err != nil {
-        log.Fatal("connect:", err)
-    }
-    defer db.Close()
-
-    birthday := time.Date(0, time.January, 1, 0, 0, 0, 0, time.UTC) //time.Parse("2006-01-02", "1000-01-01")
-    register := time.Date(0, time.January, 1, 0, 0, 0, 0, time.UTC)
-    login := time.Now()
-
-    m1 := &Member{
-        Name:     "小明",
-        Info:     "小明",
-        Birthday: birthday,
-        Register: register,
-        Login:    login,
-        VIP:      "A",
-    }
-    log.Println("member:", m1)
-
-    ins, err := db.Prepare("insert into member(name, info, birthday, register, login, vip) values(?, ?, ?, ?, ?, ?)")
-    if err != nil {
-        log.Println("prepare insert:", err)
-        return
-    }
-    defer ins.Close()
-
-    result, err := ins.Exec(m1.Name, m1.Info, m1.Birthday, m1.Register, m1.Login, m1.VIP)
-    if err != nil {
-        log.Println("insert:", err)
-        return
-    }
-
-    id, err := result.LastInsertId()
-    if err != nil {
-        log.Println("last id:", err)
-        return
-    }
-
-    sel, err := db.Prepare("select id, name, info, birthday, register, login, vip, created, updated from member where id = ?")
-    if err != nil {
-        log.Println("prepare select:", err)
-        return
-    }
-    defer sel.Close()
-
-    rows, err := sel.Query(id)
-    if err != nil {
-        log.Println("query:", err)
-        return
-    }
-
-    defer rows.Close()
-
-    if rows.Next() {
-        m2 := &Member{}
-        err = rows.Scan(&m2.ID, &m2.Name, &m2.Info, &m2.Birthday, &m2.Register, &m2.Login, &m2.VIP, &m2.Created, &m2.Updated)
-        if err != nil {
-            log.Println("scan:", err)
-            return
-        }
-        fmt.Println("get member:", m2)
-    } else {
-        log.Printf("data (%d) not found\n", id)
-    }
-
-    other, err := GetMember(db, 100)
-    if err != nil {
-        if errors.Is(err, sql.ErrNoRows) {
-            fmt.Println("id 100 not found")
-        } else {
-            fmt.Println("other error:", err)
-        }
-    } else {
-        fmt.Println("other member:", other)
-    }
-
-    fmt.Println("end")
-}
-```
-
-## Connection
+## 1. Initial Connection Pool
 
 1. import package.
 
@@ -188,10 +51,11 @@ func main() {
     }
     ```
 
-1. 連線資料庫
+1. 連線資料庫，並取得 Connection Pool 物件。
 
     ```go { .line-numbers }
-    func Connect() (*sql.DB, error) {
+    // InitDB ...
+    func InitDB() (*sql.DB, error) {
         db, err := sql.Open("mysql", "abc:1234test@tcp(localhost)/mytest?charset=utf8mb4,utf8&parseTime=true")
         if err != nil {
             return nil, err
@@ -208,17 +72,17 @@ func main() {
     }
     ```
 
-    記得取的 db 連線後，立即下 `defer db.Close()`，確保程式在結束後，會關閉連線。如下：
+    記得取的 db 連線後，立即下 `defer db.Close()`，確保主程式在結束後，會關閉連線。如下：
 
     ```go { .line-numbers }
-    db, err := Connect()
-    if err != nil {
-        log.Fatal("connect:", err)
-    }
-    defer db.Close()
+    db, err := InitDB()
+	if err != nil {
+		log.Fatal("initial db:", err)
+	}
+	defer db.Close()
     ```
 
-## Insert
+## 2. Insert
 
 ```go { .line-numbers }
 birthday := time.Date(0, time.January, 1, 0, 0, 0, 0, time.UTC)
@@ -293,7 +157,7 @@ if err != nil {
 
 **Update/Delete** 與 Insert 類似。
 
-## Select
+## 3. Select
 
 1. 下 SQL，與 Java 的 PreparedStatement 類似。
 
@@ -349,7 +213,7 @@ if err != nil {
     }
     ```
 
-## Fast Query/Insert
+## 4. Fast Query/Insert
 
 上述的例子，是使用 `Stmt` 執行 SQL，並透過 `Rows` 來取得資料。如果不是需要重覆使用 `Stmt`時，可以直接用 `DB` 的 `DB.Query` 取得 `Rows`，或用 `DB.Exec` 執行 SQL。
 
@@ -369,6 +233,6 @@ func GetMember(db *sql.DB, id int64) (*Member, error) {
 
 可利用 `errors.Is(err, sql.ErrNoRows)` 來判斷資料是否存在。
 
-## Connect, Prepared Statement, Rows, Cursor 關係
+## 5. Connect, Prepared Statement, Rows, Cursor 關係
 
 ![DB](db.png)

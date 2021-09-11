@@ -91,7 +91,7 @@
 
 ### 三、實作應用
 - [15 flag and spf13 Cobra/Viper](15_flag_cobra_viper)
-- [16 MySQL](class16/)
+- [16 MySQL](16_mysql)
 - [17 Web](class17/)
   - Go Template 語法
   - Context in Request (Request-Scoped)
