@@ -1,6 +1,6 @@
 module ex15_04
 
-go 1.13
+go 1.17
 
 require (
 	github.com/spf13/cobra v0.0.5

@@ -1,6 +1,6 @@
 module gorilla_web
 
-go 1.13
+go 1.17
 
 require (
 	github.com/gorilla/csrf v1.6.2

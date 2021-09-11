@@ -98,7 +98,7 @@ Go 官方不建議使用 insecure 的方式，因此自建的 Git repository 使
 ```go
 module abc.xyz/hello
 
-go 1.13
+go 1.17
 ```
 
 如果專案會使用到其他 package 時，通常 IDE 工具會自動編輯 **go.mod**，會編譯過程，會產生 **go.sum** (不用理會)。如果 IDE 工具沒有編輯時，或者需要指定使用 package 版本時，則需要手動編輯。
@@ -108,7 +108,7 @@ go 1.13
 ```go
 module myhello
 
-go 1.13
+go 1.17
 
 require abc.xyz/hello v0.0.0
 

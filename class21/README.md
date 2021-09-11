@@ -106,7 +106,7 @@ Followings are fine.
 ### Go WASM works with Javascript
 
 - Javascript TypedArray and Go Slice
-  - Share memory in Go 1.12, but remove from Go 1.13 (for some bug issues)
+  - Share memory in Go 1.12, but remove from go 1.17 (for some bug issues)
 - Javascript UInt8Array and Go []byte
   - js.CopyBytesToGo / js.CopyBytesToJS in Go1.13
 

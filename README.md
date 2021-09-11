@@ -59,7 +59,7 @@
   - 語法
   - Pass By Value in Value and Reference Types.
   - First Class
-- [07 Methods](class07/)
+- [07 Methods](07_methods)
   - Methods in Value and Pointer
 - [08 Interface](class08/)
   - Interface in Struct and Pointer
