@@ -65,7 +65,7 @@
   - Interface in Struct and Pointer
   - Interface value
   - Interface puzzle (interface nil problem)
-- [09 OOP in Go](class09/)
+- [09 Go and OOP](09_go_and_oop)
   - Encapsulation
   - Inheritance (fake)
   - Polymorphism
