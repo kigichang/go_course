@@ -1,8 +1,28 @@
 # 07 Methods
 
-在 OOP 中，會定義 Class 的 Method 來處理資料。在 Go 也有一樣的功能，主要是針對 struct 來定義 method.
 
-## Declaring Method for Struct
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [07 Methods](#07-methods)
+  - [0. 前言](#0-前言)
+  - [1. Struct Receiver](#1-struct-receiver)
+  - [2. Struct Pointer Receiver](#2-struct-pointer-receiver)
+  - [3. Methods in Value and Pointer](#3-methods-in-value-and-pointer)
+    - [3.1 Struct](#31-struct)
+    - [3.2 Pointer](#32-pointer)
+    - [3.3 注意](#33-注意)
+  - [4. Method Signature](#4-method-signature)
+  - [5. Side Effects in Functional Language](#5-side-effects-in-functional-language)
+
+<!-- /code_chunk_output -->
+
+## 0. 前言
+
+在 OOP 中，定義在 Class 內的 Function，稱為 Methods。Class 的 Method 來處理資料，達到封裝的功能。在 Go 也有一樣的功能，主要是針對 struct 來定義 method。Go 定義 Method 時，(Method 的 receiver) 可以使用 Struct 或者是 Struct Pointer。
+
+## 1. Struct Receiver
 
 ```go {.line-numbers}
 package main
@@ -33,7 +53,7 @@ func main() {
 }
 ```
 
-## Declaring Method for Struct Pointer
+## 2. Struct Pointer Receiver
 
 在定義 method 也可以使用 struct pointer。
 
@@ -71,11 +91,13 @@ func main() {
 }
 ```
 
-## Methods in Value and Pointer
+## 3. Methods in Value and Pointer
 
 由上面的例子來看，不論 methods 是被宣告在 struct 或者是 struct pointer，只要是該 struct 或者是 struct pointer，都可以呼叫。而這兩者差別是，用 struct pointer 定義 method 要特別注意會修改到原本的值。
 
-### Value
+### 3.1 Struct
+
+使用 Method 時，不會修改到原本 Struct 值。
 
 ```go {.line-numbers}
 package main
@@ -104,7 +126,9 @@ func main() {
 }
 ```
 
-### Pointer
+### 3.2 Pointer
+
+使用 Method 時，會修改到原本 Struct 值。(原因：傳 Pointer 至 Method)
 
 ```go {.line-numbers}
 package main
@@ -134,7 +158,7 @@ func main() {
 }
 ```
 
-### 注意
+### 3.3 注意
 
 與 slice 類似，但因為是 method 很難查覺是否有修改原本的資料。因此在實作上，儘量 method 都用 pointer 的方式。
 
@@ -142,7 +166,7 @@ func main() {
 1. 避免 golang 在 struct pointer 語法上的 puzzle (因為 struct 與 struct pointer 在 call method 的語法都一樣，不像 C 有分 `.` 與 `->`).
 
 
-## Method Signature
+## 4. Method Signature
 
 Method 本身就是 funcation，因此也有 signature.
 
@@ -180,7 +204,7 @@ func main() {
 }
 ```
 
-## Side Effects in Functional Language
+## 5. Side Effects in Functional Language
 
 程式的函式有以下的行為時，就會稱該函式有 **Side Effects**。
 
@@ -196,4 +220,4 @@ func main() {
 
 截自 [Functional Language in Scala](http://www.amazon.com/Functional-Programming-Scala-Paul-Chiusano/dp/1617290653)
 
-就實際狀況來說，我們寫程式不可能不去碰 I/O。
+~~就實際狀況來說，我們寫程式不可能不去碰 I/O。~~
