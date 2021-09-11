@@ -31,18 +31,18 @@
 - [本文件](README.md)
 ### 一、Go 基礎說明
 
-- [01 開發環境與語言簡介](01_instruction/)
+- [01 開發環境與語言簡介](01_introduction)
   - 參考文件
   - IDE 設定
   - 與 C/Java/PHP 簡單比較
-- [02 程式結構與語法](02_syntax/)
+- [02 程式結構與語法](02_syntax)
   - 關鍵字
   - 基本語法
   - `iota`
   - `type`
   - 指標
   - Package
-- [03 Data Types - Basic Types](03_basic_types/)
+- [03 Data Types - Basic Types](03_basic_types)
   - Number
   - Boolean
   - String
@@ -61,7 +61,7 @@
   - First Class
 - [07 Methods](07_methods)
   - Methods in Value and Pointer
-- [08 Interface](class08/)
+- [08 Interface](08_interface)
   - Interface in Struct and Pointer
   - Interface value
   - Interface puzzle (interface nil problem)
@@ -75,7 +75,6 @@
   - Panic and Recover
   - Errors (new feature in Go 1.13)
 - [14 Testing](class14/)
-
 - [Build and Dependency](class_build_dependency)
   - Build cross platform
   - Go Module `go mod`

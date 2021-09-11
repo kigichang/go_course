@@ -124,3 +124,6 @@ ps: 為了讓 go mod 不到網路上查詢 `abc.xyz` (會編譯失數)，在編�
 1. 編輯 **go.mod**
 ~~1. 執行 `go mod download`~~
 1. 如果要整理使用的 package，並移除沒再使用的 package，可以用 `go mod tidy`
+
+// TODO: Build Constrain
+// TODO: Build CFlags to modify global variables.
