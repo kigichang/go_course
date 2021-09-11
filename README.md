@@ -75,9 +75,9 @@
   - Panic and Recover
   - Errors (new feature in Go 1.13)
 - [14 Testing](14_testing)
-- [Build and Dependency](class_build_dependency)
-  - Build cross platform
-  - Go Module `go mod`
+- [Go Build](go_build)
+  - Build cross Platform
+  - Build Constrain
 ### 二、多執行緒
 - [11 Concurrency - Goroutine](11_goroutine)
   - Keyword `go`
