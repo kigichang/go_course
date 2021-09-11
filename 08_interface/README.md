@@ -16,8 +16,8 @@
   - [4. Type Assert and Interface Puzzler](#4-type-assert-and-interface-puzzler)
     - [Interface Puzzler](#interface-puzzler)
     - [Type Assertion](#type-assertion)
-  - [Interface Value (interface{})](#interface-value-interface)
-  - [Summary](#summary)
+  - [5. Interface Value (interface{})](#5-interface-value-interface)
+  - [6. Summary](#6-summary)
 
 <!-- /code_chunk_output -->
 
@@ -341,7 +341,7 @@ func main() {
 1. 要從 interface 轉成原生的資料型別，建議使用 `value, ok := f2.(*MyFile)`，不要使用 `value := f2.(*MyFile)`，原因是：如果該 interface 不是此種資料型別時，會發生 panic，中斷程式。
 1. Type assertion 更多的實例，可參考 [spf13/cast](https://github.com/spf13/cast)。
 
-## Interface Value (interface{})
+## 5. Interface Value (interface{})
 
 Go 有設計一種特別的資料型別 Interface Value (`interface{}`)，可以包含所有 Go 的資料型別。有點像 php 或 python 不管變數的資料型別 (弱型別)。
 
@@ -397,6 +397,6 @@ any = &f
 fmt.Printf("%T\n", any)     // *map[string]int
 ```
 
-## Summary
+## 6. Summary
 
 Go interface 設計上是以 decouple 的概念，將 interface 與 struct 的關係脫勾，與 Java 不太一樣的地方。在 Java 中，class 需要指定 implements 某個 interface，但在 go 則不用，只要 struct 有符合某個 interface 的定義，即成為該 interface；也因此我們也可以事後再定義 interface 來綁定 struct 的關係。
