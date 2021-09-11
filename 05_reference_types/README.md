@@ -31,7 +31,7 @@ Reference types 有：
 - Functions
 - Channel
 
-## 1. Pointer & Passing By Value
+## 1. Pointer & Pass By Value
 
 Pointer 就好比資料在記憶體的地址 (術語：位址, Address)，每一筆資料都會有自己的位址，且可以透過這組位址，來存取該資料。操作的方式如下：
 
@@ -83,7 +83,7 @@ func main() {
 1. 此時 `a` 的值，會被改寫成 `20`。
 1. 可以透過 `%p`，來列印 Pointer 內的值。`%p` 只能用在 Pointer。
 
-Pointer 可以視作資料的位址，因此每一個變數，都會有自己的 Pointer。Passing by Value 的步驟如下：
+Pointer 可以視作資料的位址，因此每一個變數，都會有自己的 Pointer。Pass by Value 的步驟如下：
 
 1. 宣告一組相同資料型別的變數，將要傳入函式的變數值，複製一份到新的變數。
 1. 上述的動作，通常稱為 __Clone__。

@@ -47,15 +47,15 @@
   - Boolean
   - String
   - Zero Value
-- [04 Data Types - Aggregate Types](class04/)
+- [04 Data Types - Aggregate Types](04_aggregate_types)
   - Array
   - Struct
   - JSON
-- [05 Data Types - Reference Types](class05/)
+- [05 Data Types - Reference Types](05_reference_types)
   - Slice
     - Append Slice
   - Map
-- [06 Functions](class06/)
+- [06 Functions](06_functions)
   - 語法
   - Pass By Value in Value and Reference Types.
   - First Class
