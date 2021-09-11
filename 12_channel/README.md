@@ -1,5 +1,30 @@
 # 12 Concurrency - Channel
 
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [12 Concurrency - Channel](#12-concurrency-channel)
+  - [0. 前言](#0-前言)
+  - [1. Channel](#1-channel)
+  - [2. Buffered Channel](#2-buffered-channel)
+    - [2.1 Deadlock 1: Reading/Writing with Non-Buffered Channel](#21-deadlock-1-readingwriting-with-non-buffered-channel)
+    - [2.2 Deadlock 2: Reading Before Writing with Buffered Channel](#22-deadlock-2-reading-before-writing-with-buffered-channel)
+  - [3. Producer and Consumer Pattern (Pipeline)](#3-producer-and-consumer-pattern-pipeline)
+    - [利用 goroutine 執行 1 個 producer 及 2 個 consumer](#利用-goroutine-執行-1-個-producer-及-2-個-consumer)
+      - [Deadlock: Closing Channel in Main Instead of Producer](#deadlock-closing-channel-in-main-instead-of-producer)
+  - [4. Actor Pattern (Pipeline)](#4-actor-pattern-pipeline)
+  - [5. Select and Timeout](#5-select-and-timeout)
+    - [Select and Timeout 說明](#select-and-timeout-說明)
+      - [createNumber](#createnumber)
+      - [readNumber](#readnumber)
+      - [main](#main)
+      - [執行結果](#執行結果)
+
+<!-- /code_chunk_output -->
+
+## 0. 前言
+
 Channel 可以想像是一個資料的通道 (pipe)，一頭是 write，另一頭是 read，資料順序是 FIFO (First In First Out)。通常用在 goroutine 間資料交換。channel 是 thread-safe，因此可以同時讀寫 channel。
 
 channel 的注意事項：
@@ -8,7 +33,7 @@ channel 的注意事項：
 1. 一個 channel 只能包含一種 data type
 1. channel 當作參數傳給 function 時，最好指定是要做 read or write。
 
-## Channel
+## 1. Channel
 
 ```go {.line-numbers}
 package main
@@ -83,11 +108,11 @@ func main() {
 
     注意：`c chan<- int` 是 **write only** channel。
 
-## Buffered Channel
+## 2. Buffered Channel
 
 `c := make(chan int)` 宣告時，沒有指定 channel 的容量，因此在 read/write 時，會 block。在上例中，因為是用 goroutine 執行, 所以不會有問題。
 
-### Deadlock 1: Reading/Writing with Non-Buffered Channel
+### 2.1 Deadlock 1: Reading/Writing with Non-Buffered Channel
 
 ```go {.line-numbers}
 package main
@@ -140,7 +165,7 @@ exit status 2
 
 先執 write，資料放在 channel，供之後 read。
 
-### Deadlock 2: Reading Before Writing with Buffered Channel
+### 2.2 Deadlock 2: Reading Before Writing with Buffered Channel
 
 但如果程式的順序，改成先 read 再 write 時，一樣會發生 deadlock。因為還沒寫資料，根本沒資料供 read。
 
@@ -177,17 +202,17 @@ main.main()
 exit status 2
 ```
 
-## Producer and Consumer Pattern (Pipeline)
+## 3. Producer and Consumer Pattern (Pipeline)
 
 Producer/Consumer 是 channel 最常用的實作模型。概念是一端產出資料 (可能是從資料庫或大檔案讀取資料)，另一端運算資料。
 
-### 利用 goroutine 執行 1 個 producer 及 2 個 consumer
+### 3.1 利用 goroutine 執行 1 個 producer 及 2 個 consumer
 
 @import "ex12_05/main.go" {.line-numbers}
 
 與先前的範例最大不同是，這次關閉 channel 是在 `producer` 執行，而非主程序，也就是說在產生完資料後，就關閉 channel，之後就不能再寫入。而 `consumer` 端，在 channel 資料讀完後，就會跳出 for-range 的迴圈而執行完畢。
 
-#### Deadlock: Closing Channel in Main Instead of Producer
+#### 3.2 Deadlock: Closing Channel in Main Instead of Producer
 
 如果不在 `producer` 關閉 channel，而是在主程序，則會發生 deadlock。
 
@@ -230,129 +255,11 @@ created by main.main
 exit status 2
 ```
 
-## Actor Pattern (Pipeline)
+## 4. Actor Pattern (Pipeline)
 
 Actor Pattern 與 Producer/Consumer Pattern 類似，概念是每一個 Actor 只負責固定的工作。Producer 必須將資料，傳到每個 Actor。以下的範例，是模擬訂單成立後，傳給兩個 Actor，一個負責計算每個分類的業績，另一個計算全站的業績。
 
-```go {.line-numbers}
-package main
-
-import (
-    "fmt"
-    "log"
-    "sync"
-)
-
-var (
-    waitGroup = sync.WaitGroup{}
-)
-
-// Order ...
-type Order struct {
-    Category string
-    Amount   float64
-}
-
-// Actor ...
-type Actor interface {
-    Run()
-}
-
-// Producer ...
-type Producer struct {
-    MailBoxes []chan Order
-}
-
-// Run ...
-func (p *Producer) Run() {
-    defer waitGroup.Done()
-
-    for i := 0; i < 100; i++ {
-        category := fmt.Sprintf("cate-%d", i%7)
-        amount := float64(i)
-
-        order := Order{
-            Category: category,
-            Amount:   amount,
-        }
-
-        for _, m := range p.MailBoxes {
-            m <- order
-        }
-    }
-
-    for _, m := range p.MailBoxes {
-        close(m)
-    }
-}
-
-// CategorySum ...
-type CategorySum struct {
-    MailBox     chan Order
-    CategorySum map[string]float64
-}
-
-// Run ...
-func (c *CategorySum) Run() {
-    defer waitGroup.Done()
-
-    for order := range c.MailBox {
-        c.CategorySum[order.Category] += order.Amount
-    }
-}
-
-// SiteSum ...
-type SiteSum struct {
-    MailBox chan Order
-    Total   float64
-}
-
-// Run ...
-func (c *SiteSum) Run() {
-    defer waitGroup.Done()
-
-    for order := range c.MailBox {
-        c.Total += order.Amount
-    }
-}
-
-func main() {
-    log.Println("start...")
-
-    producer := &Producer{}
-    waitGroup.Add(1)
-
-    category := &CategorySum{
-        MailBox:     make(chan Order),
-        CategorySum: make(map[string]float64),
-    }
-    waitGroup.Add(1)
-    producer.MailBoxes = append(producer.MailBoxes, category.MailBox)
-
-    site := &SiteSum{
-        MailBox: make(chan Order),
-    }
-    waitGroup.Add(1)
-    producer.MailBoxes = append(producer.MailBoxes, site.MailBox)
-
-    go producer.Run()
-    go category.Run()
-    go site.Run()
-
-    waitGroup.Wait()
-
-    total := 0.0
-
-    for x, a := range category.CategorySum {
-        log.Println(x, ":", a)
-        total += a
-    }
-
-    log.Println("total: ", site.Total, total)
-
-    log.Println("end")
-}
-```
+@import "ex12_07/main.go" {class="line-numbers"}
 
 說明：
 
@@ -360,7 +267,7 @@ func main() {
 1. `CategorySum`: 負責主要統計每個分類的業績。
 1. `SiteSum`: 負責統計全站業績
 
-## Select and Timeout
+## 5. Select and Timeout
 
 可以透過 `select` 來偵測 channel 是否可以被寫入及是否有資料可以讀取。`select` 可以撘配 `time.After` 來實作 timeout 的機制。
 

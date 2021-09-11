@@ -82,7 +82,7 @@
 - [11 Concurrency - Goroutine](11_goroutine)
   - Keyword `go`
   - `sync.WaitGroup`
-- [12 Concurrency - Channel](class12/)
+- [12 Concurrency - Channel](12_channel)
   - Buffered channel
   - Producer and Consumer Pattern
   - Actor Pattern

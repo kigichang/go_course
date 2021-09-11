@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	waitGroup = sync.WaitGroup{}
+	waitGroup = &sync.WaitGroup{}
 )
 
 // Order ...

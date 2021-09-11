@@ -6,7 +6,7 @@ import (
 )
 
 var (
-	waitGroup = sync.WaitGroup{}
+	waitGroup = &sync.WaitGroup{}
 )
 
 func producer(min, max int, c chan<- int) {
@@ -15,15 +15,15 @@ func producer(min, max int, c chan<- int) {
 	for i := min; i < max; i++ {
 		c <- i
 	}
-	//close(c)
-	log.Println("producer end")
+	close(c)
+	log.Println("producer end and close channel")
 }
 
 func consumer(id int, c <-chan int) {
 	defer waitGroup.Done()
 	count := 0
 
-	log.Println("comsumer ", id, " starting...")
+	log.Println("consumer ", id, " starting...")
 	for a := range c {
 		log.Println(id, " got ", a)
 		count++
@@ -34,7 +34,6 @@ func consumer(id int, c <-chan int) {
 func main() {
 	log.Println("start...")
 	c := make(chan int)
-	defer close(c)
 
 	waitGroup.Add(1)
 	go producer(1, 100, c)

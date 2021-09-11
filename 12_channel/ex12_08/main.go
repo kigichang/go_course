@@ -49,9 +49,12 @@ func main() {
 
 	time.Sleep(2 * time.Second)
 	finishChannel <- false
+
 	time.Sleep(3 * time.Second)
 	finishChannel <- true
+
 	time.Sleep(1 * time.Second)
 	close(finishChannel)
+
 	log.Println("end")
 }
