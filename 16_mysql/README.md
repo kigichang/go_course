@@ -73,7 +73,7 @@
     }
     ```
 
-    記得取的 db 連線後，立即下 `defer db.Close()`，確保主程式在結束後，會關閉連線。如下：
+    記得取的 db 連線後，可以下 `defer db.Close()`，確保主程式在結束後，會關閉Connection Pool 中的連線。如下：
 
     ```go { .line-numbers }
     db, err := InitDB()
