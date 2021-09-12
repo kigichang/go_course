@@ -103,8 +103,6 @@
   - Shema
   - Secure Cookie
   - CSRF
-- [Echo](echo/)
-  - Hello world
 - [18 RESTful, Protobuf and gRPC](18_restful)
   - RESTful using Gorilla
 - [19 gRPC](19_grpc)
