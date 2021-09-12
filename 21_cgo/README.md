@@ -1,10 +1,37 @@
 # 21 Cowork with C/C++ (swig)
 
-在 Golang 有 cgo 與 gccgo 可以與 C 的程式互動。在 compile Golang 的程式時，可以 link C 的 library。
 
-但 Golang 無法直接使用 C++ 程式，因為 Golang 本身沒有 OOP 的設計，所以必須在 C++ 再封裝一層程式來使用。目前 golang 有支援 [Swig](http://www.swig.org/) 工具，可以協助封裝 C/C++ 程式。
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=3 orderedList=false} -->
 
-## Golang unsafe Package
+<!-- code_chunk_output -->
+
+- [21 Cowork with C/C++ (swig)](#21-cowork-with-cc-swig)
+- [0. 前言](#0-前言)
+  - [1. Go unsafe Package](#1-go-unsafe-package)
+    - [1.1 Sizeof and Alignof](#11-sizeof-and-alignof)
+    - [1.2 unsafe.Pointer](#12-unsafepointer)
+  - [2. Swig Introduction](#2-swig-introduction)
+    - [2.1 範例](#21-範例)
+    - [2.2 Compile](#22-compile)
+    - [2.3 swig 說明](#23-swig-說明)
+  - [3. Wrap C++ Class with C](#3-wrap-c-class-with-c)
+    - [3.1 直接在 go 的程式碼中，加入 C 的程式](#31-直接在-go-的程式碼中加入-c-的程式)
+    - [3.2 Go string and C *char](#32-go-string-and-c-char)
+    - [3.3 Go call C++](#33-go-call-c)
+  - [4. C Call Go (Static Linking)](#4-c-call-go-static-linking)
+    - [程式目錄](#程式目錄)
+  - [5. reference](#5-reference)
+  - [6. How does ==this== work](#6-how-does-this-work)
+
+<!-- /code_chunk_output -->
+
+## 0. 前言
+
+在 Go 有 cgo 與 gccgo 可以與 C 的程式互動。在 compile Golang 的程式時，可以 link C 的 library。
+
+因為 Go 本身沒有 OOP 的設計，Go 無法直接使用 C++ 程式，，所以必須在 C++ 再封裝一層程式來使用。目前 Go 有支援 [Swig](http://www.swig.org/) 工具，可以協助封裝 C/C++ 程式。
+
+## 1. Go unsafe Package
 
 因為 Go 的 `unsafe` 使用到系統底層的屬性，所以會失去相容與移植。如非必要，儘可能不要使用。
 
@@ -20,61 +47,13 @@ unsafe package 主要有三個 function 與一個 data type
   - type Pointer: 等同 void* in c. [Go reference to C](https://golang.org/cmd/cgo/#hdr-Go_references_to_C)
      > The C type void* is represented by Go's unsafe.Pointer
 
-### Sizeof and Alignof
+### 1.1 Sizeof and Alignof
 
-```go {.line-numbers}
-package main
-
-import (
-    "fmt"
-    "unsafe"
-)
-
-func main() {
-    var x struct {
-        a bool
-        b float64
-        c int16
-    }
-
-    fmt.Println("Sizeof x:", unsafe.Sizeof(x))
-    fmt.Println("Alignof x:", unsafe.Alignof(x))
-
-    fmt.Println("Sizeof x.a:", unsafe.Sizeof(x.a), "AlignOf x.a:", unsafe.Alignof(x.a), "Offsetof x.a:", unsafe.Offsetof(x.a))
-    fmt.Println("Sizeof x.b:", unsafe.Sizeof(x.b), "AlignOf x.b:", unsafe.Alignof(x.b), "Offsetof x.b:", unsafe.Offsetof(x.b))
-    fmt.Println("Sizeof x.c:", unsafe.Sizeof(x.c), "AlignOf x.c:", unsafe.Alignof(x.c), "Offsetof x.c:", unsafe.Offsetof(x.c))
-
-    var y struct {
-        a float64
-        b int16
-        c bool
-    }
-
-    fmt.Println("Sizeof y:", unsafe.Sizeof(y))
-    fmt.Println("Alignof y:", unsafe.Alignof(y))
-
-    fmt.Println("Sizeof y.a:", unsafe.Sizeof(y.a), "AlignOf y.a:", unsafe.Alignof(y.a), "Offsetof y.a:", unsafe.Offsetof(y.a))
-    fmt.Println("Sizeof y.b:", unsafe.Sizeof(y.b), "AlignOf y.b:", unsafe.Alignof(y.b), "Offsetof y.b:", unsafe.Offsetof(y.b))
-    fmt.Println("Sizeof y.c:", unsafe.Sizeof(y.c), "AlignOf y.c:", unsafe.Alignof(y.c), "Offsetof y.c:", unsafe.Offsetof(y.c))
-
-    var z struct {
-        a bool
-        b int16
-        c float64
-    }
-
-    fmt.Println("Sizeof z:", unsafe.Sizeof(z))
-    fmt.Println("Alignof z:", unsafe.Alignof(z))
-
-    fmt.Println("Sizeof z.a:", unsafe.Sizeof(z.a), "AlignOf y.a:", unsafe.Alignof(z.a), "Offsetof z.a:", unsafe.Offsetof(z.a))
-    fmt.Println("Sizeof z.b:", unsafe.Sizeof(z.b), "AlignOf y.b:", unsafe.Alignof(z.b), "Offsetof z.b:", unsafe.Offsetof(z.b))
-    fmt.Println("Sizeof z.c:", unsafe.Sizeof(z.c), "AlignOf y.c:", unsafe.Alignof(z.c), "Offsetof z.c:", unsafe.Offsetof(z.c))
-}
-```
+@import "ex21_01/main.go" {class=line-numbers}
 
 Output:
 
-```text
+```text {.line-numbers}
 Sizeof x: 24
 Alignof x: 8
 Sizeof x.a: 1 AlignOf x.a: 1 Offsetof x.a: 0
@@ -93,13 +72,15 @@ Sizeof z.c: 8 AlignOf y.c: 8 Offsetof z.c: 8
 ```
 
 x, y, z 在 64-bit 系統下， alignment 都是 8 bytes. 但 x 的 size 是 24 bytes (3 words[^word])，而其他 y, z 都是 16 bytes (2 words)。
+
 主要因為 x 的 bool (x.a) 與 int16 (x.c) 中間是 float64 (x.b)，佔了 8 bytes (1 word)，bool 雖只佔 1 byte，但要補足成 8 bytes (1 word), 同理 x.c 只佔 2 bytes，也要補足成 8 bytes (1 word)。
+
 而 y, z 因為 bool, int16 是相連，因此在 bool 後面補 1 bytes, int16 補 4 bytes，補足成 8 bytes(1 word)。所以 x 是 24 bytes，而 y, z 是 16 bytes。[^src_sample]
 
 [^word]: 在 32 bit 系統下，1 word = 4 bytes (32bit), 64 bit 是 8 bytes (64bit)
 [^src_sample]: [unsafe.Sizeof, Alignof 和 Offsetof](https://wizardforcel.gitbooks.io/gopl-zh/ch13/ch13-01.html)
 
-### unsafe.Pointer
+### 1.2 unsafe.Pointer
 
 unsafe.Pointer 可以是任意型別的指標。在 Golang 的 strong type 安全機制下，不同的資料型別與指標都不可以直接轉換，如：
 
@@ -319,111 +300,45 @@ unsafe.Pointer 一定要遵守[官網](https://golang.org/pkg/unsafe/#Pointer)�
     1. 做完 `str = str + "DEF"`，`StringHeader.Data` 的值，已經被修改了，也就代表產生一個新的字串資料。但原本 StringHeader 的位址不變
     1. `*hdr = *hdr2` 等同 `str = str2`，因為整個 StringHeader 的值都被更改了。
 
-## Swig Introduction
+## 2. Swig Introduction
 
 [Swig](http://www.swig.org/) 可以將 C/C++ 與其他高階語言(eg: PHP, Java, C#，Go) 等結合的工具，其原理是將 C/C++ 再用對應的程式語言封裝。Go 的 build 工具已內建整合 Swig。
 
-### 範例
+### 2.1 範例
 
-專案目錄: `class20/swig_test`
+專案目錄: `21_cgo/swig_test`
 
 ```text
+swig_test
 ├── foo
 │   ├── foo.cpp
 │   ├── foo.go
 │   ├── foo.hpp
 │   └── foo.swigcxx
+├── go.mod
 └── main.go
 ```
 
-#### foo/foo.hpp
+#### swig_test/foo/foo.hpp
 
-```C++ {.line-numbers}
-#pragma once
+@import "swig_test/foo/foo.hpp" {as="cpp" class="line-numbers"}
 
-extern double Foo;
+#### swig_test/foo/foo.cpp
 
-class cxxFoo {
-public:
-    int a;
-    cxxFoo(int _a): a(_a) {};
-    ~cxxFoo() {};
-    void Bar();
-};
+@import "swig_test/foo/foo.cpp" {as="cpp" class="line-numbers"}
 
-extern int gcd(int x, int y);
-extern double add(double x);
-```
+#### swig_test/foo/foo.swigcxx
 
-#### foo/foo.cpp
+@import "swig_test/foo/foo.swigcxx" {class="line-numbers" as="txt"}
 
-```C++ {.line-numbers}
-#include <iostream>
-#include "foo.hpp"
+#### swig_test/foo/foo.go
 
-double Foo = 3.0;
+@import "swig_test/foo/foo.go" {class="line-numbers"}
 
-void cxxFoo::Bar(void) {
-    std::cout << this->a<<std::endl;
-}
+#### swig_test/main.go
 
-int gcd(int x, int y) {
-    int g;
-    g = y;
-
-    while (x > 0) {
-        g = x;
-        x = y % x;
-        y = g;
-    }
-
-    return g;
-}
-
-double add(double x) {
-    return x + Foo;
-}
-```
-
-#### foo/foo.swigcxx
-
-```text {.line-numbers}
-%module myfoo
-%{
-#include "foo.hpp"
-%}
-%include "foo.hpp"
-```
-
-#### foo/foo.go
-
-```go {.line-numbers}
-package foo
-```
-
-#### main.go
-
-```go {.line-numbers}
-package main
-
-import (
-    "fmt"
-    "go_test/class16/swig/foo"
-)
-
-func main() {
-    f := foo.NewCxxFoo(10)
-    fmt.Println(foo.Add(10.0))
-    f.Bar()
-    foo.DeleteCxxFoo(f)
-    fmt.Println(foo.Gcd(12, 16))
-    foo.SetFoo(100.0)
-    fmt.Println(foo.GetFoo())
-    fmt.Println("end")
-}
-```
-
-### Compile
+@import "swig_test/main.go" {class="line-numbers"}
+### 2.2 Compile
 
 在專案目錄 `swig_test` 下，先執行 `go clean -x -cache`，清除舊的 cache，再執行 `go build -x -work`。
 
@@ -435,7 +350,7 @@ func main() {
 
 ![auto_complete](swig.png)
 
-#### swig 說明
+### 2.3 swig 說明
 
 - `foo/foo.hpp` and `foo/foo.cpp`: C++ 程式，有一組 class, 一個 global 變數，二個 global functions
 - `foo/foo.go`: 空白的 go 程式，避免在 build 程式時，`go build` 發生 `foo` package 沒有 go 的程式
@@ -452,28 +367,13 @@ func main() {
     1. Global 變數，也會有 Get/Set 的對應。
     1. Global function 會改成第一個字母大寫的 function.
 
-## Wrap C++ Class with C
+## 3. Wrap C++ Class with C
 
 Go 主要是透過 [cgo](https://golang.org/cmd/cgo/) 來與 C 程式結合，也可以直接在 go 的 source code 中，加入 C 的程式碼，如果要接 C++ 的程式，就需要像 swig 的做法，在 C++ 包一層 C 的程式，再與 Go 對接。
 
-### 直接在 go 的程式碼中，加入 C 的程式
+### 3.1 直接在 go 的程式碼中，加入 C 的程式
 
-```go {.line-number}
-package main
-
-// #include "stdlib.h"
-// #include "stdio.h"
-// #define b (5)
-// int add(int a) {
-//   return a + b;
-// }
-import "C"
-import "fmt"
-
-func main() {
-    fmt.Println(C.add(100))
-}
-```
+@import "ex21_08/main.go" {class="line-numbers"}
 
 1. 要使用 C 的程式時，一定要 `import "C"`，之後與 C 程式的互動，都會由這個 `C` 的 package 來負責
 1. 在 `import "C"` 上面，用註解的方式加入 C 的程式，之後如果是載入 library 的話，也是用註解的方式加入。
@@ -483,55 +383,20 @@ Go 與 C 的數字型別，剛好是一對一的對應。比如 Go 的 int 等�
 
 要特別注意的是 String, 當 Go 的 `string` 轉成 C 的 `*char` 時(透過 `func C.CString(string) *C.char`), 使用完後，記使用 `C.free` 來釋放記憶體，因為在轉換的過程，會使用 `malloc`。
 
-### Go string and C *char
+### 3.2 Go string and C *char
 
-```go {.line-numbers}
-package main
-
-/*
-#include "stdlib.h"
-#include "stdio.h"
-
-void list(const char** str, const int size) {
-    for(int i = 0; i < size; i++) {
-        printf("%d:%s\n", i, str[i]);
-    }
-    fflush(stdout);
-}
-*/
-import "C"
-
-import (
-    "unsafe"
-)
-
-func main() {
-    strings := []string{"hello", "world"}
-
-    tmp := make([]*C.char, len(strings))
-
-    // Go string to C *char
-    for i, str := range strings {
-        tmp[i] = C.CString(str)
-    }
-
-    C.list(&tmp[0], C.int(len(strings)))
-
-    // Free all C *char
-    for _, x := range tmp {
-        C.free(unsafe.Pointer(x))
-    }
-}
-```
+@import "ex21_09/main.go" {class="line-numbers"}
 
 1. 使用 `C.CString` 將 Go `string` 轉成 C 的 `*char`
 1. 因為 strong type 關係，需用 `C.int(x)` 將 Go 的 int 轉成 C 的 int
 1. 用 `&tmp[0]` 取得 `**char`，不能用 `&tmp` (∵ `&tmp` 是取到 `*reflect.SliceHeader`)
 1. 最後用 `C.free` 釋放記憶體，需用 `unsafe.Pointer` 將 `*char` 轉成 `*void`
 
-### Go call C++
+### 3.3 Go call C++
 
 除了用 Swig 外，也可以自行將 C++ 透過 C，包裝成 library，再讓 Go 使用。
+
+#### 目錄結構
 
 ```text
 cxx_test
@@ -543,187 +408,35 @@ cxx_test
 └── foo.hpp
 ```
 
-#### foo.hpp
+#### cxx_test/foo.hpp
 
-```c++ {.line-numbers}
-#pragma once
+@import "cxx_test/foo.hpp" {as="c" class="line-numbers"}
 
-class cxxFoo {
-public:
-    int a;
-    cxxFoo(int _a): a(_a) {};
-    ~cxxFoo() {};
-    void Bar();
-};
+#### cxx_test/foo.cpp
 
-class cxxTest {
-public:
-    cxxTest(const int argc, const char **argv, int *pnErr);
-    ~cxxTest();
-};
-```
+@import "cxx_test/foo.cpp" {as="c" class="line-numbers"}
 
-#### foo.cpp
+#### cxx_test/foo.h
 
-```c++ {.line-numbers}
-#include <iostream>
-#include "foo.hpp"
+@import "cxx_test/foo.h" {as="c" class="line-numbers"}
 
-void cxxFoo::Bar(void) {
-    std::cout << this->a<<std::endl;
-}
+#### cxx_test/cfoo.cpp
 
-cxxTest::cxxTest(const int argc, const char **argv, int *err) {
-
-    for(int i = 0; i < argc; i++) {
-        std::cout << argv[i] << std::endl;
-    }
-    *err = 100;
-}
-
-cxxTest::~cxxTest() {
-    std::cout << "delete cxxTest" << std::endl;
-}
-```
-
-#### foo.h
-
-```c {.line-numbers}
-#pragma once
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef void* Foo;
-typedef void* Test;
-
-Foo FooInit(void);
-void FooFree(Foo);
-void FooBar(Foo);
-
-Test TestNew(const int argc, const char **argv, int *err);
-void TestFree(Test);
-
-#ifdef __cplusplus
-}
-#endif
-```
-
-#### cfoo.cpp
-
-```c++ {.line-numbers}
-#include "foo.hpp"
-#include "foo.h"
-
-Foo FooInit() {
-    cxxFoo *ret = new cxxFoo(1);
-    return (void *)ret;
-}
-
-void FooFree(Foo f) {
-    cxxFoo *foo = (cxxFoo *)f;
-    delete foo;
-}
-
-void FooBar(Foo f) {
-    cxxFoo *foo = (cxxFoo *)f;
-    foo->Bar();
-}
-
-Test TestNew(const int argc, const char **argv, int *err) {
-    cxxTest *ret = new cxxTest(argc, argv, err);
-    return (void *)ret;
-}
-
-void TestFree(Test t) {
-    cxxTest *tt = (cxxTest *)t;
-    delete tt;
-}
-```
+@import "cxx_test/cfoo.cpp" {as="c" class="line-numbers"}
 
 #### cxx_test/main.go
 
-```go {.line-numbers}
-package main
+@import "cxx_test/main.go" {class="line-numbers"}
 
-// #cgo LDFLAGS: -L. -lfoo
-// #include "foo.h"
-// #include "stdlib.h"
-import "C"
-import (
-    "fmt"
-    "unsafe"
-)
+#### cxx_test/Makefile
 
-func conv(args []string) []*C.char {
-    ret := make([]*C.char, len(args))
-
-    for i, x := range args {
-        ret[i] = C.CString(x)
-    }
-
-    return ret
-}
-
-// New ...
-func New() C.Test {
-    var args = []string{"A", "B", "C"}
-
-    xx := conv(args)
-
-    aa := C.int(100)
-    a := &aa
-
-    t := C.TestNew(3, &xx[0], a)
-    fmt.Println(aa)
-
-    for _, v := range xx {
-        C.free(unsafe.Pointer(v))
-    }
-
-    return t
-
-}
-
-func main() {
-
-    foo := C.FooInit()
-    C.FooBar(foo)
-    C.FooFree(foo)
-
-    t := New()
-    C.TestFree(t)
-
-}
-```
-
-#### Makefile
-
-```makefile {.line-numbers}
-.PHONY: clean
-
-TARGET=cxx_test
-
-$(TARGET): libfoo.a
-    go build -x -work .
-
-libfoo.a: foo.o cfoo.o
-    ar r $@ $^
-
-%.o: %.cpp
-    g++ -O2 -o $@ -c $^
-
-clean:
-    rm -f *.o *.so *.a $(TARGET)
-    go clean -x -cache
-```
+@import "cxx_test/Makefile" {as="makefile", class="line-numbers"}
 
 1. foo.hpp, foo.cpp: C++ 程式
 1. foo.h, cfoo.cpp: 封裝 foo.hpp/foo.cpp 的程式，之後 Go 會對應 foo.h
 1. foo.go: Go 程式
 
-原理：
+#### 原理
 
 1. 因為 Go 無法直接用 C++ 程式，因此封裝一層 C++ 程式，外層只用 C 語言特性，讓 Go 透過這層 C interface 與底層 C++ 溝通。
 1. 對應 class 的 new/delete，因為 Go 無法使用，因此 C 的 interface 需要有相對應的 function 來處理。
@@ -734,7 +447,7 @@ clean:
 
 [^import-path]: `command-line-arguments` 關係，請見 [go build](http://wiki.jikexueyuan.com/project/go-command-tutorial/0.1.html)
 
-## C Call Go (Static Linking)
+## 4. C Call Go (Static Linking)
 
 Go 可以產生 C 的 library 提供給 C 使用。在編譯時，加 `-buildmode=c-archive` 參數。詳細說明，可看 [Build modes](https://golang.org/cmd/go/#hdr-Build_modes)。
 
@@ -753,50 +466,25 @@ static_link
 1. mygo 是 Go 程式，準備給 C 使用。
 1. mytest.c 是 C 程式，會使用 Go 產出的 C 靜態 library。
 
-#### mygo/main.go
+#### static_link/mygo/main.go
 
-```go {.line-numbers}
-package main
-
-import "fmt"
-import "C"
-
-// Hello ...
-//export Hello
-func Hello(name *C.char) {
-    fmt.Println("Hello,", C.GoString(name))
-}
-
-func main() {
-
-}
-```
+@import "static_link/mygo/main.go" {class="line-numbers"}
 
 1. 在 Go 程式中，一定要加 `import "C"`，否則在編譯時，不會產生出 C 的 header file (*.h)。
 1. 在要給 C 使用的 function，緊接 CGO 的註解 `//export` 在該 function 上方。
 1. 編譯指令：`go build -buildmode=c-archive -o mygo.a .`，會產生出 **mygo.h** 及 **mygo.a**。
 
-#### mytest.c
+#### static_link/mytest.c
 
-```c
-#include "mygo/mygo.h"
-
-int main(void) {
-  Hello("world");
-  return 0;
-}
-```
+@import "static_link/mytest.c" {class="line-numbers"}
 
 1. `Hello("world");` 使用 Go 的 `Hello` function.
 1. 編譯指令：`gcc -o mytest mygo/mygo.a mytest.c`
 
-## reference
+## 5. reference
 
-1. [[译]Go里面的unsafe包详解Ｖ](https://gocn.io/question/371)
 1. [Go 1 and the Future of Go Programs#Expections](https://golang.org/doc/go1compat#expectations)
-1. [GO 命令教程](http://wiki.jikexueyuan.com/project/go-command-tutorial/)
-
-### How does this work
+## 6. How does ==this== work
 
 ```C++ {.line-numbers}
 class CRect {

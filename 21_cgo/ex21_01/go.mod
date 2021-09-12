@@ -1,3 +1,3 @@
-module ex20_01
+module ex21_01
 
 go 1.17
