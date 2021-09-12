@@ -12,7 +12,9 @@ import (
 	"google.golang.org/grpc"
 )
 
-type helloService struct{}
+type helloService struct {
+	service.UnimplementedHelloServiceServer
+}
 
 func (h *helloService) Hello(ctx context.Context, req *service.Request) (*protos.Hello, error) {
 	if req == nil || "" == req.Name {

@@ -1,6 +1,6 @@
 package protos
 
-//go:generate protoc -I ../../grpc_test/protos -I $GOPATH/src --go_out=../../ test.proto
+//go:generate protoc -I ../../grpc_test/protos -I $GOPATH/include --go_out=../../ test.proto
 
 import (
 	proto "github.com/golang/protobuf/proto"

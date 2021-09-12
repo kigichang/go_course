@@ -20,7 +20,7 @@ func main() {
 
 	client := service.NewHelloServiceClient(conn)
 
-	resp, err := client.Hello(context.TODO(), &service.Request{Name: "Bob"})
+	resp, _ := client.Hello(context.Background(), &service.Request{Name: "Bob"})
 
 	log.Println(resp)
 
