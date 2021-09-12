@@ -1,4 +1,4 @@
-# 16 Cowork with C/C++ (swig)
+# 21 Cowork with C/C++ (swig)
 
 在 Golang 有 cgo 與 gccgo 可以與 C 的程式互動。在 compile Golang 的程式時，可以 link C 的 library。
 

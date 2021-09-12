@@ -1,4 +1,4 @@
-# 18 RESTful, Protobuf and gRPC
+# 18 RESTful
 
 ## REST API
 

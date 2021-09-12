@@ -105,15 +105,15 @@
   - CSRF
 - [Echo](echo/)
   - Hello world
-- [18 RESTful, Protobuf and gRPC](18_restful_and_grpc)
+- [18 RESTful, Protobuf and gRPC](18_restful)
   - RESTful using Gorilla
+- [19 gRPC](19_grpc)
   - Protobuf
     - Protoc (Protobuf Compliler)
   - gRPC (Client and Service)
-
 ### 四、Go 進階功能
 
-- [19 Reflection and Struct Tag](19_reflect)
+- [20 Reflection and Struct Tag](20_reflect)
   - Type and Value
   - Strut Tag
   - Check Interface implementation
@@ -121,7 +121,7 @@
   - Make Slice
   - Make Map
   - Make Function
-- [20 Cowork with C/C++](20_cgo)
+- [21 Cowork with C/C++](21_cgo)
   - Go `unsafe` Package
   - Go String and *C.char
   - Go call C
@@ -131,7 +131,7 @@
 
 ### 五、實驗中功能
 
-- [21 Go WebAssembly](21_wasm)
+- [Go WebAssembly](wasm)
   - WebAssembly Introduction
   - DOM in Go WASM
     - Selector
@@ -144,7 +144,7 @@
   - File and FileReader
   - Conversion Javascript Uint8Array and Go Byte Slice
 
-- [22 Type Parameters and Go Generic](22_generic)
+- [Type Parameters and Go Generic](generic)
 
 ## 新增
 

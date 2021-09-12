@@ -1,4 +1,4 @@
-# 21 Go WebAssembly
+# Go WebAssembly
 
 ## WebAssembly (WASM) Introduction
 
