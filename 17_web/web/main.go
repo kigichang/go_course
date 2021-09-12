@@ -107,7 +107,7 @@ func main() {
 	mux.HandleFunc("/", test)
 	mux.HandleFunc("/set_cookie", setCookie)
 	mux.HandleFunc("/get_cookie", getCookie)
-	mux.HandleFunc("/nueip", toGo)
+	mux.HandleFunc("/go", toGo)
 
 	if err := http.ListenAndServe(":8080", mux); err != nil {
 		log.Fatal(err)
