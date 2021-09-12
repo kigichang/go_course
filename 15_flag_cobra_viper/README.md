@@ -1,7 +1,7 @@
 # 15 flag and spf13 Cobra/Viper
 
 
-<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=3 orderedList=false} -->
 
 <!-- code_chunk_output -->
 
@@ -17,10 +17,6 @@
     - [3.3 定義 flag，參數與工作](#33-定義-flag參數與工作)
     - [3.3 測試](#33-測試)
     - [3.4 與 Viper 結合](#34-與-viper-結合)
-      - [main.go](#maingo)
-      - [config.json](#configjson)
-      - [執行](#執行)
-      - [Summary](#summary)
 
 <!-- /code_chunk_output -->
 

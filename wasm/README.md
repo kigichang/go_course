@@ -1,7 +1,7 @@
 # Go WebAssembly
 
 
-<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=3 orderedList=false} -->
 
 <!-- code_chunk_output -->
 
@@ -21,8 +21,6 @@
   - [3. Hello World and DOM Manipulation](#3-hello-world-and-dom-manipulation)
     - [3.1 目錄結構](#31-目錄結構)
     - [3.2 WASM Demo](#32-wasm-demo)
-      - [wasm_demo/index.html](#wasm_demoindexhtml)
-      - [wasm_demo/main.go](#wasm_demomaingo)
 
 <!-- /code_chunk_output -->
 

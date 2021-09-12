@@ -1,12 +1,12 @@
 # 05 Data Types - Reference Types
 
-<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=3 orderedList=false} -->
 
 <!-- code_chunk_output -->
 
 - [05 Data Types - Reference Types](#05-data-types-reference-types)
   - [0. 前言](#0-前言)
-  - [1. Pointer & Passing By Value](#1-pointer-passing-by-value)
+  - [1. Pointer & Pass By Value](#1-pointer-pass-by-value)
   - [2. Slices](#2-slices)
     - [2.1 Slice Declaration](#21-slice-declaration)
     - [2.2 Array and Slice Relation](#22-array-and-slice-relation)

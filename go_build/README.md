@@ -1,6 +1,6 @@
 # Go Build
 
-<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=3 orderedList=false} -->
 
 <!-- code_chunk_output -->
 
@@ -9,18 +9,9 @@
   - [2. Build Constraints](#2-build-constraints)
     - [2.1 目錄結構](#21-目錄結構)
     - [2.3 主程式說明](#23-主程式說明)
-      - [mybuild/main.go](#mybuildmaingo)
     - [2.4 使用檔名控制](#24-使用檔名控制)
-      - [mybuild/hello_darwin.go](#mybuildhello_darwingo)
-      - [mybuild/hello_linux.go](#mybuildhello_linuxgo)
-      - [mybuild/hello_windows.go](#mybuildhello_windowsgo)
     - [2.5 在檔案加入 Constraint 設定](#25-在檔案加入-constraint-設定)
-      - [mybuild/start1.go](#mybuildstart1go)
-      - [mybuild/start2.go](#mybuildstart2go)
-      - [mybuild/start3.go](#mybuildstart3go)
     - [2.6 使用 tag 方式指定](#26-使用-tag-方式指定)
-      - [mybuild/hi_gopher.go](#mybuildhi_gophergo)
-      - [mybuild/hi_everyone.go](#mybuildhi_everyonego)
     - [2.7 Makefile](#27-makefile)
     - [2.8 測試](#28-測試)
 

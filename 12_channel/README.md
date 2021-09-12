@@ -1,6 +1,6 @@
 # 12 Concurrency - Channel
 
-<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=3 orderedList=false} -->
 
 <!-- code_chunk_output -->
 
@@ -11,15 +11,10 @@
     - [2.1 Deadlock 1: Reading/Writing with Non-Buffered Channel](#21-deadlock-1-readingwriting-with-non-buffered-channel)
     - [2.2 Deadlock 2: Reading Before Writing with Buffered Channel](#22-deadlock-2-reading-before-writing-with-buffered-channel)
   - [3. Producer and Consumer Pattern (Pipeline)](#3-producer-and-consumer-pattern-pipeline)
-    - [利用 goroutine 執行 1 個 producer 及 2 個 consumer](#利用-goroutine-執行-1-個-producer-及-2-個-consumer)
-      - [Deadlock: Closing Channel in Main Instead of Producer](#deadlock-closing-channel-in-main-instead-of-producer)
+    - [3.1 利用 goroutine 執行 1 個 producer 及 2 個 consumer](#31-利用-goroutine-執行-1-個-producer-及-2-個-consumer)
   - [4. Actor Pattern (Pipeline)](#4-actor-pattern-pipeline)
   - [5. Select and Timeout](#5-select-and-timeout)
     - [Select and Timeout 說明](#select-and-timeout-說明)
-      - [createNumber](#createnumber)
-      - [readNumber](#readnumber)
-      - [main](#main)
-      - [執行結果](#執行結果)
 
 <!-- /code_chunk_output -->
 
