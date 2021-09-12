@@ -75,6 +75,7 @@
   - Panic and Recover
   - Errors (new feature in Go 1.13)
 - [14 Testing](14_testing)
+- [Go Moudle](go_module)
 - [Go Build](go_build)
   - Build cross Platform
   - Build Constrain
