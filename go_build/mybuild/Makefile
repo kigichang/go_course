@@ -28,7 +28,7 @@ windows:${TARGET}
 	wine64 mybuild.exe
 
 linux:${TARGET}
-	docker run -v `pwd`:/myapp ubuntu:18.04 /myapp/mybuild
+	docker run --rm -v `pwd`:/myapp ubuntu:18.04 /myapp/mybuild
 
 clean:
 	-rm ${TARGET}
