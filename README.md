@@ -6,7 +6,7 @@
 - GO 版本: Go 1.17
 - 開發環境: Mac OS (amd64)
 - 開發工具: [VSCode](https://code.visualstudio.com/)
-- 文件使用 Markdown 撰寫，建議使用 [Markdown Preview Enhanced](https://github.com/shd101wyy/markdown-preview-enhanced) 閱讀
+- 文件使用 [Markdown Preview Enhanced](https://github.com/shd101wyy/markdown-preview-enhanced) 撰寫，請安裝完環境後再閱讀。
 - [Source on Github](https://github.com/kigichang/go_course)
 
 ## 主要資料來源
