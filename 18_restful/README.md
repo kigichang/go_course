@@ -8,7 +8,7 @@
 - [18 RESTful](#18-restful)
   - [1. What is REST](#1-what-is-rest)
   - [2. Architectural Goals](#2-architectural-goals)
-  - [3. Architectural Constrains](#3-architectural-constrains)
+  - [3. Architectural Constraints](#3-architectural-constraints)
   - [4. RESTful Interface Example](#4-restful-interface-example)
     - [4.1 Use HTTP Response Codes to Indicate Status](#41-use-http-response-codes-to-indicate-status)
     - [4.2 Using HTTP Methods for RESTful Services](#42-using-http-methods-for-restful-services)
@@ -40,7 +40,7 @@ RESTful 設計時，希望達到以下目的:
     - 服務可以輕易地被佈暑
 1. Reliability
 
-## 3. Architectural Constrains
+## 3. Architectural Constraints
 
 RESTful 設計時的限制：
 1. Client-Server

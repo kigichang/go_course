@@ -29,13 +29,13 @@
 
 Interface 對於初學程式的人，會是個很抽象的概念。Interface 有著以下概念：
 
-1. 限制 (Constrain)
+1. 限制 (Constraint)
 1. 建立關聯
 1. 去耦合(Decouple)
 
 可以想像一種情境，進到公園，寵物需要繫上牽繩。繫上牽繩這種行為，是就是一種 Interface。
 
-1. 限制 (Constrain)：凡是要進公園的寵物，都要繫上牽繩。
+1. 限制 (Constraint)：凡是要進公園的寵物，都要繫上牽繩。
 1. 建立關聯：只有繫上牽繩的寵物都可以進公園。
 1. 去耦合(Decouple): 不管是那種寵物(貓，狗等)，有繫上牽繩即可進公園。
 
@@ -108,7 +108,7 @@ func Read(r Reader) {
 
 由上的行為，可以再反思一開始概念：
 
-1. 限制 (Constrain): 想要符合 `Reader`，就需要實作 `func Read()`。
+1. 限制 (Constraint): 想要符合 `Reader`，就需要實作 `func Read()`。
 1. 建立關聯: 需要變成 `Reader` 才能被主程式使用。
 1. 去耦合(Decouple): 主程式可以不用理會是何種資料型別，只要是 `Reader`，主程式就可以使用。
 
