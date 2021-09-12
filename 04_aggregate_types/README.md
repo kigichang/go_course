@@ -15,6 +15,7 @@
     - [2.1 Struct Declaration](#21-struct-declaration)
     - [2.2 Struct Pointer](#22-struct-pointer)
     - [2.3 Struct Compare](#23-struct-compare)
+    - [2.4 Slice of Stuct Puzzle](#24-slice-of-stuct-puzzle)
   - [3. JSON](#3-json)
 
 <!-- /code_chunk_output -->
@@ -162,6 +163,27 @@ q := Point{2, 1}
 fmt.Println(p.X == q.X && p.Y == q.Y) // "false"
 fmt.Println(p == q)                   // "false"
 ```
+
+### 2.4 Slice of Stuct Puzzle
+
+當 Slice 內的元素是 Struct 時，在使用 `for-range` 操作資料時，要特別留意操作的 struct 物件，並非 Slice 內的物件。如下：
+
+@import "ex04_05/main.go" {class=line-numbers}
+
+結果：
+
+```text {.line-numbers}
+before: [{0 0} {0 0} {0 0} {0 0} {0 0}]
+0: 0xc000118000, 0xc00010c0c0
+1: 0xc000118010, 0xc00010c0c0
+2: 0xc000118020, 0xc00010c0c0
+3: 0xc000118030, 0xc00010c0c0
+4: 0xc000118040, 0xc00010c0c0
+after: [{0 0} {0 0} {0 0} {0 0} {0 0}]
+```
+
+1. 在 `for i, pt := range points`，會 clone slice 內的值，因此會看到 `pt` 的記憶體位址，並非 `points[i]` 的位址。
+1. `pt` 等同是一個新的 struct，因此任何修改的操作，都不的影響到原本 slice 內的值。
 
 ## 3. JSON
 
