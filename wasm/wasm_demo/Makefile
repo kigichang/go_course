@@ -10,4 +10,4 @@ clean:
 	- rm test.wasm
 
 goexec:
-	go get -u github.com/shurcooL/goexec
+	go install github.com/shurcooL/goexec

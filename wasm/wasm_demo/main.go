@@ -4,7 +4,7 @@
 **/
 package main
 
-//go:generate go get -u github.com/shurcooL/goexec
+//go:generate go install github.com/shurcooL/goexec
 
 import (
 	"encoding/base64"
