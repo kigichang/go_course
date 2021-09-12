@@ -156,5 +156,6 @@ func main() {
 	r.HandleFunc("/categories/{id:[0-9]+}", update).Methods("PUT")
 	r.HandleFunc("/categories/{id:[0-9]+}", del).Methods("DELETE")
 
+	log.Println("service starting...")
 	log.Fatal(http.ListenAndServe(":8080", r))
 }
