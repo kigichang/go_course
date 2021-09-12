@@ -1,7 +1,7 @@
 # 19 ProtoBuf and gRPC
 
 
-<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=3 orderedList=false} -->
 
 <!-- code_chunk_output -->
 
@@ -22,11 +22,8 @@
   - [5. gRPC (Google Remote Procedure Call)](#5-grpc-google-remote-procedure-call)
     - [5.1 grpc_test/service/service.proto](#51-grpc_testserviceserviceproto)
     - [5.2 Serivce Definition](#52-serivce-definition)
-      - [service.pb.go](#servicepbgo)
-      - [service_grpc.pb.go](#service_grpcpbgo)
     - [5.3 Server and Client Interface](#53-server-and-client-interface)
     - [5.4 Server 實作 (grpc_test/server/main.go)](#54-server-實作-grpc_testservermaingo)
-      - [grpc_test/server/main.go](#grpc_testservermaingo)
     - [5.5 Client 實作 (grpc_test/client/main.go)](#55-client-實作-grpc_testclientmaingo)
 
 <!-- /code_chunk_output -->
@@ -253,6 +250,7 @@ type HelloServiceServer interface {
 
 ### 5.5 Client 實作 (grpc_test/client/main.go)
 
+#### grpc_test/client/main.go
 @import "grpc_test/client/main.go" {class=line-numbers}
 
 說明：
