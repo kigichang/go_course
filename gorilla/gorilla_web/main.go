@@ -185,5 +185,6 @@ func main() {
 		csrf.Secure(false),
 	)
 
+	log.Println("gorilla starting...")
 	log.Fatal(http.ListenAndServe(":8080", CSRF(r)))
 }

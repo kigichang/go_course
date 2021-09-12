@@ -1,5 +1,25 @@
-
 # Build Web with Gorilla Toolkit
+
+
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [Build Web with Gorilla Toolkit](#build-web-with-gorilla-toolkit)
+  - [0. 前言](#0-前言)
+  - [1. 實作](#1-實作)
+    - [gorilla_web/main.go](#gorilla_webmaingo)
+  - [2. mux](#2-mux)
+  - [3. csrf](#3-csrf)
+  - [4. schema](#4-schema)
+  - [5. securecookie](#5-securecookie)
+  - [6. MiddlewareFunc](#6-middlewarefunc)
+
+<!-- /code_chunk_output -->
+
+## 0. 前言
+
+Gorilla 自己定位是多種 toolkit 組成，不是 Framework，希望使用者可以自行使用這些 Toolkit，自製 Framework。
 
 - [mux](https://github.com/gorilla/mux): Mux Router，可以定義更彈性的 routing path。
 - [securecookie](https://github.com/gorilla/securecookie): 加密 cookie。
@@ -10,201 +30,12 @@
 
 將綜合以上與 Gorilla Tool Kit，撰寫登入功能。
 
-## gorilla_web/main.go
+## 1. 實作
+### gorilla_web/main.go
 
-```go {.line-numbers}
-package main
+@import "gorilla_web/main.go" {class="line-numbers"}
 
-import (
-    "context"
-    "encoding/json"
-    "fmt"
-    "html/template"
-    "log"
-    "net/http"
-
-    "github.com/gorilla/csrf"
-    "github.com/gorilla/mux"
-    "github.com/gorilla/schema"
-    "github.com/gorilla/securecookie"
-)
-
-type member struct {
-    Email string `json:"email"`
-}
-
-func (m *member) String() string {
-    memBytes, err := json.Marshal(m)
-    if err != nil {
-        return err.Error()
-    }
-    return string(memBytes)
-}
-
-func generateHTML(w http.ResponseWriter, data interface{}, files ...string) {
-    var tmp []string
-    for _, f := range files {
-        tmp = append(tmp, fmt.Sprintf("templates/%s.html", f))
-    }
-
-    tmpl := template.Must(template.ParseFiles(tmp...))
-    tmpl.ExecuteTemplate(w, "layout", data)
-}
-
-func redirect(w http.ResponseWriter, target string) {
-    w.Header().Set("Location", target)
-    w.WriteHeader(http.StatusFound)
-}
-
-func index(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintln(w, "index")
-}
-
-func showLogin(w http.ResponseWriter, r *http.Request) {
-    generateHTML(w, csrf.TemplateField(r), "layout", "login")
-}
-
-func doLogin(w http.ResponseWriter, r *http.Request) {
-    form := struct {
-        Email    string `schema:"email"`
-        Password string `schema:"password"`
-        Token    string `schema:"auth_token"`
-    }{}
-
-    r.ParseForm()
-
-    if err := schema.NewDecoder().Decode(&form, r.PostForm); err != nil {
-        log.Println("schema decode:", err)
-        w.WriteHeader(http.StatusInternalServerError)
-        return
-    }
-
-    mem := &member{
-        Email: form.Email,
-    }
-
-    tmp, err := secureC.Encode(cookieName, mem)
-    if err != nil {
-        log.Println("encode secure cookie:", err)
-        w.WriteHeader(http.StatusInternalServerError)
-        return
-    }
-
-    cookie := &http.Cookie{
-        Name:   cookieName,
-        Value:  tmp,
-        MaxAge: 0,
-        Path:   "/",
-    }
-
-    http.SetCookie(w, cookie)
-    redirect(w, "/member")
-}
-
-func logout(w http.ResponseWriter, r *http.Request) {
-    cookie := &http.Cookie{
-        Name:   cookieName,
-        Value:  "",
-        MaxAge: -1,
-    }
-
-    http.SetCookie(w, cookie)
-    redirect(w, "/")
-}
-
-func showRegister(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintln(w, "show register")
-}
-
-func doRegister(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintln(w, "do resgier")
-}
-
-func memberIndex(w http.ResponseWriter, r *http.Request) {
-    mem, ok := r.Context().Value(ctxKey(cookieName)).(*member)
-    if !ok || mem == nil {
-        log.Println(mem, ok)
-        redirect(w, "/")
-        return
-    }
-
-    fmt.Fprintln(w, "member:", mem)
-}
-
-func memberShowEdit(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintln(w, "member show edit")
-}
-
-func memberDoEdit(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintln(w, "member do edit")
-}
-
-func memberAuthHandler(next http.Handler) http.Handler {
-    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-        // check cookie
-        cookie, err := r.Cookie(cookieName)
-        if err != nil {
-            w.WriteHeader(http.StatusForbidden)
-            return
-        }
-
-        value := &member{}
-        if err := secureC.Decode(cookieName, cookie.Value, value); err != nil {
-            log.Println("decode secure cookie:", err)
-            w.WriteHeader(http.StatusInternalServerError)
-            return
-        }
-
-        newRequest := r.WithContext(context.WithValue(r.Context(), ctxKey(cookieName), value))
-
-        next.ServeHTTP(w, newRequest)
-    })
-}
-
-type ctxKey string
-
-var (
-    secureC *securecookie.SecureCookie
-)
-
-const (
-    hashKey  = "1234567890123456789012345678901234567890123456789012345678901234"
-    blockKey = "0123456789abcdef"
-
-    cookieName = "mytest"
-)
-
-func main() {
-
-    secureC = securecookie.New([]byte(hashKey), []byte(blockKey))
-    r := mux.NewRouter()
-
-    r.HandleFunc("/", index)
-    r.HandleFunc("/login", showLogin).Methods("GET")
-    r.HandleFunc("/login", doLogin).Methods("POST")
-    r.HandleFunc("/logout", logout)
-    r.HandleFunc("/register", showRegister).Methods("GET")
-    r.HandleFunc("/register", doRegister).Methods("POST")
-
-    s := r.PathPrefix("/member").Subrouter()
-    s.HandleFunc("", memberIndex)
-    s.HandleFunc("/edit", memberShowEdit).Methods("GET")
-    s.HandleFunc("/edit", memberDoEdit).Methods("POST")
-
-    s.Use(memberAuthHandler)
-
-    CSRF := csrf.Protect(
-        []byte(`1234567890abcdefghijklmnopqrstuvwsyz!@#$%^&*()_+~<>?:{}|,./;'[]\`),
-        csrf.RequestHeader("X-ATUH-Token"),
-        csrf.FieldName("auth_token"),
-        csrf.Secure(false),
-    )
-
-    log.Fatal(http.ListenAndServe(":8080", CSRF(r)))
-}
-```
-
-## mux
+## 2. mux
 
 ```go {.line-numbers}
 r := mux.NewRouter()
@@ -228,7 +59,7 @@ s.Use(memberAuthHandler)
 - `r.PathPrefix(xxx).Subrouter()`: 產生子 router, 方便管理子模組。
 - `s.Use(xxx)`: 此 router 下的所有 request 都需要先經過某個 handler 處理，類似 Java Servlet Filter 功能。
 
-## csrf
+## 3. csrf
 
 1. 設定:
 
@@ -280,7 +111,7 @@ s.Use(memberAuthHandler)
 
     - 輸出的結果，會在 form 加一個 hidden 的 field，name 為 **auth_token**。
 
-## schema
+## 4. schema
 
 1. 用 Gorilla schema 處理時 crsf，記得要加一個 token 欄位，可以不處理
 
@@ -296,7 +127,7 @@ s.Use(memberAuthHandler)
     err := schema.NewDecoder().Decode(&form, r.PostForm)
     ```
 
-## securecookie
+## 5. securecookie
 
 1. Initialize
 
@@ -350,7 +181,7 @@ s.Use(memberAuthHandler)
     - cookieName: cookie name
     - value: 原先寫在 cookie 的值
 
-## MiddlewareFunc
+## 6. MiddlewareFunc
 
 Gorilla mux 提供 MiddlewareFunc，讓所有請求某個 URL 時，必須經過此 func 處理後，才會進入該 URL 的 handler func。作用類似 Java Servlet Filter。通常會在這裏面，作身分驗證，並把用戶的資料，變成 request-scope 的資料。
 
