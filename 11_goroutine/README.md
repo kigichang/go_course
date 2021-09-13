@@ -10,6 +10,7 @@
   - [2. Wait for goroutine](#2-wait-for-goroutine)
     - [2.1 已知有幾個 goroutine 會被執行](#21-已知有幾個-goroutine-會被執行)
     - [2.2 每執行 goroutine 前，WaitGroup Counter + 1](#22-每執行-goroutine-前waitgroup-counter-1)
+  - [3. Mutex](#3-mutex)
 
 <!-- /code_chunk_output -->
 
@@ -169,3 +170,21 @@ func main() {
 }
 ```
 
+## 3. Mutex
+
+當多個 goroutine 對同一份資料進行修改時，如果沒有管控的話，會造成資料不一致。如下程式，並不保證一定會得到一組長度為 __20__ 的 slice。
+
+@import "ex11_05/main.go" {class="line-numbers" highlight="9,24,26,29"}
+
+1. 兩個 goroutine 同時 append data。
+1. 最後 data 並不保證長度一定為 __20__ 。
+
+可以使用 [sync.Mutex](https://pkg.go.dev/sync#Mutex)，用上鎖的概念，來確保資料的完整與一致。行為說明如下：
+
+1. 當要讀寫共用的資料時，透過 Mutex 取得存取的權限 (上鎖)
+1. 當存取完畢後，需釋放權限 (解鎖)
+1. 此機制使用時，要留意，以免發生 Dead-Lock 問題。
+
+使用方法如下：
+
+@import "ex11_06/main.go" {class="line-numbers" highlight="17-19"}
