@@ -14,6 +14,7 @@
   - [4. Benchmark](#4-benchmark)
   - [5. Example](#5-example)
   - [6. Package 命名](#6-package-命名)
+  - [7. stretchr/testify](#7-stretchrtestify)
 
 <!-- /code_chunk_output -->
 
@@ -254,3 +255,9 @@ from [Proper package naming for testing with the Go language](https://stackoverf
 
 - Black-box Testing: 只管 Input/Output 測試，建議 package 命名用 xxx_test。
 - White-Box Testing: 測試程式內部邏輯, 建議放在相同的 package。
+
+## 7. stretchr/testify
+
+在撰寫 Unit Test 時，常常會寫到判斷是不是預期的結果，會寫很多 `if-else` 的程式碼。目前有 [stretchr/testify](https://github.com/stretchr/testify) 來協助撰寫測試程式。__stretchr/testify__ 功能很多，可以先從最基本的 `assert` 入門。如下：
+
+@import "mytest/util_test.go" {class="line-numbers"}
