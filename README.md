@@ -79,6 +79,8 @@
 - [Go Build](go_build)
   - Build cross Platform
   - Build Constraints
+- [embed](embed)
+
 ### 二、多執行緒
 - [11 Concurrency - Goroutine](11_goroutine)
   - Keyword `go`
