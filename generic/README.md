@@ -114,10 +114,11 @@ Go 官方，有提供練習 Generic 語法網站：[The go2go Playground](https:
 
 在泛型依然要定義可支援的資料型別，如：`Add[T Number]` 中的 __T__ 就被限制 (Constraint) 是 __Number__。
 
-目前已知 Go 內建的限制型別：
+目前已知 Go 內建的限制條件：
 
 - __any__: 沒有限制，可以是任何資料型別。
 - __comparable__: 支援 `==` 與 `!=` 操作的資料型別。
+  - map 內的 key 的資料型別，一定要是 __comparable__。
 
 ### 5.1 自定義限制條件
 
