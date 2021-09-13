@@ -75,7 +75,7 @@
   - Panic and Recover
   - Errors (new feature in Go 1.13)
 - [14 Testing](14_testing)
-- [Go Moudle](go_module)
+- [Go Module](go_module)
 - [Go Build](go_build)
   - Build cross Platform
   - Build Constraints
@@ -103,7 +103,7 @@
   - Shema
   - Secure Cookie
   - CSRF
-- [18 RESTful, Protobuf and gRPC](18_restful)
+- [18 RESTful](18_restful)
   - RESTful using Gorilla
 - [19 gRPC](19_grpc)
   - Protobuf
