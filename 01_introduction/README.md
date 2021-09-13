@@ -58,7 +58,7 @@
 
 ### 2.1 IDE 建議
 
-建議用 Visual Studio Code，再安裝 Go Plugin
+建議用 Visual Studio Code，再安裝 Go Plugin。因為使用到 [PlantUML](https://plantuml.com/)，需要安裝 JDK。
 
 [Go by Microsoft](https://marketplace.visualstudio.com/items?itemName=ms-vscode.Go)
 
