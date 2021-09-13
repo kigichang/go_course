@@ -77,11 +77,11 @@ func AddFloat(a, b float64) float64 {
 由於還在實驗中，目前 1.17 版本不允許將 Generic 相關的實作公開，也因此上述程式，都只能用 private 形式。如果改成 public (改大寫)，則會 compile 錯誤。
 ## 4. Go2Go
 
-Go 官方，有提供練習 Generic 語法網站：[The go2go Playground](https://go2goplay.golang.org/)。原理是先將有泛型的程式碼，轉成沒有泛型的程式碼，讓再編譯執行。
+Go 官方，有提供練習 Generic 語法網站：[The go2go Playground](https://go2goplay.golang.org/)。原理是先將有泛型的程式碼，轉成沒有泛型的程式碼，再編譯執行。
 
 也可以自行編譯 Go2Go 的工具。
 
-### 4.1 自行編譯 Go2Go 工具
+### 4.1 自行編譯 Go2Go 工具
 
 我自己環境的設定方式如下：
 
