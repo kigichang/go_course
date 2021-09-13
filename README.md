@@ -31,50 +31,50 @@
 - [本文件](README.md)
 ### 一、Go 基礎說明
 
-- [01 開發環境與語言簡介](01_introduction)
+- [01. 開發環境與語言簡介](01_introduction)
   - 參考文件
   - IDE 設定
   - 與 C/Java/PHP 簡單比較
-- [02 程式結構與語法](02_syntax)
+- [02. 程式結構與語法](02_syntax)
   - 關鍵字
   - 基本語法
   - `iota`
   - `type`
   - 指標
   - Package
-- [03 Data Types - Basic Types](03_basic_types)
+- [03. Data Types - Basic Types](03_basic_types)
   - Number
   - Boolean
   - String
   - Zero Value
-- [04 Data Types - Aggregate Types](04_aggregate_types)
+- [04. Data Types - Aggregate Types](04_aggregate_types)
   - Array
   - Struct
   - JSON
-- [05 Data Types - Reference Types](05_reference_types)
+- [05. Data Types - Reference Types](05_reference_types)
   - Slice
     - Append Slice
   - Map
-- [06 Functions](06_functions)
+- [06. Functions](06_functions)
   - 語法
   - Pass By Value in Value and Reference Types.
   - First Class
-- [07 Methods](07_methods)
+- [07. Methods](07_methods)
   - Methods in Value and Pointer
-- [08 Interface](08_interface)
+- [08. Interface](08_interface)
   - Interface in Struct and Pointer
   - Interface value
   - Interface puzzle (interface nil problem)
-- [09 Go and OOP](09_go_and_oop)
+- [09. Go and OOP](09_go_and_oop)
   - Encapsulation
   - Inheritance (fake)
   - Polymorphism
-- [10 Defer and Error Handling](10_defer_and_error_handling)
+- [10. Defer and Error Handling](10_defer_and_error_handling)
   - Defer
     - Closure Binding
   - Panic and Recover
   - Errors (new feature in Go 1.13)
-- [14 Testing](14_testing)
+- [14. Testing](14_testing)
 - [Go Module](go_module)
 - [Go Build](go_build)
   - Build cross Platform
@@ -82,20 +82,20 @@
 - [embed](embed)
 
 ### 二、多執行緒
-- [11 Concurrency - Goroutine](11_goroutine)
+- [11. Concurrency - Goroutine](11_goroutine)
   - Keyword `go`
   - `sync.WaitGroup`
-- [12 Concurrency - Channel](12_channel)
+- [12. Concurrency - Channel](12_channel)
   - Buffered channel
   - Producer and Consumer Pattern
   - Actor Pattern
   - `select` to monitor channels
-- [13 Context](13_context)
+- [13. Context](13_context)
 
 ### 三、實作應用
-- [15 flag and spf13 Cobra/Viper](15_flag_cobra_viper)
-- [16 MySQL](16_mysql)
-- [17 Web](17_web)
+- [15. flag and spf13 Cobra/Viper](15_flag_cobra_viper)
+- [16. MySQL](16_mysql)
+- [17. Web](17_web)
   - Go Template 語法
   - Context in Request (Request-Scoped)
   - Cookie
@@ -105,15 +105,15 @@
   - Shema
   - Secure Cookie
   - CSRF
-- [18 RESTful](18_restful)
+- [18. RESTful](18_restful)
   - RESTful using Gorilla
-- [19 gRPC](19_grpc)
+- [19. gRPC](19_grpc)
   - Protobuf
     - Protoc (Protobuf Compliler)
   - gRPC (Client and Service)
 ### 四、Go 進階功能
 
-- [20 Reflection and Struct Tag](20_reflect)
+- [20. Reflection and Struct Tag](20_reflect)
   - Type and Value
   - Strut Tag
   - Check Interface implementation
@@ -121,7 +121,7 @@
   - Make Slice
   - Make Map
   - Make Function
-- [21 Cowork with C/C++](21_cgo)
+- [21. Cowork with C/C++](21_cgo)
   - Go `unsafe` Package
   - Go String and *C.char
   - Go call C
