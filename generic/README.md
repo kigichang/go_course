@@ -13,7 +13,7 @@
       - [generic_1.17/main.go](#generic_117maingo)
       - [generic_1.17/Makefile](#generic_117makefile)
   - [4. Go2Go](#4-go2go)
-    - [4.1 自行編譯 Go2Go 工具](#41-自行編譯-go2go-工具)
+    - [4.1 自行編譯 Go2Go 工具](#41-自行編譯-go2go-工具)
     - [4.2 Go2Go 實作](#42-go2go-實作)
       - [generic_go2go/main.go2](#generic_go2gomaingo2)
       - [generic_go2go/Makefile](#generic_go2gomakefile)
@@ -21,6 +21,8 @@
   - [5. Go Generic](#5-go-generic)
     - [5.1 自定義限制條件](#51-自定義限制條件)
     - [5.2 實作](#52-實作)
+    - [5.3 Option 實作](#53-option-實作)
+      - [option/main.go2](#optionmaingo2)
   - [6. Summary](#6-summary)
 
 <!-- /code_chunk_output -->
@@ -159,6 +161,27 @@ func main() {
 1. 泛型宣告：`func Add[T Number](a, b T) T`
     1. 定義資料型別的限制條件：`[T Number]`
     1. 將原本 Function 中資料型別宣告，改成 `T`。如：`func AddInt(a, b int) int` => `func Add[T Number](a, b T) T` 中 __int__ => __T__。
+
+
+### 5.3 Option 實作
+
+實作 Scala 的 Option。[Scala Option](https://scala-lang.org/files/archive/api/3.x/scala/Option.html) 有兩種 subtype：
+
+- Some: 可視為有值，非 nil。
+- None: 可視為 nil。
+
+Java, Scala, 及 Go 都有 Nil (null) 設計，工程師常常取得 Reference Type 後，沒有檢查是否為 __nil__，而造成 Nil panic。Option 最原始的設計就是要強迫檢查。
+
+Java 可以看 [Google Guava Optional](https://guava.dev/releases/snapshot-jre/api/docs/com/google/common/base/Optional.html)
+
+#### option/main.go2
+
+@import "option/main.go2" {as="go" class="line-numbers" highlight="74,107,108"}
+
+1. 透過 __OptionMap__，運算 Option 內的值，如果是 None，則不做運算。上述範例是將數字轉成字串。
+1. 透過 __OptionEquals__，比對兩者是否相同，因為用到 `==` 運算，因此 __T__ 必須是 __comparable__。
+  - `OptionEquals(None[int64](), None[int]())`: 型別不同，在 compile 會錯誤。
+  - `OptionEquals(None[[]int64](), None[[]int64]())`: `[]int64` 不是 __comparable__，因此 compile 也會錯誤。
 
 ## 6. Summary
 
