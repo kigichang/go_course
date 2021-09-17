@@ -183,6 +183,10 @@ Java 可以看 [Google Guava Optional](https://guava.dev/releases/snapshot-jre/a
   - `OptionEquals(None[int64](), None[int]())`: 型別不同，在 compile 會錯誤。
   - `OptionEquals(None[[]int64](), None[[]int64]())`: `[]int64` 不是 __comparable__，因此 compile 也會錯誤。
 
+### 5.4 使用 Go 1.18 (開發版) 實作
+
+相關環境與實作，請見 [GoScala](https://github.com/kigichang/goscala)
+
 ## 6. Summary
 
 Generic 即將在 2022 年推出，之後 Go 相關的 eco-system 又會是一場大改版。可以在這段時間多多預習。
