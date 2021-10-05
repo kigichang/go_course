@@ -62,7 +62,7 @@ func AddFloat(a, b float64) float64 {
 
 ## 2. Type Parameters
 
-泛型有一個很重要觀念，就是 __Type Parameters__ 。一般我們很憝悉 Function 的參數與回傳值，都有各自的資料型別，如 `func AddInt(a, b int) int`。 __Type Parameters__ 的概念是 __資料型別__ 也是 Function 的一種參數。在 `func AddInt(a, b int) int` 裏，當 __int__ 也是 `AddInt` 的參數時，我們就有更多實作上的彈性。
+泛型有一個很重要觀念，就是 __Type Parameters__ 。一般我們很熟悉 Function 的參數與回傳值，都有各自的資料型別，如 `func AddInt(a, b int) int`。 __Type Parameters__ 的概念是 __資料型別__ 也是 Function 的一種參數。在 `func AddInt(a, b int) int` 裏，當 __int__ 也是 `AddInt` 的參數時，我們就有更多實作上的彈性。
 
 ## 3. Go 1.17 支援
 
