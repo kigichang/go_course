@@ -16,7 +16,7 @@
   - [4. Type Assert and Interface Puzzler](#4-type-assert-and-interface-puzzler)
     - [Interface Puzzler](#interface-puzzler)
     - [Type Assertion](#type-assertion)
-  - [5. Interface Value (interface{})](#5-interface-value-interface)
+  - [5. Empty Interface (interface{})](#5-empty-interface-interface)
   - [6. Summary](#6-summary)
 
 <!-- /code_chunk_output -->
@@ -341,16 +341,16 @@ func main() {
 1. 要從 interface 轉成原生的資料型別，建議使用 `value, ok := f2.(*MyFile)`，不要使用 `value := f2.(*MyFile)`，原因是：如果該 interface 不是此種資料型別時，會發生 panic，中斷程式。
 1. Type assertion 更多的實例，可參考 [spf13/cast](https://github.com/spf13/cast)。
 
-## 5. Interface Value (interface{})
+## 5. Empty Interface (interface{})
 
-Go 有設計一種特別的資料型別 Interface Value (`interface{}`)，可以包含所有 Go 的資料型別。有點像 php 或 python 不管變數的資料型別 (弱型別)。
+Go 的 Empty Interface `interface{}`，可以包含所有 Go 的資料型別。有點像 php 或 python 不管變數的資料型別 (弱型別)。
 
-Interface Value 也可以視作一種完全沒有任何條件限制的 Interface。Interface Value 通常會跟 Type Assertion 與 Reflection 使用。如：內建的 `json`。 
+Empty Interface 也可以視作一種完全沒有任何條件限制的 Interface。Empty Interface 通常會跟 Type Assertion 與 Reflection 使用。如：內建的 `json`。 
 
-An interface value (**interface{}**) can hold arbitrarily large dynamic values
+在 Go 1.18，可以 `any` 來表示 `interface{}`。比如之前是用 `var a interface{}` 在 Go 1.18 可以用 `var a any`。
 
 ```go {.line-numbers}
-var any interface{}
+var anything interface{}
 fmt.Printf("%T\n", any)     // <nil>
 
 a := 10
@@ -360,40 +360,40 @@ d := struct {A, B string}{"foo", "boo"}
 e := []string{}
 f := map[string]int{}
 
-any = a
+anything = a
 fmt.Printf("%T\n", any)     // int
 
-any = &a
+anything = &a
 fmt.Printf("%T\n", any)     // *int
 
-any = b
+anything = b
 fmt.Printf("%T\n", any)     // float64
 
-any = &b
+anything = &b
 fmt.Printf("%T\n", any)     // *float64
 
-any = c
+anything = c
 fmt.Printf("%T\n", any)     // string
 
-any = &c
+anything = &c
 fmt.Printf("%T\n", any)     // *string
 
-any = d
+anything = d
 fmt.Printf("%T\n", any)     // struct { A string; B string }
 
-any = &d
+anything = &d
 fmt.Printf("%T\n", any)     // *struct { A string; B string }
 
-any = e
+anything = e
 fmt.Printf("%T\n", any)     // []string
 
-any = &e
+anything = &e
 fmt.Printf("%T\n", any)     // *[]string
 
-any = f
+anything = f
 fmt.Printf("%T\n", any)     // map[string]int
 
-any = &f
+anything = &f
 fmt.Printf("%T\n", any)     // *map[string]int
 ```
 

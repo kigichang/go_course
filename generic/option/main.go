@@ -61,6 +61,7 @@ func OptionEquals[T comparable](opt Option[T], that Option[T]) bool {
 }
 
 func main() {
+	
 	defer func() {
 		if r := recover(); r != nil {
 			fmt.Println(r)

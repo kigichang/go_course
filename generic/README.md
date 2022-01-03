@@ -9,21 +9,23 @@
   - [0. 前言](#0-前言)
   - [1. 什麼是泛型 (Generic)](#1-什麼是泛型-generic)
   - [2. Type Parameters](#2-type-parameters)
-  - [3. Go 1.17 支援](#3-go-117-支援)
+  - [3. Go Generic](#3-go-generic)
+    - [3.1 自定義限制條件](#31-自定義限制條件)
+    - [3.2 實作](#32-實作)
+    - [3.3 Option 實作](#33-option-實作)
+      - [option/main.go](#optionmaingo)
+  - [4. 實作 Scala 相關 Monadic 功能。](#4-實作-scala-相關-monadic-功能)
+    - [4.1 與 Scala 的區別](#41-與-scala-的區別)
+  - [備註 (Go 1.17 時期的實驗，保留備份)](#備註-go-117-時期的實驗保留備份)
+    - [Go 1.17 支援](#go-117-支援)
       - [generic_1.17/main.go](#generic_117maingo)
       - [generic_1.17/Makefile](#generic_117makefile)
-  - [4. Go2Go](#4-go2go)
-    - [4.1 自行編譯 Go2Go 工具](#41-自行編譯-go2go-工具)
-    - [4.2 Go2Go 實作](#42-go2go-實作)
-      - [generic_go2go/main.go2](#generic_go2gomaingo2)
-      - [generic_go2go/Makefile](#generic_go2gomakefile)
-      - [generic_go2go/main.go](#generic_go2gomaingo)
-  - [5. Go Generic](#5-go-generic)
-    - [5.1 自定義限制條件](#51-自定義限制條件)
-    - [5.2 實作](#52-實作)
-    - [5.3 Option 實作](#53-option-實作)
-      - [option/main.go2](#optionmaingo2)
-  - [6. Summary](#6-summary)
+    - [Go2Go](#go2go)
+      - [自行編譯 Go2Go 工具](#自行編譯-go2go-工具)
+      - [Go2Go 實作](#go2go-實作)
+        - [generic_go2go/main.go2](#generic_go2gomaingo2)
+        - [generic_go2go/Makefile](#generic_go2gomakefile)
+        - [generic_go2go/main.go](#generic_go2gomaingo)
 
 <!-- /code_chunk_output -->
 
@@ -64,71 +66,26 @@ func AddFloat(a, b float64) float64 {
 
 泛型有一個很重要觀念，就是 __Type Parameters__ 。一般我們很熟悉 Function 的參數與回傳值，都有各自的資料型別，如 `func AddInt(a, b int) int`。 __Type Parameters__ 的概念是 __資料型別__ 也是 Function 的一種參數。在 `func AddInt(a, b int) int` 裏，當 __int__ 也是 `AddInt` 的參數時，我們就有更多實作上的彈性。
 
-## 3. Go 1.17 支援
 
-目前 Go 1.17 版本，有支援編譯 Generic 語法。在編譯時，加入 __-gcflags=-G=3__。
-
-#### generic_1.17/main.go
-
-@import "generic_1.17/main.go" {class="line-numbers"}
-
-#### generic_1.17/Makefile
-
-@import "generic_1.17/Makefile" {as="makefile" class="line-numbers"}
-
-由於還在實驗中，目前 1.17 版本不允許將 Generic 相關的實作公開，也因此上述程式，都只能用 private 形式。如果改成 public (改大寫)，則會 compile 錯誤。
-## 4. Go2Go
-
-Go 官方，有提供練習 Generic 語法網站：[The go2go Playground](https://go2goplay.golang.org/)。原理是先將有泛型的程式碼，轉成沒有泛型的程式碼，再編譯執行。
-
-也可以自行編譯 Go2Go 的工具。
-
-### 4.1 自行編譯 Go2Go 工具
-
-我自己環境的設定方式如下：
-
-1. 切換至 __HOME__ 目錄。
-1. 執行 `git clone -b dev.go2go  git@github.com:golang/go.git goroot`。
-1. 進到 __goroot/src__ 執行 __all.bash__ 進行編譯。
-1. 執行 `~/goroot/bin/go version` 確認版本。
-1. 如果要開始實作大型專案，則需要設定 __GO2PATH__ 環境變數。
-    - 在 __HOME__ 目錄下，建立 __go2__ 目錄，並設定環境變數 __$GO2PATH__。
-
-可以參考 __goroot/src/cmd/go2go/testdata__ Generic 與 Monoid 範例可學習。
-
-### 4.2 Go2Go 實作
-
-要使用 Go2GO 必須將程式碼的副檔案，改成 __*.go2__。使用 `~/goroot/bin/go tool go2go build` 方式編譯程式。編譯完成後，會看到 go2go 產生的程式碼 __main.go__ 。
-
-#### generic_go2go/main.go2
-
-@import "generic_go2go/main.go2" {as="go" class="line-numbers"}
-
-#### generic_go2go/Makefile
-
-@import "generic_go2go/Makefile" {as="makefile" class="line-numbers"}
-
-#### generic_go2go/main.go
-
-@import "generic_go2go/main.go" {class="line-numbers"}
-
-## 5. Go Generic
+## 3. Go Generic
 
 在泛型依然要定義可支援的資料型別，如：`Add[T Number]` 中的 __T__ 就被限制 (Constraint) 是 __Number__。
 
-目前已知 Go 內建的限制條件：
+Go 內建的限制條件：
 
 - __any__: 沒有限制，可以是任何資料型別。
 - __comparable__: 支援 `==` 與 `!=` 操作的資料型別。
   - map 內的 key 的資料型別，一定要是 __comparable__。
+- __constraints__: Go 1.18 新增一組 package 定義: `Signed`, `Unsigned`, `Integer`, `Float`, `Complex`, `Ordered`。
 
-### 5.1 自定義限制條件
+目前 Go 1.18 尚不支援在 __Method__ 使用 Type Parameters，預計在 Go 1.19 版本會才支援。
+### 3.1 自定義限制條件
 
 可以自定義限制條件，如：
 
 ```go {.line-numbers}
 type Number interface {
-	type int, int8, int16, int32, int64,
+	int, int8, int16, int32, int64,
 		uint, uint8, uint16, uint32, uint64,
 		float32, float64
 }
@@ -138,12 +95,20 @@ type Number interface {
 1. 設定此條件下，支援的資料型別：
 
     ```go {.line-numbers}
-    type int, int8, int16, int32, int64,
+    int, int8, int16, int32, int64,
             uint, uint8, uint16, uint32, uint64,
             float32, float64
     ```
+1. `~`: Go 的 `constraints` 下，會發現 `~` 的用法，如下：
 
-### 5.2 實作
+    ```go
+    type Signed interface {
+      ~int | ~int8 | ~int16 | ~int32 | ~int64
+    }
+    ```
+    主要是使用 Type Declaration 來定義新型別時，也會被視為該 constraint。比如：`type Status int`, 則新的型別 `Status` 也會被視做 `Signed`。
+
+### 3.2 實作
 
 使用自定義的限制條件。
 
@@ -163,7 +128,7 @@ func main() {
     1. 將原本 Function 中資料型別宣告，改成 `T`。如：`func AddInt(a, b int) int` => `func Add[T Number](a, b T) T` 中 __int__ => __T__。
 
 
-### 5.3 Option 實作
+### 3.3 Option 實作
 
 實作 Scala 的 Option。[Scala Option](https://scala-lang.org/files/archive/api/3.x/scala/Option.html) 有兩種 subtype：
 
@@ -174,19 +139,95 @@ Java, Scala, 及 Go 都有 Nil (null) 設計，工程師常常取得 Reference T
 
 Java 可以看 [Google Guava Optional](https://guava.dev/releases/snapshot-jre/api/docs/com/google/common/base/Optional.html)
 
-#### option/main.go2
+#### option/main.go
 
-@import "option/main.go2" {as="go" class="line-numbers" highlight="74,107,108"}
+@import "option/main.go" {as="go" class="line-numbers" highlight="74,107,108"}
 
 1. 透過 __OptionMap__，運算 Option 內的值，如果是 None，則不做運算。上述範例是將數字轉成字串。
 1. 透過 __OptionEquals__，比對兩者是否相同，因為用到 `==` 運算，因此 __T__ 必須是 __comparable__。
   - `OptionEquals(None[int64](), None[int]())`: 型別不同，在 compile 會錯誤。
   - `OptionEquals(None[[]int64](), None[[]int64]())`: `[]int64` 不是 __comparable__，因此 compile 也會錯誤。
 
-### 5.4 使用 Go 1.18 (開發版) 實作
+## 4. 實作 Scala 相關 Monadic 功能。
 
-相關環境與實作，請見 [GoScala](https://github.com/kigichang/goscala)
+[GoScala (gs)](https://github.com/dairaga/gs)，依據 Golang 的特性，實作 Scala Collection 中常用的 Monadic 相關的功能，如：
 
-## 6. Summary
+- Exists
+- Forall
+- Foreach
+- Filter
+- FloatMap
+- Map
+- Group
+- AndThen (Function)
+- Componse (Function)
 
-Generic 即將在 2022 年推出，之後 Go 相關的 eco-system 又會是一場大改版。可以在這段時間多多預習。
+依 Scala 的設計，目前實作：
+
+1. Either
+1. Try
+1. Option
+1. Slice
+1. Map
+1. Future
+
+### 4.1 與 Scala 的區別
+
+1. Go 沒有繼承，因此沒有 Scala constaint 的 Lower / Upper Type Bounds.
+1. Java / Scala 有 Exception 設計，在 Go 使用 error。
+1. Scala 中的 __Partial Function__ 設計，在 Go 使用 `type Partial[T, R any] func(T) (R, bool)` 實作。
+
+~~##  4. Summary~~
+
+~~Generic 即將在 2022 年 2 月推出，之後 Go 相關的 eco-system 又會是一場大改版。可以在這段時間多多預習。~~
+
+
+## 備註 (Go 1.17 時期的實驗，保留備份)
+### Go 1.17 支援
+
+目前 Go 1.17 版本，有支援編譯 Generic 語法。在編譯時，加入 __-gcflags=-G=3__。
+
+#### generic_1.17/main.go
+
+@import "generic_1.17/main.go" {class="line-numbers"}
+
+#### generic_1.17/Makefile
+
+@import "generic_1.17/Makefile" {as="makefile" class="line-numbers"}
+
+由於還在實驗中，目前 1.17 版本不允許將 Generic 相關的實作公開，也因此上述程式，都只能用 private 形式。如果改成 public (改大寫)，則會 compile 錯誤。
+### Go2Go
+
+Go 官方，有提供練習 Generic 語法網站：[The go2go Playground](https://go2goplay.golang.org/)。原理是先將有泛型的程式碼，轉成沒有泛型的程式碼，再編譯執行。
+
+也可以自行編譯 Go2Go 的工具。
+
+#### 自行編譯 Go2Go 工具
+
+我自己環境的設定方式如下：
+
+1. 切換至 __HOME__ 目錄。
+1. 執行 `git clone -b dev.go2go  git@github.com:golang/go.git goroot`。
+1. 進到 __goroot/src__ 執行 __all.bash__ 進行編譯。
+1. 執行 `~/goroot/bin/go version` 確認版本。
+1. 如果要開始實作大型專案，則需要設定 __GO2PATH__ 環境變數。
+    - 在 __HOME__ 目錄下，建立 __go2__ 目錄，並設定環境變數 __$GO2PATH__。
+
+可以參考 __goroot/src/cmd/go2go/testdata__ Generic 與 Monoid 範例可學習。
+
+#### Go2Go 實作
+
+要使用 Go2GO 必須將程式碼的副檔案，改成 __*.go2__。使用 `~/goroot/bin/go tool go2go build` 方式編譯程式。編譯完成後，會看到 go2go 產生的程式碼 __main.go__ 。
+
+##### generic_go2go/main.go2
+
+@import "generic_go2go/main.go2" {as="go" class="line-numbers"}
+
+##### generic_go2go/Makefile
+
+@import "generic_go2go/Makefile" {as="makefile" class="line-numbers"}
+
+##### generic_go2go/main.go
+
+@import "generic_go2go/main.go" {class="line-numbers"}
+
