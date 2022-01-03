@@ -129,6 +129,8 @@
     - DIY
   - C Call Go with Static Library
 
+- [Type Parameters and Go Generic](generic)
+
 ### 五、實驗中功能
 
 - [Go WebAssembly](wasm)
@@ -143,8 +145,6 @@
   - Javascript Call Go
   - File and FileReader
   - Conversion Javascript Uint8Array and Go Byte Slice
-
-- [Type Parameters and Go Generic](generic)
 
 ## 新增
 
