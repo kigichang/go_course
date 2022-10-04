@@ -1,5 +1,5 @@
 module handle_request
 
-go 1.16
+go 1.19
 
-require github.com/labstack/echo/v4 v4.3.0
+require github.com/labstack/echo/v4 latest
