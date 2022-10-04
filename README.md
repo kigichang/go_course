@@ -1,9 +1,10 @@
 # Golang 學習筆記
 
 個人多年來學習與實作上的心得筆記，本文件適合已有一種程式語言經驗的同好閱讀，內容如有錯誤或建議，可以隨時與我連絡。
+
 ## 開發環境
 
-- GO 版本: Go 1.17
+- GO 版本: Go 1.19
 - 開發環境: Mac OS (amd64)
 - 開發工具: [VSCode](https://code.visualstudio.com/)
 - 文件使用 [Markdown Preview Enhanced](https://github.com/shd101wyy/markdown-preview-enhanced) 撰寫，請安裝完環境後再閱讀。
@@ -29,6 +30,7 @@
 ## Summary
 
 - [本文件](README.md)
+
 ### 一、Go 基礎說明
 
 - [01. 開發環境與語言簡介](01_introduction)
@@ -82,6 +84,7 @@
 - [embed](embed)
 
 ### 二、多執行緒
+
 - [11. Concurrency - Goroutine](11_goroutine)
   - Keyword `go`
   - `sync.WaitGroup`
@@ -93,6 +96,7 @@
 - [13. Context](13_context)
 
 ### 三、實作應用
+
 - [15. flag and spf13 Cobra/Viper](15_flag_cobra_viper)
 - [16. MySQL](16_mysql)
 - [17. Web](17_web)
@@ -111,6 +115,7 @@
   - Protobuf
     - Protoc (Protobuf Compliler)
   - gRPC (Client and Service)
+
 ### 四、Go 進階功能
 
 - [20. Reflection and Struct Tag](20_reflect)

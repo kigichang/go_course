@@ -1,0 +1,6 @@
+go 1.19
+
+use (
+	./01_introduction/ex01_01
+	./01_introduction/ex01_02
+)

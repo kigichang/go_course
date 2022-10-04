@@ -34,14 +34,15 @@
 <!-- /code_chunk_output -->
 
 ## 1. Build-in
+
 ### 1.1 關鍵字
 
 ```go
-break    default     func   interface select
-case     defer       go     map       struct
-chan     else        goto   package   switch
-const    fallthrough if     range     type
-continue for         import return    var
+break        default      func         interface    select
+case         defer        go           map          struct
+chan         else         goto         package      switch
+const        fallthrough  if           range        type
+continue     for          import       return       var
 ```
 
 ### 1.2 內建常數
@@ -74,72 +75,72 @@ panic  recover
 var name type = expression
 ```
 
-- 不給初始值時，可以省略 `= expression`
+1. 不給初始值時，可以省略 `= expression`
 
-	```go
-	var name type
-	```
+    ```go
+    var name type
+    ```
 
-- 給初始值時，則可以省略 ==type==
+1. 給初始值時，則可以省略 ==type==
 
-	```go
-	var name = expression
-	```
+    ```go
+    var name = expression
+    ```
 
-- 使用方式如下：
+#### 2.1.1 使用方式如下
 
-	1. 宣告變數，不給初始值
+1. 宣告變數，不給初始值
 
-		```go {.line-numbers}
-		var s string
-		fmt.Println(s) // ""
-		```
+    ```go {.line-numbers}
+    var s string
+    fmt.Println(s) // ""
+    ```
 
-	1. 一次宣告多個變數，並給初始值(可省略型別)
+1. 一次宣告多個變數，並給初始值(可省略型別)
 
-		```go {.line-numbers}
-		var i, j, k int                 // int, int, int
-		var b, f, s = true, 2.3, "four" // bool, float64, string
-		```
+    ```go {.line-numbers}
+    var i, j, k int                 // int, int, int
+    var b, f, s = true, 2.3, "four" // bool, float64, string
+    ```
 
-	1. 接收 return 值，可 return 多組值。
+1. 接收 return 值，可 return 多組值。
 
-		```go {.line-numbers}
-		var f, err = os.Open(name) // os.Open returns a file and an error
-		```
+    ```go {.line-numbers}
+    var f, err = os.Open(name) // os.Open returns a file and an error
+    ```
 
 ### 2.2 簡寫
 
-- 宣告時，省略 `var`
+1. 宣告時，省略 `var`
 
-	```go {.line-numbers}
-	name := expression
-	```
+    ```go {.line-numbers}
+    name := expression
+    ```
 
-- 使用方式如下：
+#### 2.2.1 使用方式如下
 
-	1. 省略型別宣告
+1. 省略型別宣告
 
-		```go {.line-numbers}
-		i, j := 0, 1
-		```
+    ```go {.line-numbers}
+    i, j := 0, 1
+    ```
 
-	1. 接收 return 值
+1. 接收 return 值
 
-		```go {.line-numbers}
-		anim := gif.GIF{LoopCount: nframes}
-		freq := rand.Float64() * 3.0
-		t := 0.0
+    ```go {.line-numbers}
+    anim := gif.GIF{LoopCount: nframes}
+    freq := rand.Float64() * 3.0
+    t := 0.0
 
-		f, err := os.Open(name)
-		if err != nil {
-			return err
-		}
+    f, err := os.Open(name)
+    if err != nil {
+    return err
+    }
 
-		// ...use f...
+    // ...use f...
 
-		f.Close()
-		```
+    f.Close()
+    ```
 
 ### 2.3 Default Type
 
@@ -160,23 +161,23 @@ s := ""     // string
 
 1. 至少要有一個是新的變數名稱
 
-	```go {.line-numbers}
-	in, err := os.Open(infile)
-	// ...
-	out, err := os.Create(outfile)
-	```
+    ```go {.line-numbers}
+    in, err := os.Open(infile)
+    // ...
+    out, err := os.Create(outfile)
+    ```
 
-	以上，雖然 `err` 重覆，但 `out` 是新的變數名稱，compile 會過。
+    以上，雖然 `err` 重覆，但 `out` 是新的變數名稱，compile 會過。
 
 1. 都是舊的
 
-	```go {.line-numbers}
-	f, err := os.Open(infile)
-	// ...
-	f, err := os.Create(outfile) // compile error: no new variables
-	```
+    ```go {.line-numbers}
+    f, err := os.Open(infile)
+    // ...
+    f, err := os.Create(outfile) // compile error: no new variables
+    ```
 
-	以上，`f` 與 `err` 都是舊的變數，所以在第二次，還是使用 `:=` 時，compile 會錯。通常 compile 會報錯，都不是什麼大問題，修正就好了。
+    以上，`f` 與 `err` 都是舊的變數，所以在第二次，還是使用 `:=` 時，compile 會錯。通常 compile 會報錯，都不是什麼大問題，修正就好了。
 
 ## 3. 數值宣告
 
@@ -197,8 +198,8 @@ const pi = 3.14159 // approximately; math.Pi is a better approximation
 
 ```go {.line-numbers}
 const (
-	e = 2.71828182845904523536028747135266249775724709369995957496696763
-	pi = 3.14159265358979323846264338327950288419716939937510582097494459
+ e = 2.71828182845904523536028747135266249775724709369995957496696763
+ pi = 3.14159265358979323846264338327950288419716939937510582097494459
 )
 ```
 
@@ -211,77 +212,29 @@ const (
 
 [itoa 詳細說明](https://github.com/golang/go/wiki/Iota)
 
-```go {.line-numbers}
-package main
-
-import "fmt"
-
-// number
-const (
-	Zero  = iota    // 0
-	One   = iota    // 1
-	Two   = iota    // 2
-	Three = iota    // 3
-)
-
-// file mode
-const (
-	X = 1 << iota   // 1
-	W = 1 << iota   // 2
-	R = 1 << iota   // 4
-)
-
-// size
-const (
-	_          = iota // ignore first value by assigning to blank identifier
-	KB float64 = 1 << (10 * iota)
-	MB
-	GB
-	TB
-	PB
-	EB
-	ZB
-	YB
-)
-
-// weekday
-const (
-	Sunday = 1 + iota       // iota = 0, sunday     = 1
-	_                       // iota = 1, skip
-	// this is a comment    // iota = 1, skip
-							// iota = 1, skip
-	Monday                  // iota = 2, monday     = 3
-	Tuesday                 // iota = 3, tuesday    = 4
-	Wednesday               // iota = 4, wednesday  = 5
-	Thursday                // iota = 5, thursday   = 6
-	Friday                  // iota = 6, friday     = 7
-	Saturday                // iota = 7, saturday   = 8
-)
-```
+@import "ex02_01/main.go" {class=line-numbers}
 
 ## 6. 指標 (Pointer)
 
 使用方法及觀念與 C 相同，`&` 取變數的指標，`*` 取指標內的值；需注意的是，C 可以對指標做位移，但 Go 不行。[^unsafe]
 
-[^unsafe]: Golang 有 `unsafe` 套件，專門用在與 C 串接。需轉成 unsafe 的 pointer 才能做指標位移。
-
 1. 用法
 
-	```go {.line-numbers}
-	x := 1
-	p := &x         // p, of type *int, points to x
-	fmt.Println(*p) // "1"
-	*p = 2          // equivalent to x = 2
-	fmt.Println(x)  // "2"
-	```
+    ```go {.line-numbers}
+    x := 1
+    p := &x         // p, of type *int, points to x
+    fmt.Println(*p) // "1"
+    *p = 2          // equivalent to x = 2
+    fmt.Println(x)  // "2"
+    ```
 
 1. 不可做指標位移:
 
-	```go {.line-numbers}
-	a := 10
-	b := &a
-	b++     // invalid operation: b++ (non-numeric type *int)
-	```
+    ```go {.line-numbers}
+    a := 10
+    b := &a
+    b++     // invalid operation: b++ (non-numeric type *int)
+    ```
 
 ## 7. 元組 (Tuple)
 
@@ -289,35 +242,35 @@ const (
 
 1. Tuple Assignment (1)
 
-	```go {.line-numbers}
-	x, y = y, x
-	a[i], a[j] = a[j], a[i]
-	```
+    ```go {.line-numbers}
+    x, y = y, x
+    a[i], a[j] = a[j], a[i]
+    ```
 
 1. Tuple Assignment (2): GCD sample
 
-	```go {.line-numbers}
-	func gcd(x, y int) int {
+    ```go {.line-numbers}
+    func gcd(x, y int) int {
 
-		for y != 0 {
-			x, y = y, x%y
-		}
+    for y != 0 {
+    x, y = y, x%y
+    }
 
-		return x
-	}
-	```
+    return x
+    }
+    ```
 
 1. Return Tuple
 
-	```go {.line-numbers}
-	func swap(x, y int) (int, int) {
-		return y, x
-	}
-	```
+    ```go {.line-numbers}
+    func swap(x, y int) (int, int) {
+    return y, x
+    }
+    ```
 
 ## 8. ==type== Keyword
 
-在 Go 可以使用 `type` 來宣告一個新的 data type，或幫舊的 data type 取一個別名，來增加程式碼的可讀性。
+在 Go 可以使用 `type` 來宣告一個新的 data type，擴充原本 type 的功能，或幫舊的 data type 取一個別名，來增加程式碼的可讀性。
 
 ### 8.1 Type Declaration (ex02_02)
 
@@ -325,59 +278,30 @@ const (
 
 #### 華氏、攝氏型別宣告與轉換
 
-```go {.line-numbers}
-// Celsius ...
-type Celsius float64
-
-// ToF convert Celsius to Fahrenheit
-func (c Celsius) ToF() Fahrenheit {
-	return CToF(c)
-}
-
-// Fahrenheit ...
-type Fahrenheit float64
-
-// ToC convert Celsius to Fahrenheit
-func (f Fahrenheit) ToC() Celsius {
-	return FToC(f)
-}
-
-// const variable
-const (
-	AbsoluteZeroC Celsius = -273.15
-	FreezingC     Celsius = 0
-	BoilingC      Celsius = 100
-)
-
-// CToF convert Celsius to Fahrenheit
-func CToF(c Celsius) Fahrenheit { return Fahrenheit(c*9/5 + 32) }
-
-// FToC convert Fahrenheit to Celsius
-func FToC(f Fahrenheit) Celsius { return Celsius((f - 32) * 5 / 9) }
-```
+@import "ex02_02/main.go" {class=line-numbers}
 
 1. Strong Type Detection
-	雖然 `Celsius` 與 `Fahrenheit` 都是 `float64`，但還是遵守 **Strong Type** 原則，兩者不能直接做運算。如下：
+ 雖然 `Celsius` 與 `Fahrenheit` 都是 `float64`，但還是遵守 __Strong Type__ 原則，兩者不能直接做運算。如下：
 
-	```go {.line-numbers}
-	fmt.Printf("%g\n", BoilingC-FreezingC) // "100" °C
-	boilingF := BoilingC.ToF()
-	fmt.Printf("%g\n", boilingF-FreezingC.ToF()) // "180" °F
-	fmt.Printf("%g\n", boilingF-FreezingC)       // compile error: type mismatch
-	```
+    ```go {.line-numbers}
+    fmt.Printf("%g\n", BoilingC-FreezingC) // "100" °C
+    boilingF := BoilingC.ToF()
+    fmt.Printf("%g\n", boilingF-FreezingC.ToF()) // "180" °F
+    fmt.Printf("%g\n", boilingF-FreezingC)       // compile error: type mismatch
+    ```
 
 1. 型別轉換(cast)
 
-	```go {.line-numbers}
-	var c Celsius
-	var f Fahrenheit
-	fmt.Println(c == 0)          // "true"
-	fmt.Println(f >= 0)          // "true"
-	fmt.Println(c == Celsius(f)) // "true"!
-	fmt.Println(c == f)          // compile error: type mismatch
-	```
+    ```go {.line-numbers}
+    var c Celsius
+    var f Fahrenheit
+    fmt.Println(c == 0)          // "true"
+    fmt.Println(f >= 0)          // "true"
+    fmt.Println(c == Celsius(f)) // "true"!
+    fmt.Println(c == f)          // compile error: type mismatch
+    ```
 
-	注意，雖然 `Celsius` 及 `Fahrenheit` 底層都是 `float64`，但都還是要視為不同的型別。
+ 注意，雖然 `Celsius` 及 `Fahrenheit` 底層都是 `float64`，但都還是要視為不同的型別。
 
 ### 8.2 Type Alias (ex02_03)
 
@@ -389,58 +313,11 @@ type type1 = type2
 
 如此一來，type1 就直接等於是 type2，可以不用轉型。
 
-```go {.line-numbers}
-package main
-
-import "fmt"
-
-// Celsius ...
-type Celsius = float64
-
-// ToF convert Celsius to Fahrenheit
-func (c Celsius) ToF() Fahrenheit { //  compile error: cannot define new methods on non-local type float64
-	return CToF(c)
-}
-
-// Fahrenheit ...
-type Fahrenheit = float64
-
-// ToC convert Celsius to Fahrenheit
-func (f Fahrenheit) ToC() Celsius { //  compile error: cannot define new methods on non-local type float64
-	return FToC(f)
-}
-
-// const variable
-const (
-	AbsoluteZeroC Celsius = -273.15
-	FreezingC     Celsius = 0
-	BoilingC      Celsius = 100
-)
-
-// CToF convert Celsius to Fahrenheit
-func CToF(c Celsius) Fahrenheit { return c*9/5 + 32 } // do not cast
-
-// FToC convert Fahrenheit to Celsius
-func FToC(f Fahrenheit) Celsius { return (f - 32) * 5 / 9 } // do not cast
-
-func main() {
-	fmt.Printf("%g\n", BoilingC-FreezingC) // 100
-	boilingF := CToF(BoilingC)
-	fmt.Printf("%g\n", boilingF-CToF(FreezingC)) // 180
-	fmt.Printf("%g\n", boilingF-FreezingC)       // 212
-
-	var c Celsius
-	var f Fahrenheit
-	fmt.Println(c == 0)          // true
-	fmt.Println(f >= 0)          // true
-	fmt.Println(c == Celsius(f)) // true
-	fmt.Println(c == f)          // true
-}
-```
+@import "ex02_03/main.go" {class=line-numbers}
 
 ### 8.3 Type Declaration & Alias 差別
 
-**Type Declaration** 與 **Type Alias** 主要的差別：
+__Type Declaration__ 與 __Type Alias__ 主要的差別：
 
 |                  | 需做轉型 | 擴展功能  |
 | ---------------- |:-------:|:-------:|
@@ -480,59 +357,30 @@ package 中，可以在某一個程式檔案，定義 `func init()`。當 packag
 ├── main.go
 ├── go.mod
 └── util
-	└── util.go
+ └── util.go
 ```
 
 #### 程式碼
 
-- go.mod
+##### go.mod
 
-	```go
-	module ex02_04
+@import "ex02_04/go.mod" {class=line-numbers as=go}
 
-	go 1.17
-	```
+##### util.go
 
-- util.go
+@import "ex02_04/util/util.go" {class=line-numbers}
 
-	```go {.line-numbers}
-	package util
+##### main.go
 
-	import "fmt"
+@import "ex02_04/main.go" {class=line-numbers}
 
-	func init() {
-		fmt.Println("package util initialize")
-	}
+##### 結果
 
-	// Hello returns string concates
-	func Hello(name string) string {
-		return fmt.Sprintf("hello %s", name)
-	}
-	```
-
-- main.go
-
-	```go {.line-numbers}
-	package main
-
-	import (
-		"ex02_04/util"
-		"fmt"
-	)
-
-	func main() {
-		fmt.Println("start...")
-		fmt.Println(util.Hello("Gopher"))
-	}
-	```
-
-- 結果
-
-	```text
-	package util initialize
-	start...
-	hello Gopher
-	```
+ ```text
+ package util initialize
+ start...
+ hello Gopher
+ ```
 
 ## 10. Go Wildcard
 
@@ -548,15 +396,16 @@ _ = test()
 
 ```go {.line-numbers}
 func mytest(_ int, str string) {
-	
+ 
 }
 ```
 
 ## 11. 變數 Visibiility
 
-Go 沒有 **private** and **public** 關鍵字，而是利用字母的**大**、**小**寫來區分 **public** 及 **private**。如果變數或 function 是**小寫**開頭，則為 **private**，反之，**大寫**就是 **public**。
+Go 沒有 __private__ and __public__ 關鍵字，而是利用字母的__大__、__小__寫來區分 __public__ 及 __private__。如果變數或 function 是__小寫__開頭，則為 __private__，反之，__大寫__就是 __public__。
 
-注意：**在同 package 下，可以存取 struct 內的 private 變數 (Package Private)。**
+注意：__在同 package 下，可以存取 struct 內的 private 變數 (Package Private)。__
+注意：有使用 Struct Tag 的欄位，一定要是 __Public__ (也就是大寫)。
 
 ## 12. 變數 Scope
 
