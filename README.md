@@ -65,7 +65,7 @@
   - Methods in Value and Pointer
 - [08. Interface](08_interface)
   - Interface in Struct and Pointer
-  - Interface value
+  - Interface Value
   - Interface puzzle (interface nil problem)
 - [09. Go and OOP](09_go_and_oop)
   - Encapsulation
@@ -78,6 +78,7 @@
   - Errors (new feature in Go 1.13)
 - [14. Testing](14_testing)
 - [Go Module](go_module)
+- [TODO: Go Workspaces](go_workspaces)
 - [Go Build](go_build)
   - Build cross Platform
   - Build Constraints
@@ -88,6 +89,8 @@
 - [11. Concurrency - Goroutine](11_goroutine)
   - Keyword `go`
   - `sync.WaitGroup`
+  - Mutex
+  - Atomic
 - [12. Concurrency - Channel](12_channel)
   - Buffered channel
   - Producer and Consumer Pattern
@@ -103,12 +106,13 @@
   - Go Template 語法
   - Context in Request (Request-Scoped)
   - Cookie
-- [Gorilla](gorilla/)
+- [Gorilla](gorilla)
   - Mux
   - Middleware
   - Shema
   - Secure Cookie
   - CSRF
+- [TODO: Echo](echo)
 - [18. RESTful](18_restful)
   - RESTful using Gorilla
 - [19. gRPC](19_grpc)
@@ -157,3 +161,6 @@
 - Go 1.16 embed 功能
 - Go WebAssembly
 - Go Generic & Go2Go (Go 1.8)
+- Go Workspaces
+- Echo
+- Go 1.19 atomic 功能

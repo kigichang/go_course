@@ -6,7 +6,7 @@
 
 - [05 Data Types: Reference Types](#05-data-types-reference-types)
   - [0. 前言](#0-前言)
-  - [1. Pointer & Pass By Value (ex05_01)](#1-pointer-pass-by-value-ex05_01)
+  - [1. Pointer 與 Pass By Value (ex05_01)](#1-pointer-與-pass-by-value-ex05_01)
   - [2. Slices](#2-slices)
     - [2.1 Slice Declaration (ex05_02)](#21-slice-declaration-ex05_02)
     - [2.2 Array and Slice Relation (ex05_03)](#22-array-and-slice-relation-ex05_03)

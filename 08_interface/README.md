@@ -1,6 +1,5 @@
 # 08 Interface
 
-
 <!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=3 orderedList=false} -->
 
 <!-- code_chunk_output -->
@@ -9,14 +8,14 @@
   - [0. 我對 Interface 的心得](#0-我對-interface-的心得)
   - [1. Interface 宣告](#1-interface-宣告)
   - [2. Differentence from Value and Pointer](#2-differentence-from-value-and-pointer)
-    - [2.1 Value](#21-value)
-    - [2.2 Pointer](#22-pointer)
+    - [2.1 Value (ex08_01)](#21-value-ex08_01)
+    - [2.2 Pointer (ex08_02)](#22-pointer-ex08_02)
     - [2.3 Summary](#23-summary)
   - [3 Stringer interface](#3-stringer-interface)
   - [4. Type Assert and Interface Puzzler](#4-type-assert-and-interface-puzzler)
-    - [Interface Puzzler](#interface-puzzler)
+    - [Interface Puzzler (ex08_03)](#interface-puzzler-ex08_03)
     - [Type Assertion](#type-assertion)
-  - [5. Empty Interface (interface{})](#5-empty-interface-interface)
+  - [5. Interface Value (interface{} or any) (ex08_04)](#5-interface-value-interface-or-any-ex08_04)
   - [6. Summary](#6-summary)
 
 <!-- /code_chunk_output -->
@@ -62,15 +61,15 @@ func (f *File) Read() {
 }
 
 func ReadDB(db *DB) {
-	db.Read()
+    db.Read()
 }
 
 func ReadNet(net *Net) {
-	net.Read()
+    net.Read()
 }
 
 func ReadFile(f *File) {
-	f.Read()
+    f.Read()
 }
 ```
 
@@ -78,7 +77,7 @@ func ReadFile(f *File) {
 
 ```go {.line-numbers}
 type Reader interface {
-	Read()
+    Read()
 }
 
 type DB struct{}
@@ -102,7 +101,7 @@ func (i Integer) Read() {
 }
 
 func Read(r Reader) {
-	r.Read()
+    r.Read()
 }
 ```
 
@@ -142,90 +141,15 @@ Go 的 `io.ReadCloser` 是由 `io.Reader` 與 `io.Closer` 組成。
 
 Interface 與 Java 類似，用 struct 的 method 來實作 interface 指定的 method。這邊需注意的是，在實作 interface 的 method 時，是用 Value 還是 Pointer.
 
-### 2.1 Value
+### 2.1 Value (ex08_01)
 
 使用 Value 方式，實作 interface 的 function。
 
-```go {.line-numbers}
-package main
+@import "ex08_01/main.go" {class=line-numbers}
 
-import "fmt"
+### 2.2 Pointer (ex08_02)
 
-// Scale ...
-type Scale interface {
-    ScaleBy(float64)
-}
-
-// Point ...
-type Point struct {
-    X float64
-    Y float64
-}
-
-// ScaleBy ...
-func (p Point) ScaleBy(a float64) {
-    p.X *= a
-    p.Y *= a
-}
-
-// CallScale ...
-func CallScale(s Scale, a float64) {
-    s.ScaleBy(a)
-}
-
-func main() {
-    p := Point{100.0, 200.0}
-
-    fmt.Println(p) // {100 200}
-    p.ScaleBy(10)
-    fmt.Println(p) // {100 200}
-    CallScale(p, 10)
-    fmt.Println(p) // {100 200}
-    CallScale(&p, 10)
-    fmt.Println(p) // {100 200}
-}
-```
-
-### 2.2 Pointer
-
-```go {.line-numbers}
-package main
-
-import "fmt"
-
-// Scale ...
-type Scale interface {
-    ScaleBy(float64)
-}
-
-// Point ...
-type Point struct {
-    X float64
-    Y float64
-}
-
-// ScaleBy ...
-func (p *Point) ScaleBy(a float64) {
-    p.X *= a
-    p.Y *= a
-}
-
-// CallScale ...
-func CallScale(s Scale, a float64) {
-    s.ScaleBy(a)
-}
-
-func main() {
-    p := Point{100.0, 200.0}
-
-    fmt.Println(p) // {100 200}
-    p.ScaleBy(10)
-    fmt.Println(p) // {1000 2000}
-    CallScale(&p, 10)
-    fmt.Println(p) // {10000 20000}
-    CallScale(p, 10) // cannot use p (type Point) as type Scale in argument to CallScale: Point does not implement Scale (ScaleBy method has pointer receiver)
-}
-```
+@import "ex08_02/main.go" {class=line-numbers}
 
 ### 2.3 Summary
 
@@ -236,7 +160,7 @@ func main() {
 
 ## 3 Stringer interface
 
-**Stringer** interface 有一個 `String()`，功能類似 Java Object 的 **toString**. 可以自定義輸出的字串格式。可用在 `fmt.Println`, `fmt.Printf("%v")` 或 `fmt.Printf("%s")` 等。在 debug 時，非常好用。
+__Stringer__ interface 有一個 `String()`，功能類似 Java Object 的 __toString__. 可以自定義輸出的字串格式。可用在 `fmt.Println`, `fmt.Printf("%v")` 或 `fmt.Printf("%s")` 等。在 debug 時，非常好用。
 
 ```go {.line-numbers}
 type Stringer interface {
@@ -267,57 +191,9 @@ Go 的 Interface 會存原生的資料型別(是由那種資料型別實作)，�
 
 [From FAQ of Go](https://golang.org/doc/faq#nil_error)
 
-```go {.line-numbers}
-package main
+### Interface Puzzler (ex08_03)
 
-import (
-    "fmt"
-    "io"
-    "os"
-)
-
-// MyFile ...
-type MyFile struct{}
-
-// Close implements io.Closer interface
-func (f *MyFile) Close() error {
-    return nil
-}
-
-// BadNew1 ...
-func BadNew1() *MyFile {
-    return nil
-}
-
-// BadNew2 ...
-func BadNew2() io.Closer {
-    var f *MyFile
-    return f
-}
-
-func main() {
-    var f1 io.Closer = BadNew1()
-    f2 := BadNew2()
-
-    fmt.Printf("%T, %v, %v\n", f1, f1, f1 == nil) // *main.MyFile, <nil>, false
-    fmt.Printf("%T, %v, %v\n", f2, f2, f2 == nil) // *main.MyFile, <nil>, false
-
-    switch v := f1.(type) {
-    case *MyFile:
-        fmt.Printf("%T, %v, %v\n", v, v, v == nil) // *main.MyFile, <nil>, true
-    default:
-        fmt.Println("unknown type")
-    }
-
-    value, ok := f2.(*MyFile)
-    fmt.Printf("%v, %T, %v, %v\n", ok, value, value, value == nil) // true, *main.MyFile, <nil>, true
-
-    f3, ok := f2.(*os.File)
-    fmt.Printf("%v, %T, %v, %v\n", ok, f3, f3, f3 == nil) // false, *os.File, <nil>, true
-}
-```
-
-### Interface Puzzler
+@import "ex08_03/main.go" {class=line-numbers}
 
 1. `BadNew1` 回傳值，有指定資料型別為 `*MyFile`，即使回傳值是 `nil`，但 `f1` 會記錄 `*MyFile`，因此 `f1` 會不是 `nil`。應改為 `func BadNew1() io.Closer`
 1. `BadNew2` 在 Function 內的 `f` 已指定資料型別為 `*MyFile`，即使值是 `nil`，回傳成 `io.Closer` 後，會記錄 `*MyFile`，依然不會是 `nil`。應改為 `var f io.Closer`
@@ -325,13 +201,16 @@ func main() {
 ### Type Assertion
 
 1. 要判斷 interface 是否為某種資料型別，可以用：
+
     ```go {.line-numbers}
     switch v := f1.(type) {
         case *MyFile:
         // v 會是該資料型別的值。
     }
     ```
+
     或
+
     ```go {.line-numbers}
     switch f1.(type) {
         case *MyFile:
@@ -341,61 +220,15 @@ func main() {
 1. 要從 interface 轉成原生的資料型別，建議使用 `value, ok := f2.(*MyFile)`，不要使用 `value := f2.(*MyFile)`，原因是：如果該 interface 不是此種資料型別時，會發生 panic，中斷程式。
 1. Type assertion 更多的實例，可參考 [spf13/cast](https://github.com/spf13/cast)。
 
-## 5. Empty Interface (interface{})
+## 5. Interface Value (interface{} or any) (ex08_04)
 
-Go 的 Empty Interface `interface{}`，可以包含所有 Go 的資料型別。有點像 php 或 python 不管變數的資料型別 (弱型別)。
+Go 的 Interface Value `interface{}` or `any` (in Go 1.18 later)，可以包含所有 Go 的資料型別。有點像 php 或 python 不管變數的資料型別 (弱型別)。
 
-Empty Interface 也可以視作一種完全沒有任何條件限制的 Interface。Empty Interface 通常會跟 Type Assertion 與 Reflection 使用。如：內建的 `json`。 
+Interface Value 也可以視作一種完全沒有任何條件限制的 Interface。Interface Value 通常會跟 Type Assertion 與 Reflection 使用。如：內建的 `json`。
 
 在 Go 1.18，可以 `any` 來表示 `interface{}`。比如之前是用 `var a interface{}` 在 Go 1.18 可以用 `var a any`。
 
-```go {.line-numbers}
-var anything interface{}
-fmt.Printf("%T\n", any)     // <nil>
-
-a := 10
-b := 100.0
-c := "string"
-d := struct {A, B string}{"foo", "boo"}
-e := []string{}
-f := map[string]int{}
-
-anything = a
-fmt.Printf("%T\n", any)     // int
-
-anything = &a
-fmt.Printf("%T\n", any)     // *int
-
-anything = b
-fmt.Printf("%T\n", any)     // float64
-
-anything = &b
-fmt.Printf("%T\n", any)     // *float64
-
-anything = c
-fmt.Printf("%T\n", any)     // string
-
-anything = &c
-fmt.Printf("%T\n", any)     // *string
-
-anything = d
-fmt.Printf("%T\n", any)     // struct { A string; B string }
-
-anything = &d
-fmt.Printf("%T\n", any)     // *struct { A string; B string }
-
-anything = e
-fmt.Printf("%T\n", any)     // []string
-
-anything = &e
-fmt.Printf("%T\n", any)     // *[]string
-
-anything = f
-fmt.Printf("%T\n", any)     // map[string]int
-
-anything = &f
-fmt.Printf("%T\n", any)     // *map[string]int
-```
+@import "ex08_04/main.go" {class=line-numbers}
 
 ## 6. Summary
 
