@@ -89,5 +89,7 @@ use (
 	./21_cgo/ex21_08
 	./21_cgo/ex21_09
 	./21_cgo/static_link/mygo
-	./21_cgo/swig_test
+	./echo/bind_validate
+	./echo/handle_request
+	./echo/hello_world
 )
