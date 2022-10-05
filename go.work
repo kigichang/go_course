@@ -65,4 +65,29 @@ use (
 	./15_flag_cobra_viper/ex15_02
 	./15_flag_cobra_viper/ex15_03
 	./15_flag_cobra_viper/ex15_04
+	./16_mysql/ex16
+	./17_web/web
+	./18_restful/restful
+	./19_grpc/grpc_test
+	./20_reflect/ex20_01
+	./20_reflect/ex20_02
+	./20_reflect/ex20_03
+	./20_reflect/ex20_04
+	./20_reflect/how_to_01
+	./20_reflect/how_to_02
+	./20_reflect/how_to_03
+	./20_reflect/how_to_04
+	./20_reflect/how_to_05
+	./21_cgo/cxx_test
+	./21_cgo/ex21_01
+	./21_cgo/ex21_02
+	./21_cgo/ex21_03
+	./21_cgo/ex21_04
+	./21_cgo/ex21_05
+	./21_cgo/ex21_06
+	./21_cgo/ex21_07
+	./21_cgo/ex21_08
+	./21_cgo/ex21_09
+	./21_cgo/static_link/mygo
+	./21_cgo/swig_test
 )

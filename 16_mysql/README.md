@@ -6,7 +6,7 @@
 
 - [16 MySQL](#16-mysql)
   - [0. 前言](#0-前言)
-    - [Test table schema (MySQL):](#test-table-schema-mysql)
+    - [Test table schema (MySQL)](#test-table-schema-mysql)
     - [Sample Code](#sample-code)
   - [1. Initial Connection Pool](#1-initial-connection-pool)
   - [2. Insert](#2-insert)
@@ -21,7 +21,7 @@
 
 與 Java JDBC 類似，Go 有定義一套 interface，所有要連 DB 的 driver，都需要實作這些 interface (["database/sql/driver"](https://golang.org/pkg/database/sql/driver/))。以下我是用 [go-sql-driver/mysql](https://github.com/go-sql-driver/mysql)
 
-### Test table schema (MySQL):
+### Test table schema (MySQL)
 
 @import "ex16/init.sql" {class="line-numbers"}
 
@@ -77,49 +77,15 @@
 
     ```go { .line-numbers }
     db, err := InitDB()
-	if err != nil {
-		log.Fatal("initial db:", err)
-	}
-	defer db.Close()
+    if err != nil {
+        log.Fatal("initial db:", err)
+    }
+    defer db.Close()
     ```
 
 ## 2. Insert
 
-```go { .line-numbers }
-birthday := time.Date(0, time.January, 1, 0, 0, 0, 0, time.UTC)
-register := time.Date(0, time.January, 1, 0, 0, 0, 0, time.UTC)
-login := time.Now()
-
-m1 := Member{
-    Name:     "小明",
-    Info:     "小明",
-    Birthday: birthday,
-    Register: register,
-    Login:    login,
-    VIP:      "A",
-}
-log.Println(m1)
-
-ins, err := db.Prepare("insert into member(name, info, birthday, register, login, vip) values(?, ?, ?, ?, ?, ?)")
-if err != nil {
-    log.Println("prepare insert:", err)
-    return
-}
-defer ins.Close()
-
-result, err := ins.Exec(m1.Name, m1.Info, m1.Birthday, m1.Register, m1.Login, m1.VIP)
-if err != nil {
-    log.Println("insert:", err)
-    return
-}
-defer ins.Close()
-
-id, err := result.LastInsertId()
-if err != nil {
-    log.Println("last id:", err)
-    return
-}
-```
+@import "ex16/main.go" {class=line-numbers line_begin=78 line_end=112}
 
 說明：
 

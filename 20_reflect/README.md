@@ -1,6 +1,5 @@
 # 20 Reflection and Struct Tag
 
-
 <!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=3 orderedList=false} -->
 
 <!-- code_chunk_output -->
@@ -100,7 +99,6 @@ type User struct {
 
 @import "ex20_04/main.go" {class="line-numbers" highlight="19,24,29,31"}
 
-
 1. 要取 struct tag 前，一定要先判斷傳入的 interface{} 是否是 struct: `typ.Kind() != reflect.Struct`
 1. 要取出 struct tag，必要用 `reflect.Type`: `typ := reflect.TypeOf(xx)`
 1. 透過 `Type.Field(i int)` 取得 `StructField`: `field := typ.Field(i)`
@@ -116,6 +114,7 @@ type User struct {
 ## 5. How Tos
 
 以下舉例我之前寫過的程式。
+
 ### 5.1 Implements Some Interface or Not
 
 如何判斷是否有實作某個 interface。
@@ -162,7 +161,7 @@ type User struct {
 
 1. `reflect.Zero` to get Zero Value of some type.
 1. `reflect.Value.IsZero` to check value is Zero Value of some type.
-1. `reflect.Value.IsNil` to check value is nil. It is only for reference type or **panic**.
+1. `reflect.Value.IsNil` to check value is nil. It is only for reference type or __panic__.
 
 ### 5.5 Function
 

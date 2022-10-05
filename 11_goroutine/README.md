@@ -9,8 +9,8 @@
   - [1. ==go== Keyword (ex11_01, ex11_02)](#1-go-keyword-ex11_01-ex11_02)
   - [2. Wait for goroutine (ex11_03, ex11_04)](#2-wait-for-goroutine-ex11_03-ex11_04)
     - [2.1 已知有幾個 goroutine 會被執行](#21-已知有幾個-goroutine-會被執行)
-    - [2.2 每執行 goroutine 前，WaitGroup Counter + 1](#22-每執行-goroutine-前waitgroup-counter-1)
-  - [3. Mutex](#3-mutex)
+    - [2.2 每執行 goroutine 前，WaitGroup Counter+1](#22-每執行-goroutine-前waitgroup-counter1)
+  - [3. Mutex (ex11_05, ex11_06)](#3-mutex-ex11_05-ex11_06)
   - [4. Atmoic (ex11_07)](#4-atmoic-ex11_07)
 
 <!-- /code_chunk_output -->
@@ -70,7 +70,7 @@
 
 1. `waitGroup.Wait()`: 主程序 wait
 
-### 2.2 每執行 goroutine 前，WaitGroup Counter + 1
+### 2.2 每執行 goroutine 前，WaitGroup Counter+1
 
 也可以每需要一個 goroutine 時，wait group 就加 1。記得 `waitGroup.Add(1)` 要在 `go nameFunction()` 之前。
 
