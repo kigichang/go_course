@@ -18,9 +18,9 @@ func main() {
 	a := [3]int{1, 2, 3}
 
 	fmt.Println(a) // [1 2 3]
-	arrTest(a)     // 用原本的 array
+	arrTest(a)     // 用 array
 	fmt.Println(a) // [1 2 3]
 
-	arrTestBySlice(a[:]) // 改用 Slice
+	arrTestBySlice(a[:]) // 用 Slice
 	fmt.Println(a)       // [2 3 4]
 }

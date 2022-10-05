@@ -1,18 +1,18 @@
-# 05 Data Types - Reference Types
+# 05 Data Types: Reference Types
 
 <!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=3 orderedList=false} -->
 
 <!-- code_chunk_output -->
 
-- [05 Data Types - Reference Types](#05-data-types-reference-types)
+- [05 Data Types: Reference Types](#05-data-types-reference-types)
   - [0. 前言](#0-前言)
-  - [1. Pointer & Pass By Value](#1-pointer-pass-by-value)
+  - [1. Pointer & Pass By Value (ex05_01)](#1-pointer-pass-by-value-ex05_01)
   - [2. Slices](#2-slices)
-    - [2.1 Slice Declaration](#21-slice-declaration)
-    - [2.2 Array and Slice Relation](#22-array-and-slice-relation)
-    - [2.3 Slice Append](#23-slice-append)
+    - [2.1 Slice Declaration (ex05_02)](#21-slice-declaration-ex05_02)
+    - [2.2 Array and Slice Relation (ex05_03)](#22-array-and-slice-relation-ex05_03)
+    - [2.3 Slice Append (ex05_04)](#23-slice-append-ex05_04)
     - [2.4 Slice Travel](#24-slice-travel)
-  - [3 Maps](#3-maps)
+  - [3 Maps (ex05_05)](#3-maps-ex05_05)
     - [3.1 Map Declaration](#31-map-declaration)
     - [3.2 Put](#32-put)
     - [3.3 Delete](#33-delete)
@@ -31,7 +31,7 @@ Reference types 有：
 - Functions
 - Channel
 
-## 1. Pointer & Pass By Value
+## 1. Pointer 與 Pass By Value (ex05_01)
 
 Pointer 就好比資料在記憶體的地址 (術語：位址, Address)，每一筆資料都會有自己的位址，且可以透過這組位址，來存取該資料。操作的方式如下：
 
@@ -39,43 +39,7 @@ Pointer 就好比資料在記憶體的地址 (術語：位址, Address)，每一
 - 透過 Pointer 取得資料，與 C 相同，用 `*` 來存取 Pointer 指向的資料。
 - 與 C 不同，不能直接對 Pointer 做位移。
 
-```go {.line-numbers}
-package main
-
-import "fmt"
-
-func AddByValue(a int) {
-	fmt.Printf("Point(%p), Value(%d) of Parameter a\n", &a, a)
-	a += 1
-}
-
-func AddByPointer(a *int) {
-	fmt.Printf("Pointer(%p), Value(%x) of Paramter a\n", &a, a)
-	*a = *a + 1
-}
-
-func main() {
-	a := 10
-	b := &a
-	*b = 20
-
-	fmt.Println(a) // 20
-
-	arr := [3]int{0, 1, 2}
-
-	p := &arr
-	//p++ // invalid operation: p++ (non-numeric type *[3]int)
-	fmt.Printf("%p: %v, %v\n", p, p, *p)
-
-	fmt.Printf("Point(%p), Value(%d) of a\n", &a, a)
-	AddByValue(a)
-	fmt.Printf("%d\n", a) // 20
-
-	fmt.Printf("Pointer(%p), Value(%x) of b (Pointer of a)\n", &b, b)
-	AddByPointer(b)
-	fmt.Printf("%d\n", a) // 21
-}
-```
+@import "ex05_01/main.go" {class=line-numbers}
 
 1. 宣告變數，並給定初始值。如：`a := 10`。
 1. 取得變數的 Pointer，並命名變數。如：`b := &a`，取得 `a` 的 Pointer，並命名為 `b`。
@@ -93,7 +57,7 @@ Pointer 可以視作資料的位址，因此每一個變數，都會有自己的
 
 執行的結果會類似：
 
-```c
+```c {.line-numbers}
 Point(0xc0000160a0), Value(20) of a
 Point(0xc0000160d8), Value(20) of Parameter a
 20
@@ -118,34 +82,13 @@ Slice 組成元素：
 - Length: 目前該 slice 可操作的最大長度。
 - Capacity: 實際內部 array 的大小，可視做目前最大的容量。
 
-### 2.1 Slice Declaration
+### 2.1 Slice Declaration (ex05_02)
 
-Slice 的 __zero value__ 是 **nil**。宣告的方式可以是：`[]T` T 是指資料型別, 或用 `make`，指定 Length 及 Capacity。如:
+Slice 的 __zero value__ 是 __nil__。宣告的方式可以是：`[]T` T 是指資料型別, 或用 `make`，指定 Length 及 Capacity。如:
 
-```go {.line-numbers}
-var s []int
-fmt.Println(s, s == nil, len(s), cap(s))    // [] true 0 0
+@import "ex05_02/main.go" {class=line-numbers}
 
-s = nil
-fmt.Println(s, s == nil, len(s), cap(s))    // [] true 0 0
-
-s = []int(nil)
-fmt.Println(s, s == nil, len(s), cap(s))    // [] true 0 0
-
-s = []int{}
-fmt.Println(s, s == nil, len(s), cap(s))    // [] false 0 0
-
-s = []int{1, 2, 3}
-fmt.Println(s, s == nil, len(s), cap(s))    // [1 2 3] false 3 3
-
-s = make([]int, 4)
-fmt.Println(s, s == nil, len(s), cap(s))    // [0 0 0 0] false 4 4
-
-s = make([]int, 5, 6)
-fmt.Println(s, s == nil, len(s), cap(s))    // [0 0 0 0 0] false 5 6
-```
-
-### 2.2 Array and Slice Relation
+### 2.2 Array and Slice Relation (ex05_03)
 
 實際上，Slice 底層有一組 Array 存放資料，Slice 的 Pointer 會指向該 Array。。
 
@@ -165,74 +108,25 @@ fmt.Println(summer) // ["June" "July" "August"]
 
 由於 slice 是用 pointer 指到 array, 因此修改 slice 的值時，也會異動到原本的 array.
 
-```go {.line-numbers}
-package main
+@import "ex05_03/main.go" {class=line-numbers}
 
-import "fmt"
-
-func minus(s [6]int) {
-    for i, x := range s {
-        s[i] = x - 1
-    }
-}
-
-func plus(s []int) {
-    for i, x := range s {
-        s[i] = x + 1
-    }
-}
-
-func main() {
-    s := [6]int{0, 1, 2, 3, 4, 5}
-
-    fmt.Println(s) // [0 1 2 3 4 5]
-    minus(s)
-    fmt.Println(s) // [0 1 2 3 4 5]
-
-    s1 := s[2:]
-
-    fmt.Println(s) // [0 1 2 3 4 5]
-    plus(s1)
-    fmt.Println(s) // [0 1 3 4 5 6]
-}
-```
-
-### 2.3 Slice Append
+### 2.3 Slice Append (ex05_04)
 
 可以使用 `append` 新增資料進 slice
 
-```go {.line-numbers}
-s := [6]int{0, 1, 2, 3, 4, 5}
-fmt.Println(len(s), cap(s)) // 6 6
-
-s1 := s[2:]
-fmt.Println(len(s1), cap(s1)) // 4 4
-
-s1 = append(s1, 100)
-
-fmt.Println(s)  // [0 1 2 3 4 5]
-fmt.Println(s1) // [2 3 4 5 100]
-
-s2 := s[1:3]
-fmt.Println(len(s2), cap(s2)) // 2 5
-
-s2 = append(s2, 30)
-
-fmt.Println(s)  // [0 1 2 30 4 5]
-fmt.Println(s2) // [1 2 30]
-```
+@import "ex05_04/main.go" {class=line-numbers}
 
 在上述範例中，
 
 1. `s1` 已經沒有空間做 `append`，因此產生了一組新的記憶體空間，也因為這樣，才沒有更動到 `s`。
 1. 但 `s2` 還有空間做 `append`, 可以用原來的位址來操作，因此會修改到原來的 `s`。[^append]
 
-在實作上，儘可能利用 **slice** 而非 array。
+在實作上，儘可能利用 __slice__ 而非 array。
 
 1. 可避免因 pass by value，而造成記憶體的浪費。
 1. 避免上述 puzzle。
 
-[^append]: 在進行 append 時，會先檢查 capacity 是否有足夠空間，來加入新的資料，如果沒有時，則會再產生一組新的記憶體空間，先將舊的資料，**copy** 進新的空間，再把新的資料加入。也因此，如果要大量 append 資料時，應該先計算好可能的容量大小，以免一直在做 copy 的動作，影響效能。
+[^append]: 在進行 append 時，會先檢查 capacity 是否有足夠空間，來加入新的資料，如果沒有時，則會再產生一組新的記憶體空間，先將舊的資料，__copy__ 進新的空間，再把新的資料加入。也因此，如果要大量 append 資料時，應該先計算好可能的容量大小，以免一直在做 copy 的動作，影響效能。
 
 ### 2.4 Slice Travel
 
@@ -253,7 +147,7 @@ for _, v := range a {
 }
 ```
 
-## 3 Maps
+## 3 Maps (ex05_05)
 
 Key-Value 結構，也就是 hashtable 的結構。
 
@@ -287,7 +181,7 @@ delete(ages, "cat")
 
 ### 3.5 Get
 
-Map 在取值時，如果 key 不存在，會回值 value 型別的 **zero value**，也因此無法直接從回傳值來判斷該 key 是否存在。可以利用 `value, ok := map[key]` 的方式，透過驗証 `ok` 來判斷 key 是否存在。
+Map 在取值時，如果 key 不存在，會回值 value 型別的 __zero value__，也因此無法直接從回傳值來判斷該 key 是否存在。可以利用 `value, ok := map[key]` 的方式，透過驗証 `ok` 來判斷 key 是否存在。
 
 ```go {.line-numbers}
 fmt.Println(ages["bob"])    // 0 (zero-value)

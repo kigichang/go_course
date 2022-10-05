@@ -1,11 +1,10 @@
-# 03 Data Types - Basic Types
-
+# 03 Data Types: Basic Types
 
 <!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=3 orderedList=false} -->
 
 <!-- code_chunk_output -->
 
-- [03 Data Types - Basic Types](#03-data-types-basic-types)
+- [03 Data Types: Basic Types](#03-data-types-basic-types)
   - [0. 前言](#0-前言)
   - [1. Zero Value (ex03_01)](#1-zero-value-ex03_01)
   - [2. Numbers](#2-numbers)
@@ -16,7 +15,7 @@
   - [4. Strings](#4-strings)
     - [4.1 宣告](#41-宣告)
     - [4.2 取得字串長度](#42-取得字串長度)
-    - [4.3 Substring](#43-substring)
+    - [4.3 Substring or String Slice](#43-substring-or-string-slice)
     - [4.4 字串連接 (Concate)](#44-字串連接-concate)
     - [4.5 ==strings== Package](#45-strings-package)
     - [4.6 Rune (ex03_02)](#46-rune-ex03_02)
@@ -48,7 +47,7 @@ Basic 與 Aggregate Type 對應到 Java 是 Value Type，Reference Type 對應�
 
 ## 1. Zero Value (ex03_01)
 
-每一種資料型別在宣告時，沒有給定值的話，則 Go 會給予一個初始值，這個初始值則稱為該型別的 **zero value**。
+每一種資料型別在宣告時，沒有給定值的話，則 Go 會給予一個初始值，這個初始值則稱為該型別的 __zero value__。
 
 - int: __`0`__
 - float: __`0.0`__
@@ -58,55 +57,11 @@ Basic 與 Aggregate Type 對應到 Java 是 Value Type，Reference Type 對應�
 - array: 指定長度，內含 zero value.
 - reference type: __`nil`__
 
-```go {.line-numbers}
-package main
-
-import "fmt"
-
-// Runable ...
-type Runable interface {
-    Run()
-}
-
-func main() {
-    // value type
-    var a int
-    var b float64
-    var c string
-    var d bool
-    var e [3]int
-    var f struct {
-        A int
-        B string
-    }
-
-    // reference type
-    var g *int
-    var h []int
-    var i map[string]int
-    var j func(int) int
-    var k chan int
-    var m Runable
-
-    // value type
-    fmt.Printf("%v\n", a) // 0
-    fmt.Printf("%v\n", b) // 0
-    fmt.Printf("%q\n", c) // ""
-    fmt.Printf("%v\n", d) // false
-    fmt.Printf("%v\n", e) // [0 0 0]
-    fmt.Printf("%v\n", f) // {0 }
-
-    // reference type
-    fmt.Printf("%v, nil? %v\n", g, g == nil) // <nil>, nil? true
-    fmt.Printf("%v, nil? %v\n", h, h == nil) // [], nil? true
-    fmt.Printf("%v, nil? %v\n", i, i == nil) // map[], nil? true
-    fmt.Printf("%v, nil? %v\n", j, j == nil) // <nil>, nil? true
-    fmt.Printf("%v, nil? %v\n", k, k == nil) // <nil>, nil? true
-    fmt.Printf("%v, nil? %v\n", m, m == nil) // <nil>, nil? true
-}
-```
+@import "ex03_01/main.go" {class=line-numbers}
 
 ## 2. Numbers
+
+數字型別有：整數、浮點數、複數。
 
 ### 2.1 Integers
 
@@ -173,8 +128,8 @@ ok := true
 Go 的字串處理方式與 Swift 同，但與 Java 不同，在 Go 是屬於 Value type, 而在 Java 是 Class (Reference type)。
 Go 的 `string` 有以下特性：
 
-- **Immutable** sequence of bytes: 不可變動的連續 byte 陣列。
-- **UTF-8** encoded: 預設是 UTF-8 編碼。
+- __Immutable__ sequence of bytes: 不可變動的連續 byte 陣列。
+- __UTF-8__ encoded: 預設是 UTF-8 編碼。
 
 ### 4.1 宣告
 
@@ -184,7 +139,7 @@ str2 := "hello world"
 str3 := `hello world`
 ```
 
-如果字串內有 __`""`__ 時，需配合 __`\`__ 使用。如: `"My name is \"Kigi\"."`，程式碼比較不好閱讀。新的程式語言，大都有各自的設計來解決這個問題。在 Go 可以使用 __`__，如：
+如果字串內有 __`"`__ 時，需配合 __`\`__ 使用。如: `"My name is \"Kigi\"."`，程式碼比較不好閱讀。新的程式語言，大都有各自的設計來解決這個問題。在 Go 可以使用 __`__，如：
 
 ```go {.line-numbers}
 str := `My name is "Kigi".`
@@ -192,13 +147,13 @@ str := `My name is "Kigi".`
 
 ### 4.2 取得字串長度
 
-使用內建的 `len` 函數，來取得字串長度。
+使用內建的 `len` 函數，來取得字串長度。這邊的長度是指位元數，而非字元數。
 
 ```go {.line-numbers}
 len := len(str2)    // use len() to get length of bytes in string
 ```
 
-### 4.3 Substring
+### 4.3 Substring or String Slice
 
 使用 `str[i:j]` 取得 substring. 會從第 i 個開始，取到第 j-1 個為止。可以省略 i 及 j。
 
@@ -241,41 +196,17 @@ func Join(a []string, sep string) string
 
 ### 4.6 Rune (ex03_02)
 
-Go string 操作單位是 **byte**，但計算字串內有多少個字元時，非常不方便。Go 的 `rune` 是 Unicode 字元為單位，它的底層型別是 **int32** 也就是 4 bytes，可以以 Unicode 字元為單位來操作。
+Go string 操作單位是 __byte__，但計算字串內有多少個字元時，非常不方便。Go 的 `rune` 是 Unicode 字元為單位，它的底層型別是 __int32__ 也就是 4 bytes，可以以 Unicode 字元為單位來操作。
 
-```go {.line-numbers}
-package main
-
-import (
-    "fmt"
-    "unicode/utf8"
-)
-
-func main() {
-    const nihongo = "日本語"
-    for i := 0; i < len(nihongo); i++ {
-        fmt.Printf("%d: %x\n", i, nihongo[i])
-    }
-
-    for index, runeValue := range nihongo {
-        fmt.Printf("%U starts at byte position %d\n", runeValue, index)
-    }
-
-    fmt.Println(utf8.RuneCountInString(nihongo)) // 取 utf8 長度
-
-    bytes1 := []byte(nihongo) // convert to byte slice.
-    fmt.Println("bytes: ", bytes1)
-    fmt.Println(string(bytes1)) // convert to string from byte slice.
-}
-```
+@import "ex03_02/main.go" {class=line-numbers}
 
 ## 5. 字串與數字轉換 (ex03_03)
 
 使用 `fmt.Sprintf()` 與 `strconv` 這個套件。
 
 1. 數字轉字串
-    1. **fmt.Strintf**
-    1. **strconv.Itoa**
+    1. __fmt.Strintf__
+    1. __strconv.Itoa__
 
     ```go {.line-numbers}
     x := 123

@@ -1,11 +1,10 @@
-# 04 Data Types - Aggregate Types
-
+# 04 Data Types: Aggregate Types
 
 <!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=3 orderedList=false} -->
 
 <!-- code_chunk_output -->
 
-- [04 Data Types - Aggregate Types](#04-data-types-aggregate-types)
+- [04 Data Types: Aggregate Types](#04-data-types-aggregate-types)
   - [0. 前言](#0-前言)
   - [1. Arrays](#1-arrays)
     - [1.1 Array Declaration](#11-array-declaration)

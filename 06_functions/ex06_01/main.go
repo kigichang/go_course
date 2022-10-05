@@ -25,9 +25,9 @@ func main() {
 	}
 
 	fmt.Println(p) // {0 Test}
-	test(p)        // 用原本的 struct
+	test(p)        // 用 struct
 	fmt.Println(p) // {0 Test}
 
-	testByPtr(&p)  // 改用 pointer
+	testByPtr(&p)  // 用 pointer
 	fmt.Println(p) // {1 Test by test}
 }

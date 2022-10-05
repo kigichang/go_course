@@ -23,7 +23,7 @@
   - [8. ==type== Keyword](#8-type-keyword)
     - [8.1 Type Declaration (ex02_02)](#81-type-declaration-ex02_02)
     - [8.2 Type Alias (ex02_03)](#82-type-alias-ex02_03)
-    - [8.3 Type Declaration & Alias 差別](#83-type-declaration-alias-差別)
+    - [8.3 Type Declaration 與 Alias 差別](#83-type-declaration-與-alias-差別)
   - [9. Package and Imports](#9-package-and-imports)
     - [9.1 Package Initialization (ex02_04)](#91-package-initialization-ex02_04)
     - [9.2 目錄結構](#92-目錄結構)
@@ -315,7 +315,7 @@ type type1 = type2
 
 @import "ex02_03/main.go" {class=line-numbers}
 
-### 8.3 Type Declaration & Alias 差別
+### 8.3 Type Declaration 與 Alias 差別
 
 __Type Declaration__ 與 __Type Alias__ 主要的差別：
 
