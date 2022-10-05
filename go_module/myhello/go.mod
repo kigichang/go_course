@@ -1,6 +1,6 @@
 module myhello
 
-go 1.17
+go 1.19
 
 require abc.xyz/hello v0.0.0
 

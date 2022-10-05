@@ -14,14 +14,14 @@ func (f *MyFile) Close() error {
 	return nil
 }
 
-// BadNew1 ...
+// BadNew1 should return io.Closer
 func BadNew1() *MyFile {
 	return nil
 }
 
 // BadNew2 ...
 func BadNew2() io.Closer {
-	var f *MyFile
+	var f *MyFile // should declare as io.Closer
 	return f
 }
 

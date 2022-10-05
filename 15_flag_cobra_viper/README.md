@@ -1,14 +1,13 @@
 # 15 flag and spf13 Cobra/Viper
 
-
 <!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=3 orderedList=false} -->
 
 <!-- code_chunk_output -->
 
 - [15 flag and spf13 Cobra/Viper](#15-flag-and-spf13-cobraviper)
   - [0. 說明](#0-說明)
-  - [1. Go flag](#1-go-flag)
-  - [2. Viper](#2-viper)
+  - [1. Go flag (ex15_01)](#1-go-flag-ex15_01)
+  - [2. Viper (ex15_02)](#2-viper-ex15_02)
     - [2.1 取值](#21-取值)
     - [2.2 自定 Viper, 不使用預設的 viper](#22-自定-viper-不使用預設的-viper)
   - [3 Cobra](#3-cobra)
@@ -26,7 +25,7 @@
 - spf13/Cobra: 進階程式參數管理，可實作類似 `go` 或 `docker` 程式效果。
 - spf13/Viper: 設定檔套件，支援多種設定檔格式(.json, .yaml 等)。
 
-## 1. Go flag
+## 1. Go flag (ex15_01)
 
 @import "ex15_01/main.go" {class="line-numbers"}
 
@@ -48,7 +47,7 @@
 
 - `go run .`:
 
-    ```text
+    ```console {.line-numbers}
     -account string
             account to login
     -debug
@@ -59,18 +58,18 @@
 
 - `go run . -account 123 -password 321`:
 
-    ```text
+    ```console {.line-numbers}
     2020/01/16 15:22:13 end
     ```
 
 - `go run . --account 123 --password 321 --debug`:
 
-    ```text
+    ```console {.line-numbers}
     2020/01/16 15:22:44 account: 123 password: 321
     2020/01/16 15:22:44 end
     ```
 
-## 2. Viper
+## 2. Viper (ex15_02)
 
 - [Viper](https://github.com/spf13/viper) 設定檔套件。
 - 支援 JSON, TOML, YAML, HCL, and Java properties 等格式
@@ -90,7 +89,7 @@ eg:
 
 結果：
 
-```text
+```console {.line-numbers}
 abc:  def
 aaa:  true
 def:
@@ -119,8 +118,6 @@ IsSet(key string) : bool
 ### 2.2 自定 Viper, 不使用預設的 viper
 
 Viper 也允許自己產生一個全新的 viper，方便管理不同的設定檔。
-
-eg:
 
 @import "ex15_03/main.go" {class="line-numbers"}
 
@@ -232,50 +229,7 @@ Additional help topics:
 
 接下來定義每個 sub command 需要的 flag, 參數與工作。
 
-```go { .line-numbers }
-package main
-
-import (
-    "fmt"
-    "os"
-
-    "github.com/spf13/cobra"
-)
-
-var (
-    name  string
-    proxy bool
-    test  string
-)
-
-func main() {
-    rootCmd := &cobra.Command{Use: "myapp"}
-
-    createCmd := &cobra.Command{Use: "create"}
-
-    updateCmd := &cobra.Command{Use: "update"}
-
-    createCmd.Flags().StringVarP(&name, "name", "n", "myname", "assign a name")
-    createCmd.Flags().BoolVarP(&proxy, "proxy", "p", false, "use proxy to connect")
-
-    createCmd.Args = cobra.ExactArgs(1)
-
-    createCmd.Run = func(cmd *cobra.Command, args []string) {
-        fmt.Println("creating")
-        fmt.Println("name:", name)
-        fmt.Println("proxy:", proxy)
-        fmt.Println("args:", args)
-    }
-
-    updateCmd.Run = func(cmd *cobra.Command, args []string) {
-        fmt.Println(args)
-    }
-
-    rootCmd.AddCommand(createCmd, updateCmd)
-
-    rootCmd.Execute()
-}
-```
+@import "ex15_04/main.go" {class=line-numbers}
 
 1. 定義兩個 flag，`name` 及 `proxy`
 
@@ -305,7 +259,7 @@ func main() {
 
 1. `go run . create`
 
-    ```text
+    ```console {.line-numbers}
     Error: accepts 1 arg(s), received 0
     Usage:
         myapp create [flags]
@@ -320,7 +274,7 @@ func main() {
 
 1. `go run . create abc`
 
-    ```text
+    ```console {.line-numbers}
     creating
     name: myname
     proxy: false
@@ -331,7 +285,7 @@ func main() {
 
 1. `go run . create abc def`
 
-    ```text
+    ```console {.line-numbers}
     Error: accepts 1 arg(s), received 2
     Usage:
         myapp create [flags]
@@ -346,7 +300,7 @@ func main() {
 
 1. `go run . create --name=bob --proxy abc` or `go run . create -n bob -p abc`
 
-    ```text
+    ```console {.line-numbers}
     creating
     name: bob
     proxy: true

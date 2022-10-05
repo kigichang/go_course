@@ -1,18 +1,18 @@
-# 12 Concurrency - Channel
+# 12 Concurrency: Channel
 
 <!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=3 orderedList=false} -->
 
 <!-- code_chunk_output -->
 
-- [12 Concurrency - Channel](#12-concurrency-channel)
+- [12 Concurrency: Channel](#12-concurrency-channel)
   - [0. 前言](#0-前言)
-  - [1. Channel](#1-channel)
+  - [1. Channel (ex12_01)](#1-channel-ex12_01)
   - [2. Buffered Channel](#2-buffered-channel)
-    - [2.1 Deadlock 1: Reading/Writing with Non-Buffered Channel](#21-deadlock-1-readingwriting-with-non-buffered-channel)
-    - [2.2 Deadlock 2: Reading Before Writing with Buffered Channel](#22-deadlock-2-reading-before-writing-with-buffered-channel)
+    - [2.1 Deadlock 1: Reading/Writing with Non-Buffered Channel (ex12_02, ex12_03)](#21-deadlock-1-readingwriting-with-non-buffered-channel-ex12_02-ex12_03)
+    - [2.2 Deadlock 2: Reading Before Writing with Buffered Channel (ex12_04)](#22-deadlock-2-reading-before-writing-with-buffered-channel-ex12_04)
   - [3. Producer and Consumer Pattern (Pipeline)](#3-producer-and-consumer-pattern-pipeline)
-    - [3.1 利用 goroutine 執行 1 個 producer 及 2 個 consumer](#31-利用-goroutine-執行-1-個-producer-及-2-個-consumer)
-  - [4. Actor Pattern (Pipeline)](#4-actor-pattern-pipeline)
+    - [3.1 利用 goroutine 執行 1 個 producer 及 2 個 consumer (ex12_05)](#31-利用-goroutine-執行-1-個-producer-及-2-個-consumer-ex12_05)
+  - [4. Actor Pattern (Pipeline) (ex12_07)](#4-actor-pattern-pipeline-ex12_07)
   - [5. Select and Timeout](#5-select-and-timeout)
     - [Select and Timeout 說明](#select-and-timeout-說明)
 
@@ -28,50 +28,9 @@ channel 的注意事項：
 1. 一個 channel 只能包含一種 data type
 1. channel 當作參數傳給 function 時，最好指定是要做 read or write。
 
-## 1. Channel
+## 1. Channel (ex12_01)
 
-```go {.line-numbers}
-package main
-
-import (
-    "log"
-    "sync"
-)
-
-var (
-    waitGroup = &sync.WaitGroup{}
-)
-
-func writeChannel(c chan<- int, x int) {
-    defer waitGroup.Done()
-
-    log.Println("writing ", x)
-    c <- x
-    log.Println("written ", x)
-}
-
-func readChannel(c <-chan int) {
-    defer waitGroup.Done()
-
-    log.Println("reading from channel")
-    x := <-c
-    log.Println("read: ", x)
-}
-
-func main() {
-    c := make(chan int)
-    defer close(c)
-
-    waitGroup.Add(1)
-    go readChannel(c)
-
-    waitGroup.Add(1)
-    go writeChannel(c, 10)
-
-    waitGroup.Wait()
-    log.Println("exit...")
-}
-```
+@import "ex12_01/main.go" {class=line-numbers}
 
 說明：
 
@@ -107,38 +66,13 @@ func main() {
 
 `c := make(chan int)` 宣告時，沒有指定 channel 的容量，因此在 read/write 時，會 block。在上例中，因為是用 goroutine 執行, 所以不會有問題。
 
-### 2.1 Deadlock 1: Reading/Writing with Non-Buffered Channel
+### 2.1 Deadlock 1: Reading/Writing with Non-Buffered Channel (ex12_02, ex12_03)
 
-```go {.line-numbers}
-package main
-
-import (
-    "log"
-)
-
-func main() {
-    c := make(chan int)
-    defer close(c)
-
-    log.Println("writing...")
-
-    c <- 10
-
-    log.Println("written")
-
-    log.Println("reading")
-
-    x := <-c
-
-    log.Println("read ", x)
-
-    log.Println("exit...")
-}
-```
+@import "ex12_02/main.go" {class=line-numbers}
 
 執行結果，發生 deadlock：
 
-```text
+```console {.line-numbers}
 2020/01/16 13:54:02 writing...
 fatal error: all goroutines are asleep - deadlock!
 
@@ -150,7 +84,9 @@ exit status 2
 
 此時，可以設定 channel 的容量，eg: `c := make(chan int, 1)`。則結果如下：
 
-```text
+@import "ex12_03/main.go" {class=line-numbers highlight="8"}
+
+```console {.line-numbers}
 2020/01/16 13:57:29 writing...
 2020/01/16 13:57:29 written
 2020/01/16 13:57:29 reading
@@ -160,34 +96,15 @@ exit status 2
 
 先執 write，資料放在 channel，供之後 read。
 
-### 2.2 Deadlock 2: Reading Before Writing with Buffered Channel
+### 2.2 Deadlock 2: Reading Before Writing with Buffered Channel (ex12_04)
 
 但如果程式的順序，改成先 read 再 write 時，一樣會發生 deadlock。因為還沒寫資料，根本沒資料供 read。
 
-```go {.line-numbers}
-func main() {
-    c := make(chan int, 1)
-    defer close(c)
-
-    log.Println("reading")
-
-    x := <-c
-
-    log.Println("read ", x)
-
-    log.Println("writing...")
-
-    c <- 10
-
-    log.Println("written")
-
-    log.Println("exit...")
-}
-```
+@import "ex12_04/main.go" {class="line-numbers"}
 
 結果：
 
-```text
+```text {.line-numbers}
 2020/01/16 13:58:46 reading
 fatal error: all goroutines are asleep - deadlock!
 
@@ -201,13 +118,13 @@ exit status 2
 
 Producer/Consumer 是 channel 最常用的實作模型。概念是一端產出資料 (可能是從資料庫或大檔案讀取資料)，另一端運算資料。
 
-### 3.1 利用 goroutine 執行 1 個 producer 及 2 個 consumer
+### 3.1 利用 goroutine 執行 1 個 producer 及 2 個 consumer (ex12_05)
 
 @import "ex12_05/main.go" {.line-numbers}
 
 與先前的範例最大不同是，這次關閉 channel 是在 `producer` 執行，而非主程序，也就是說在產生完資料後，就關閉 channel，之後就不能再寫入。而 `consumer` 端，在 channel 資料讀完後，就會跳出 for-range 的迴圈而執行完畢。
 
-#### 3.2 Deadlock: Closing Channel in Main Instead of Producer
+#### 3.2 Deadlock: Closing Channel in Main Instead of Producer (ex12_06)
 
 如果不在 `producer` 關閉 channel，而是在主程序，則會發生 deadlock。
 
@@ -215,7 +132,7 @@ Producer/Consumer 是 channel 最常用的實作模型。概念是一端產出�
 
 結果：
 
-```text
+```text {.line-numbers}
 2020/01/16 14:02:31 start...
 2020/01/16 14:02:31 comsumer  2  starting...
 2020/01/16 14:02:31 comsumer  1  starting...
@@ -250,7 +167,7 @@ created by main.main
 exit status 2
 ```
 
-## 4. Actor Pattern (Pipeline)
+## 4. Actor Pattern (Pipeline) (ex12_07)
 
 Actor Pattern 與 Producer/Consumer Pattern 類似，概念是每一個 Actor 只負責固定的工作。Producer 必須將資料，傳到每個 Actor。以下的範例，是模擬訂單成立後，傳給兩個 Actor，一個負責計算每個分類的業績，另一個計算全站的業績。
 
@@ -266,7 +183,7 @@ Actor Pattern 與 Producer/Consumer Pattern 類似，概念是每一個 Actor �
 
 可以透過 `select` 來偵測 channel 是否可以被寫入及是否有資料可以讀取。`select` 可以撘配 `time.After` 來實作 timeout 的機制。
 
-eg:
+@import "ex12_08/main.go" {class=line-numbers}
 
 ```go {.line-numbers}
 package main

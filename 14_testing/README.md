@@ -41,7 +41,7 @@ VSCode Go Plugins 建議設定：
 └── util_test.go
 ```
 
-測試 function 命名是以 **Test** 開頭，通常會針對要測試的 function 來命名，比如：有一個 `Sum` 的 function, 測試 `Sum` 的 function 則命名為 `TestSum`。
+測試 function 命名是以 __Test__ 開頭，通常會針對要測試的 function 來命名，比如：有一個 `Sum` 的 function, 測試 `Sum` 的 function 則命名為 `TestSum`。
 
 ### util.go
 
@@ -150,8 +150,8 @@ ok      util    0.005s
 `testing.T` 是做 unit test 會帶入的參數，它的功能很多 (可參考[官方說明](https://golang.org/pkg/testing/#T))，以下列出常用的 function。
 
 1. Log, Logf: 輸出訊息
-1. Fail: 標註目前測試，發生錯誤，但**繼續**執行
-1. FailNow: 標註目前測試，發生錯誤，**中斷**執行
+1. Fail: 標註目前測試，發生錯誤，但__繼續__執行
+1. FailNow: 標註目前測試，發生錯誤，__中斷__執行
 1. Error, Errorf: Log + Fail
 1. Fatal, Fatalf: Log + FailNow
 
@@ -184,7 +184,7 @@ func TestMain(m *testing.M) {
 
 ## 4. Benchmark
 
-Go Unit Test 套件，也可以做 benchmark 測試，程式碼撰寫在 `xxx_test.go` 中，function 命名與 Test 類似，以 **Benchmark** 開頭。
+Go Unit Test 套件，也可以做 benchmark 測試，程式碼撰寫在 `xxx_test.go` 中，function 命名與 Test 類似，以 __Benchmark__ 開頭。
 
 ```go { .line-numbers }
 func BenchmarkSum(b *testing.B) {
@@ -207,11 +207,11 @@ PASS
 ok      util    2.192s
 ```
 
-以中 `170493644                6.997 ns/op` 是指本次 benchmark 執行 **170493644** 次數，**6.997 ns/op** 每次花費 **6.997 ns**。
+以中 `170493644                6.997 ns/op` 是指本次 benchmark 執行 __170493644__ 次數，__6.997 ns/op__ 每次花費 __6.997 ns__。
 
 ## 5. Example
 
-**Example** 開頭的 function 也可用來測試程式，主要是比對輸出是否正確。在程式碼中，需加入一段**註解**來說明該程式正確的輸出結果為何。這邊的測試，在輸出成說明文件時，也會被當作範例呈現。
+__Example__ 開頭的 function 也可用來測試程式，主要是比對輸出是否正確。在程式碼中，需加入一段__註解__來說明該程式正確的輸出結果為何。這邊的測試，在輸出成說明文件時，也會被當作範例呈現。
 
 - `// Output`: 比對輸出結果，且順序都要一致。
 - `// Unordered Output`: 比對輸出結果，但順序可以不同。

@@ -38,4 +38,6 @@ func main() {
 	a1() // 2 1 0
 	a2() // 3 3 3
 	a3() // 2 1 0
+	fmt.Println()
+	fmt.Println("main terminated")
 }

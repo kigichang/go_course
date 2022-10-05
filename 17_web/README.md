@@ -63,11 +63,11 @@ Go 與 JAVA, PHP 等不同，不需要額外再使用 AP or Web Server，Go 內�
 
 ```go {.line-numbers}
 import (
-	"errors"
-	"fmt"
-	"html/template"
-	"log"
-	"net/http"
+    "errors"
+    "fmt"
+    "html/template"
+    "log"
+    "net/http"
 )
 ```
 
@@ -162,8 +162,8 @@ eg:
 
 ```go {.line-numbers}
 func toGo(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Location", "https://go.dev/")
-	w.WriteHeader(http.StatusFound)
+ w.Header().Set("Location", "https://go.dev/")
+ w.WriteHeader(http.StatusFound)
 }
 ```
 
@@ -262,7 +262,7 @@ func generateHTML(w http.ResponseWriter, data interface{}, files ...string) {
 
 #### 5.3.1 layout.html
 
-__layout.html__  是版型的主框。內含 __nav__ `{{ template "navbar" . }}` 與  __content__ `{{ template "content" . }}` 這個子版型。
+**layout.html**  是版型的主框。內含 **nav** `{{ template "navbar" . }}` 與  **content** `{{ template "content" . }}` 這個子版型。
 
 ```html { .line-numbers}
 {{ define "layout" }}
@@ -288,13 +288,13 @@ __layout.html__  是版型的主框。內含 __nav__ `{{ template "navbar" . }}`
 {{ end }}
 ```
 
-1. 在 __layout.html__ 定義了這個版型的名稱 __layout__:`{{ define "layout" }}`，也就是程式碼 `tmpl.ExecuteTemplate(w, "layout", data)` 中的 `"layout"`。
+1. 在 **layout.html** 定義了這個版型的名稱 **layout**:`{{ define "layout" }}`，也就是程式碼 `tmpl.ExecuteTemplate(w, "layout", data)` 中的 `"layout"`。
 
 1. 在 include 子版型的語法中，eg: `{{ template "navbar" . }}`，有 **`.`**，是指由 `ExecuteTemplate` 傳入的資料。在 ["text/template"](https://golang.org/pkg/text/template/#pkg-index) 有詳細的說明。
 
 #### 5.3.2 nav.html
 
-__nav.html__: Navigation bar。跟 __layout.html__ 一樣，一開頭定義這個版型的名稱 `{{ define "navbar" }}`，也就是 __layout.html__ 中 `{{ template "navbar" . }}` 的 `"navbar"`。
+**nav.html**: Navigation bar。跟 **layout.html** 一樣，一開頭定義這個版型的名稱 `{{ define "navbar" }}`，也就是 **layout.html** 中 `{{ template "navbar" . }}` 的 `"navbar"`。
 
 ```html { .line-numbers }
 {{ define "navbar" }}
@@ -322,7 +322,7 @@ __nav.html__: Navigation bar。跟 __layout.html__ 一樣，一開頭定義這�
 
 #### 5.3.3 test.html
 
-__test.html__ 是內容的子版型，開頭 `{{ define "content" }}` 與上述相同。
+**test.html** 是內容的子版型，開頭 `{{ define "content" }}` 與上述相同。
 
 ```html
 {{ define "content" }}

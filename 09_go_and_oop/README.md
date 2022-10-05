@@ -1,26 +1,25 @@
 # 09 Go and OOP
 
-
 <!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=3 orderedList=false} -->
 
 <!-- code_chunk_output -->
 
 - [09 Go and OOP](#09-go-and-oop)
   - [0. 前言](#0-前言)
-  - [1. 初步實作](#1-初步實作)
+  - [1. 初步實作 (ex09_01)](#1-初步實作-ex09_01)
     - [1.1 Role](#11-role)
     - [1.2 Magician](#12-magician)
   - [2. 為什麼 Go 沒有繼承](#2-為什麼-go-沒有繼承)
-  - [3. 解決 Go Strong Type 問題](#3-解決-go-strong-type-問題)
+  - [3. 解決 Go Strong Type 問題 (ex09_02)](#3-解決-go-strong-type-問題-ex09_02)
     - [3.1 定義 Role interface](#31-定義-role-interface)
     - [3.2 定義 RoleImpl 實作 Role](#32-定義-roleimpl-實作-role)
     - [3.3 定義 Magician 內含 Role](#33-定義-magician-內含-role)
     - [3.4 測試](#34-測試)
-  - [4 多重繼承與 Ambiguous](#4-多重繼承與-ambiguous)
+  - [4 多重繼承與 Ambiguous (ex09_03, ex09_04)](#4-多重繼承與-ambiguous-ex09_03-ex09_04)
     - [4.1 定義 Flyer 與 FlyerImpl](#41-定義-flyer-與-flyerimpl)
     - [4.2 定義 Bahamut 繼承 Role 與 Flyer](#42-定義-bahamut-繼承-role-與-flyer)
     - [4.3 用 Override 修正 Ambiguous 問題](#43-用-override-修正-ambiguous-問題)
-  - [5. Visible](#5-visible)
+  - [5. Visible (visible)](#5-visible-visible)
 
 <!-- /code_chunk_output -->
 
@@ -36,7 +35,7 @@
 
 以下我們用遊戲角色設計當範例，來說明如何在 Go 實作 OOP。
 
-## 1. 初步實作
+## 1. 初步實作 (ex09_01)
 
 ### 1.1 Role
 
@@ -135,7 +134,7 @@ fmt.Println("it is ", WhoIs(m))  // compile error: cannot use m (type *Magician)
 1. Go 是 strong type，`*Role` 與 `*Magician` 是不同的 data type.
 1. Go 壓根就沒有繼承。
 
-## 3. 解決 Go Strong Type 問題
+## 3. 解決 Go Strong Type 問題 (ex09_02)
 
 因為 Go 是 strong type, 因此不同 struct 都會被視為不同的 data type。要讓 Go 有完整繼承的效果，就需要用到 interface。
 
@@ -244,7 +243,7 @@ fmt.Println("role is", m)        // role is magicain has fireball
 fmt.Println("it is", WhoIs(m))   // it is magicain has fireball
 ```
 
-## 4 多重繼承與 Ambiguous
+## 4 多重繼承與 Ambiguous (ex09_03, ex09_04)
 
 Go 可以在 struct 內含多個 struct 或 interface 來達到多重繼承的效果。有多重繼承時，如果不同的 struct 或 interface 有定義相關的 Function 名稱時，就會發生衝突。
 
@@ -321,7 +320,7 @@ fmt.Println(bahamut)         // bahamut
 fmt.Println(bahamut.Skill()) // bahamut has fireball and fly fast
 ```
 
-## 5. Visible
+## 5. Visible (visible)
 
 在 Go 沒有 `public`, `protected`, 及 `private` 等關鍵字，是用名稱**第一個字母大小寫**，來分 public 還是 private. **大寫** 是 **public**, **小寫**是 **private**。
 

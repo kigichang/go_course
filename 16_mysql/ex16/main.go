@@ -1,4 +1,5 @@
-/**
+/*
+*
 此範例程式，需要 MySQL。目前利過 go generate 與 Docker，在本機端啟動 MySQL。
 使用方式如下：
 
@@ -6,7 +7,8 @@
 2. 執行範例程式前，先執行 `go generate`，會開始建立程式需要的 MySQL image 並啟動。
 3. 執行 `docker logs -f go_course_db` 確認 MySQL 已經啟動
 4. 執行範例程式 `go run .`
-**/
+*
+*/
 package main
 
 //go:generate docker rm -f go_course_db
@@ -74,8 +76,8 @@ func main() {
 	}
 	defer db.Close()
 
-	birthday := time.Date(0, time.January, 1, 0, 0, 0, 0, time.UTC)
-	register := time.Date(0, time.January, 1, 0, 0, 0, 0, time.UTC)
+	birthday := time.Now()
+	register := time.Now()
 	login := time.Now()
 
 	m1 := &Member{

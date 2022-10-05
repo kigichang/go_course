@@ -32,5 +32,7 @@ func main() {
 	fmt.Println(p) // {1000 2000}
 	CallScale(&p, 10)
 	fmt.Println(p) // {10000 20000}
-	//CallScale(p, 10) // cannot use p (type Point) as type Scale in argument to CallScale: Point does not implement Scale (ScaleBy method has pointer receiver)
+
+	// cannot use p (type Point) as type Scale in argument to CallScale: Point does not implement Scale (ScaleBy method has pointer receiver)
+	//CallScale(p, 10)
 }
