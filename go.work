@@ -92,4 +92,5 @@ use (
 	./echo/bind_validate
 	./echo/handle_request
 	./echo/hello_world
+	./gorilla/gorilla_web
 )

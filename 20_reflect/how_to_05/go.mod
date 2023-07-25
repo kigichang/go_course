@@ -1,3 +1,3 @@
 module how_to_05
 
-go 1.19
+go 1.20

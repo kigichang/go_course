@@ -30,7 +30,7 @@
 ## 0. 前言
 
 寫 Go 建議用 Git 當版控工具。基本上，Go 相關的套件，絕大部分放在 Github 上。  
-本文件是使用 Go 1.19 以上的版本，會使用 go module 來管理 package。
+本文件是使用 Go 1.20 以上的版本，會使用 go module 來管理 package。
 
 ## 1. 相關資源
 
@@ -63,9 +63,10 @@
 其他相關的 plugin (非必要，但為了開發方便，還是裝一下)
 
 1. [Markdown Preview Enhanced](https://marketplace.visualstudio.com/items?itemName=shd101wyy.markdown-preview-enhanced): Markdown 工具，支援數學公式，流程圖，心智圖，匯出 PDF 等多種功能。
-1. [TabNine Autocomplete AI](https://marketplace.visualstudio.com/items?itemName=TabNine.tabnine-vscode): 很熱的 AI 自動補碼工具。
+1. [GitHub CoPilot](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot): 如果有購買 github copilot，vs code extension 可用。
+1. [TabNine Autocomplete AI](https://marketplace.visualstudio.com/items?itemName=TabNine.tabnine-vscode): AI 自動補碼工具。
 1. [GitLens](https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens): Git 工具。
-1. [hexdump for VSCode](https://marketplace.visualstudio.com/items?itemName=slevesque.vscode-hexdump): 查看二進位檔案。
+1. [Hex Editor](https://marketplace.visualstudio.com/items?itemName=ms-vscode.hexeditor): 查看二進位檔案。
 
 ### 2.2 GOPATH 目錄說明
 

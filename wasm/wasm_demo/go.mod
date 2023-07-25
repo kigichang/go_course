@@ -1,9 +1,9 @@
 module wasm_demo
 
-go 1.19
+go 1.20
 
 require (
-	github.com/shurcooL/go v0.0.0-20200502201357-93f07166e636 // indirect
+	github.com/shurcooL/go v0.0.0-20230706063926-5fe729b41b3a // indirect
 	github.com/shurcooL/go-goon v0.0.0-20210110234559-7585751d9a17 // indirect
 	github.com/shurcooL/goexec v0.0.0-20200425235707-36ff6d2d1adc // indirect
 	golang.org/x/mod v0.5.0 // indirect

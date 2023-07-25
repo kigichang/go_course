@@ -396,7 +396,7 @@ _ = test()
 
 ```go {.line-numbers}
 func mytest(_ int, str string) {
- 
+
 }
 ```
 
