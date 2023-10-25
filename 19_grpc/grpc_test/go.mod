@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/golang/protobuf v1.5.3
-	google.golang.org/grpc v1.56.2
+	google.golang.org/grpc v1.56.3
 )
 
 require (
@@ -15,6 +15,4 @@ require (
 	google.golang.org/protobuf v1.31.0 // indirect
 )
 
-replace	(
-	grpc_test/service => ../service
-)
+replace grpc_test/service => ../service
