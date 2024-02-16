@@ -129,7 +129,7 @@ message Hello {
 1. 執行 `protoc -I grpc_test/protos -I $GOPATH/include --go_out=. grpc_test/protos/*.proto`
     - `-I` 類似 C 的 include，指定路徑，讓 protoc 去找尋相依的 protobuf 檔案。
     - 放 proto 檔案的目錄，也必須加到 `-I`。eg: `-I grpc_test/protos`
-    - 因為使用 timestamp，因此也需要加 `-I $GOPATH/include`. 
+    - 因為使用 timestamp，因此也需要加 `-I $GOPATH/include`.
     - `--go_out` 是指要輸出 Go 的程式，並指定目標目錄。
     - 由於在 test.proto 有指定 Go 的 package name `grpc_test/protos`，因此輸出的檔案，就放在 `./grpc_test/protos/test.pb.go`。一來 package name 和目錄結構就相符合。
 
@@ -177,6 +177,7 @@ func MarshalHello(data *Hello) ([]byte, error) {
 也是撰寫 .proto ，建議定義 gRPC service 要與資料 message 分開, 只放 service 會用到的 message，一來程式管理比較方便，二來也避免互相干擾。
 
 詳細說明：[gRPC](https://www.grpc.io/docs/)
+
 ### 5.1 grpc_test/service/service.proto
 
 @import "grpc_test/service/service.proto" {as="protobuf" class="line-numbers"}
@@ -202,6 +203,7 @@ service HelloService {
 @import "grpc_test/service/service.pb.go" {class=line-numbers}
 
 #### service_grpc.pb.go
+
 @import "grpc_test/service/service_grpc.pb.go" {class=line-numbers}
 
 ### 5.3 Server and Client Interface
@@ -213,15 +215,15 @@ gRPC 主要會定義 server 與 client 的 interface。
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type HelloServiceClient interface {
-	Hello(ctx context.Context, in *Request, opts ...grpc.CallOption) (*protos.Hello, error)
+    Hello(ctx context.Context, in *Request, opts ...grpc.CallOption) (*protos.Hello, error)
 }
 
 // HelloServiceServer is the server API for HelloService service.
 // All implementations must embed UnimplementedHelloServiceServer
 // for forward compatibility
 type HelloServiceServer interface {
-	Hello(context.Context, *Request) (*protos.Hello, error)
-	mustEmbedUnimplementedHelloServiceServer()
+    Hello(context.Context, *Request) (*protos.Hello, error)
+    mustEmbedUnimplementedHelloServiceServer()
 }
 ```
 
@@ -251,6 +253,7 @@ type HelloServiceServer interface {
 ### 5.5 Client 實作 (grpc_test/client/main.go)
 
 #### grpc_test/client/main.go
+
 @import "grpc_test/client/main.go" {class=line-numbers}
 
 說明：

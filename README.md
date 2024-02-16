@@ -4,7 +4,7 @@
 
 ## 開發環境
 
-- GO 版本: Go 1.20
+- GO 版本: Go 1.22
 - 開發環境: Mac OS (arm64)
 - 開發工具: [VSCode](https://code.visualstudio.com/)
 - 文件使用 [Markdown Preview Enhanced](https://github.com/shd101wyy/markdown-preview-enhanced) 撰寫，請安裝完環境後再閱讀。
@@ -115,7 +115,7 @@
 - [TODO: Echo](echo)
 - [18. RESTful](18_restful)
   - RESTful using Gorilla
-- [19. gRPC](19_grpc)
+- [19. gRPC](19_grpc) (Deprecated)
   - Protobuf
     - Protoc (Protobuf Compliler)
   - gRPC (Client and Service)

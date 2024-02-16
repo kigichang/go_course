@@ -1,6 +1,6 @@
 module bind
 
-go 1.20
+go 1.22
 
 require (
 	github.com/go-playground/validator v9.31.0+incompatible

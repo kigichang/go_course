@@ -1,3 +1,3 @@
 module how_to_04
 
-go 1.20
+go 1.22

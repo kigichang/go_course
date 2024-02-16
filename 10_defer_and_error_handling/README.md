@@ -59,7 +59,7 @@ func ReadFile(filename string) ([]byte, error) {
 1. 在 main 的 loop 宣告的 defer 函式，會在 main 結束前執行。
 1. 在 a1, a2, a3 的 loop 宣告的 defer function，會在各別 function 結束前執行。
 1. a1: 使用當下迴圈 i 的變數值。因此會是 __2 1 0__
-1. a2: 每次迴圈完成時，會記錄要執行一個 __anonymous function__，當迴圈結束後，則開始執行 defer 記錄的 function，此時 i 的值已經是 __3__。
+~~1. a2: 每次迴圈完成時，會記錄要執行一個 __anonymous function__，當迴圈結束後，則開始執行 defer 記錄的 function，此時 i 的值已經是 __3__。~~ 在 Go 1.22 修正這個問題，之後的結果會與 a1 相同。
 1. 與 a2 類似，多傳入當下 i 的值，因此結果與會 a1 相同。
 
 使用 __defer__ 要特別小心被呼叫的時機點與綁定的變數值。

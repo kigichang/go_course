@@ -1,6 +1,6 @@
 module ex15_03
 
-go 1.20
+go 1.22
 
 require github.com/spf13/viper v1.16.0
 
