@@ -2,7 +2,7 @@
 
 ## [Go 已經 15 歲了](https://go.dev/blog/15years)
 
-由於進幾年工作關係，對 Go 的體驗有新的想法，再加上這邊的內容累積很多歷史已經不適用，我計劃另開新的筆記重新整理。希望能夠幫助到更多人。
+由於近幾年工作關係，對 Go 的體驗有新的想法，再加上這邊的內容累積很多歷史已經不適用，我計劃另開新的筆記重新整理。希望能夠幫助到更多人。
 
 新的筆記在這裡：[https://github.com/kigichang/go-notebook](https://github.com/kigichang/go-notebook)。
 
